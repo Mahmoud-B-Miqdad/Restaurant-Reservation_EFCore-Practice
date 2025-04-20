@@ -11,10 +11,11 @@ public class AppUtilities
     private readonly ReservationService _reservationServices;
     private readonly TableService _tableServices;
     private readonly MenuItemService _menuItemServices;
+    private readonly OrderService _orderServices;
     public AppUtilities(RestaurantReservationDbContext context, RestaurantService restaurantService,
         CustomerService customerService, EmployeeService employeeService,
         ReservationService reservationService, TableService tableServices,
-        MenuItemService menuItemServices)
+        MenuItemService menuItemServices, OrderService orderServices)
     {
         _context = context;
         _restaurantService = restaurantService;
@@ -23,6 +24,7 @@ public class AppUtilities
         _reservationServices = reservationService;
         _tableServices = tableServices;
         _menuItemServices = menuItemServices;
+        _orderServices = orderServices;
     }
 
     public async Task RunAsync()
@@ -95,9 +97,22 @@ public class AppUtilities
         //    Console.WriteLine($"Unexpected error: {ex.Message}");
         //}
 
+        //try
+        //{
+        //    await _menuItemServices.ExecuteExamplesAsync();
+        //}
+        //catch (InvalidOperationException ex)
+        //{
+        //    Console.WriteLine($"Operation failed: {ex.Message}");
+        //}
+        //catch (Exception ex)
+        //{
+        //    Console.WriteLine($"Unexpected error: {ex.Message}");
+        //}
+
         try
         {
-            await _menuItemServices.ExecuteExamplesAsync();
+            await _orderServices.ExecuteExamplesAsync();
         }
         catch (InvalidOperationException ex)
         {
