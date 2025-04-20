@@ -1,4 +1,5 @@
 ﻿using RestaurantReservation.Db.Models;
+using Microsoft.EntityFrameworkCore;
 
 public class RestaurantService
 {
@@ -19,12 +20,30 @@ public class RestaurantService
             OpeningHours = "8:00 - 16:00"
         };
 
-        await _restaurantOperations.AddAsync(restaurant);
+        try
+        {
+            await _restaurantOperations.AddAsync(restaurant);
+        }
+        catch (DbUpdateException ex)
+        {
+            throw new InvalidOperationException("Failed to add the restaurant. Ensure all required fields are valid.", ex);
+        }
     }
 
-    public async Task<List<Restaurant>> GetAllRestaurantsAsync()
+    public async Task GetAllRestaurantsAsync()
     {
-        return await _restaurantOperations.GetAllAsync();
+        try
+        {
+            var all = await _restaurantOperations.GetAllAsync();
+            foreach (var restaurant in all)
+            {
+                Console.WriteLine($"[Restaurant] {restaurant.RestaurantId} - {restaurant.Name}, {restaurant.Address}");
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new InvalidOperationException("Failed to retrieve restaurants from the database.", ex);
+        }
     }
 
     public async Task UpdateRestaurantAsync()
@@ -38,27 +57,39 @@ public class RestaurantService
             OpeningHours = "9:00 - 17:00"
         };
 
-        await _restaurantOperations.UpdateAsync(restaurant);
+        try
+        {
+            await _restaurantOperations.UpdateAsync(restaurant);
+        }
+        catch (DbUpdateConcurrencyException ex)
+        {
+            throw new InvalidOperationException("Failed to update the restaurant. It may have been modified or deleted by another process.", ex);
+        }
     }
 
     public async Task DeleteRestaurantAsync()
     {
         int restaurantIdToDelete = 2;
-        await _restaurantOperations.DeleteAsync(restaurantIdToDelete);
+
+        try
+        {
+            await _restaurantOperations.DeleteAsync(restaurantIdToDelete);
+        }
+        catch (DbUpdateException ex)
+        {
+            throw new InvalidOperationException("Cannot delete the restaurant because it has related data (e.g., employees or reservations).", ex);
+        }
+        catch (Exception ex)
+        {
+            throw new InvalidOperationException("Unexpected error occurred while deleting the restaurant.", ex);
+        }
     }
 
     public async Task ExecuteExamplesAsync()
     {
         await AddRestaurantAsync();
-
         await UpdateRestaurantAsync();
-
+        await GetAllRestaurantsAsync();
         await DeleteRestaurantAsync();
-
-        var all = await GetAllRestaurantsAsync();
-        foreach (var restaurant in all)
-        {
-            Console.WriteLine($"[Restaurant] {restaurant.RestaurantId} - {restaurant.Name}, {restaurant.Address}");
-        }
     }
 }
