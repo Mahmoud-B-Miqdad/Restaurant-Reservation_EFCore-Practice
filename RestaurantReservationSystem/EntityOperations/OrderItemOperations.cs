@@ -23,7 +23,7 @@ public class OrderItemOperations
 
     public async Task UpdateAsync(OrderItem orderItem)
     {
-        var existingOrderItem = await _context.Restaurants.FindAsync(orderItem.OrderItemId);
+        var existingOrderItem = await _context.OrderItems.FindAsync(orderItem.OrderItemId);
         if (existingOrderItem == null)
             return;
 

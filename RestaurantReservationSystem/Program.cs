@@ -37,6 +37,9 @@ var host = Host.CreateDefaultBuilder()
         services.AddScoped<OrderOperations>();
         services.AddScoped<OrderService>();
 
+        services.AddScoped<OrderItemOperations>();
+        services.AddScoped<OrderItemService>();
+
         services.AddScoped<AppUtilities>();
     })
     .Build();

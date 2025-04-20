@@ -16,7 +16,7 @@ public class OrderItemService
         {
             OrderId = 1,     
             ItemId = 1,
-            Quantity = 2
+            Quantity = 20
         };
 
         try
@@ -52,7 +52,7 @@ public class OrderItemService
             OrderItemId = 1, 
             OrderId = 1,
             ItemId = 1,
-            Quantity = 3
+            Quantity = 30
         };
 
         try
@@ -81,9 +81,9 @@ public class OrderItemService
 
     public async Task ExecuteExamplesAsync()
     {
-        await AddOrderItemAsync();
+        //await AddOrderItemAsync();
         await UpdateOrderItemAsync();
-        await GetAllOrderItemsAsync();
-        await DeleteOrderItemAsync();
+        //await GetAllOrderItemsAsync();
+        //await DeleteOrderItemAsync();
     }
 }
