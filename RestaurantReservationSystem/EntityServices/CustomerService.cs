@@ -91,6 +91,6 @@ public class CustomerService
         await AddCustomerAsync();
         await UpdateCustomerAsync();
         await GetAllCustomersAsync();
-        await DeleteCustomerAsync();
+        //await DeleteCustomerAsync();
     }
 }
