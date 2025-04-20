@@ -89,9 +89,9 @@ public class ReservationService
 
     public async Task ExecuteExamplesAsync()
     {
-        //await AddReservationAsync();
+        await AddReservationAsync();
         await UpdateReservationAsync();
-        //await GetAllReservationsAsync();
-        //await DeleteReservationAsync();
+        await GetAllReservationsAsync();
+        await DeleteReservationAsync();
     }
 }
