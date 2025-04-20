@@ -1,0 +1,39 @@
+﻿using Microsoft.EntityFrameworkCore;
+using RestaurantReservation.Db;
+using RestaurantReservation.Db.Models;
+public class EmployeeOperations
+{
+    private readonly RestaurantReservationDbContext _context;
+
+    public EmployeeOperations(RestaurantReservationDbContext context)
+    {
+        _context = context;
+    }
+
+    public async Task<List<Employee>> GetAllAsync() => await _context.Employees.ToListAsync();
+
+    public async Task AddAsync(Employee employee)
+    {
+        _context.Employees.Add(employee);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task UpdateAsync(Employee employee)
+    {
+        var existingEmployee = await _context.Employees.FindAsync(employee.EmployeeId);
+        if (existingEmployee == null)
+            return;
+
+        _context.Entry(existingEmployee).CurrentValues.SetValues(employee);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task DeleteAsync(int id)
+    {
+        var employee = await _context.Employees.FindAsync(id);
+        if (employee is null) return;
+
+        _context.Employees.Remove(employee);
+        await _context.SaveChangesAsync();
+    }
+}
