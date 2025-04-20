@@ -48,17 +48,17 @@ public class AppUtilities
         //}
 
 
-        try
-        {
-            await _employeeOperations.ExecuteExamplesAsync();
-        }
-        catch (InvalidOperationException ex)
-        {
-            Console.WriteLine($"Operation failed: {ex.Message}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Unexpected error: {ex.Message}");
-        }
+        //try
+        //{
+        //    await _employeeOperations.ExecuteExamplesAsync();
+        //}
+        //catch (InvalidOperationException ex)
+        //{
+        //    Console.WriteLine($"Operation failed: {ex.Message}");
+        //}
+        //catch (Exception ex)
+        //{
+        //    Console.WriteLine($"Unexpected error: {ex.Message}");
+        //}
     }
 }
