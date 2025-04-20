@@ -30,6 +30,9 @@ var host = Host.CreateDefaultBuilder()
         services.AddScoped<TableOperations>();
         services.AddScoped<TableService>();
 
+        services.AddScoped<MenuItemOperations>();
+        services.AddScoped<MenuItemService>();
+
         services.AddScoped<AppUtilities>();
     })
     .Build();

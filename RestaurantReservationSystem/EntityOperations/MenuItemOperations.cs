@@ -21,11 +21,11 @@ public class MenuItemOperations
 
     public async Task UpdateAsync(MenuItem menuItem)
     {
-        var menuItemReservation = await _context.Reservations.FindAsync(menuItem.ItemId);
-        if (menuItemReservation == null)
+        var existingMenuItem = await _context.MenuItems.FindAsync(menuItem.ItemId);
+        if (existingMenuItem == null)
             return;
 
-        _context.Entry(menuItemReservation).CurrentValues.SetValues(menuItem);
+        _context.Entry(existingMenuItem).CurrentValues.SetValues(menuItem);
         await _context.SaveChangesAsync();
     }
 
