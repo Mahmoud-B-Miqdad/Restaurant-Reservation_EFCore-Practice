@@ -9,5 +9,10 @@ var host = Host.CreateDefaultBuilder()
     {
         services.AddDbContext<RestaurantReservationDbContext>(options =>
             options.UseSqlServer(context.Configuration.GetConnectionString("DefaultConnection")));
+
+        services.AddScoped<AppUtilities>();
     })
     .Build();
+
+var app = host.Services.GetRequiredService<AppUtilities>();
+await app.RunAsync();
