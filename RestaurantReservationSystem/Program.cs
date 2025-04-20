@@ -4,6 +4,8 @@ using Microsoft.Extensions.Configuration;
 using RestaurantReservation.Db;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Azure;
+using RestaurantReservation.Db.Models;
 
 var host = Host.CreateDefaultBuilder()
     .ConfigureLogging(logging =>
@@ -17,6 +19,9 @@ var host = Host.CreateDefaultBuilder()
 
         services.AddScoped<RestaurantOperations>();
         services.AddScoped<RestaurantService>();
+
+        services.AddScoped<CustomerOperations>();
+        services.AddScoped<CustomerService>();
 
         services.AddScoped<AppUtilities>();
     })
