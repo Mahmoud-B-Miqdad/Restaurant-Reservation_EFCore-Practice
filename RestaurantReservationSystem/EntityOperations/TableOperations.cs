@@ -24,7 +24,7 @@ public class TableOperations
 
     public async Task UpdateAsync(Table table)
     {
-        var existingTable = await _context.Employees.FindAsync(table.TableId);
+        var existingTable = await _context.Tables.FindAsync(table.TableId);
         if (existingTable == null)
             return;
 

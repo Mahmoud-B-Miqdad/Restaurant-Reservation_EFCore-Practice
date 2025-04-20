@@ -49,7 +49,7 @@ public class TableService
         var table = new Table
         {
             TableId = 1, 
-            RestaurantId = 1, 
+            RestaurantId = 4, 
             Capacity = 6
         };
 
@@ -79,9 +79,9 @@ public class TableService
 
     public async Task ExecuteExamplesAsync()
     {
-        await AddTableAsync();
+        //await AddTableAsync();
         await UpdateTableAsync();
-        await GetAllTablesAsync();
-        await DeleteTableAsync();
+        //await GetAllTablesAsync();
+        //await DeleteTableAsync();
     }
 }

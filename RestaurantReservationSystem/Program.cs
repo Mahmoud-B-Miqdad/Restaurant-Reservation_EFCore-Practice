@@ -27,6 +27,9 @@ var host = Host.CreateDefaultBuilder()
         services.AddScoped<ReservationOperations>();
         services.AddScoped<ReservationService>();
 
+        services.AddScoped<TableOperations>();
+        services.AddScoped<TableService>();
+
         services.AddScoped<AppUtilities>();
     })
     .Build();
