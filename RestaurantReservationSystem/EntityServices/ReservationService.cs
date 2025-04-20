@@ -55,12 +55,12 @@ public class ReservationService
     {
         var reservation = new Reservation
         {
-            ReservationId = 1, 
-            CustomerId = 1, 
-            RestaurantId = 1, 
-            TableId = 1, 
+            ReservationId = 3, 
+            CustomerId = 4, 
+            RestaurantId = 4, 
+            TableId = 4, 
             ReservationDate = DateTime.Now.AddDays(2),
-            PartySize = 5 
+            PartySize = 10 
         };
 
         try
@@ -89,9 +89,9 @@ public class ReservationService
 
     public async Task ExecuteExamplesAsync()
     {
-        await AddReservationAsync();
-        //await UpdateReservationAsync();
-        await GetAllReservationsAsync();
+        //await AddReservationAsync();
+        await UpdateReservationAsync();
+        //await GetAllReservationsAsync();
         //await DeleteReservationAsync();
     }
 }

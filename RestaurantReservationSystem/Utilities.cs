@@ -6,15 +6,18 @@ public class AppUtilities
 {
     private readonly RestaurantReservationDbContext _context;
     private readonly RestaurantService _restaurantService;
-    private readonly CustomerService _customerOperations;
-    private readonly EmployeeService _employeeOperations;
+    private readonly CustomerService _customerService;
+    private readonly EmployeeService _employeeService;
+    private readonly ReservationService _reservationServices;
     public AppUtilities(RestaurantReservationDbContext context, RestaurantService restaurantService,
-        CustomerService customerOperations, EmployeeService employeeOperations)
+        CustomerService customerService, EmployeeService employeeService,
+        ReservationService reservationService)
     {
         _context = context;
         _restaurantService = restaurantService;
-        _customerOperations = customerOperations;
-        _employeeOperations = employeeOperations;
+        _customerService = customerService;
+        _employeeService = employeeService;
+        _reservationServices = reservationService;
     }
 
     public async Task RunAsync()
@@ -36,7 +39,7 @@ public class AppUtilities
 
         //try
         //{
-        //    await _customerOperations.ExecuteExamplesAsync();
+        //    await _customerService.ExecuteExamplesAsync();
         //}
         //catch (InvalidOperationException ex)
         //{
@@ -50,7 +53,7 @@ public class AppUtilities
 
         //try
         //{
-        //    await _employeeOperations.ExecuteExamplesAsync();
+        //    await _employeeService.ExecuteExamplesAsync();
         //}
         //catch (InvalidOperationException ex)
         //{
@@ -60,5 +63,19 @@ public class AppUtilities
         //{
         //    Console.WriteLine($"Unexpected error: {ex.Message}");
         //}
+
+        try
+        {
+            await _reservationServices.ExecuteExamplesAsync();
+        }
+        catch (InvalidOperationException ex)
+        {
+            Console.WriteLine($"Operation failed: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected error: {ex.Message}");
+        }
+
     }
 }

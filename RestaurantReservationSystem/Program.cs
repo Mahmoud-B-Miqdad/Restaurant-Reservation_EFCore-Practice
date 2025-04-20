@@ -24,6 +24,9 @@ var host = Host.CreateDefaultBuilder()
         services.AddScoped<EmployeeOperations>();
         services.AddScoped<EmployeeService>();
 
+        services.AddScoped<ReservationOperations>();
+        services.AddScoped<ReservationService>();
+
         services.AddScoped<AppUtilities>();
     })
     .Build();
