@@ -101,6 +101,11 @@ namespace RestaurantReservation.Db
                 .Property(o => o.TotalAmount)
                 .HasPrecision(18, 2);
 
+            modelBuilder
+                .Entity<ReservationDetailsView>()
+                .HasNoKey()
+                .ToView("View_ReservationDetails");
+
             base.OnModelCreating(modelBuilder);
         }
     }
