@@ -46,6 +46,8 @@ var host = Host.CreateDefaultBuilder()
         services.AddScoped<OrderRepository>();
         services.AddScoped<MenuItemRepository>();
 
+        services.AddScoped<ReservationReportRepository>();
+
         services.AddScoped<AppUtilities>();
     })
     .Build();

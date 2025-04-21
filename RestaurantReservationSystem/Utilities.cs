@@ -16,13 +16,15 @@ public class AppUtilities
     private readonly ReservationRepository _reservationRepository;
     private readonly OrderRepository _orderRepository;
     private readonly MenuItemRepository _menuItemRepository;
+    private readonly ReservationReportRepository _reportRepo;
 
     public AppUtilities(RestaurantReservationDbContext context, RestaurantService restaurantService,
         CustomerService customerService, EmployeeService employeeService,
         ReservationService reservationService, TableService tableServices,
         MenuItemService menuItemServices, OrderService orderServices, OrderItemService orderItemServices
         , EmployeeRepository employeeRepository, ReservationRepository reservationRepository
-        , OrderRepository orderRepository, MenuItemRepository menuItemRepository)
+        , OrderRepository orderRepository, MenuItemRepository menuItemRepository, 
+        ReservationReportRepository reportRepo)
     {
         _context = context;
         _restaurantService = restaurantService;
@@ -37,6 +39,7 @@ public class AppUtilities
         _reservationRepository = reservationRepository;
         _orderRepository = orderRepository;
         _menuItemRepository = menuItemRepository;
+        _reportRepo = reportRepo;
     }
 
     public async Task RunAsync()
@@ -187,10 +190,17 @@ public class AppUtilities
         //    Console.WriteLine($"Menu Item: {menuItem.Name}, Price: {menuItem.Price}");
         //}
 
-        int employeeId = 1; 
+        //int employeeId = 1; 
 
-        var averageOrderAmount = await _orderRepository.CalculateAverageOrderAmountAsync(employeeId);
+        //var averageOrderAmount = await _orderRepository.CalculateAverageOrderAmountAsync(employeeId);
 
-        Console.WriteLine($"Average Order Amount for Employee {employeeId}: {averageOrderAmount:C}");
+        //Console.WriteLine($"Average Order Amount for Employee {employeeId}: {averageOrderAmount:C}");
+
+        var reservations = await _reportRepo.GetReservationsAsync();
+
+        foreach (var r in reservations)
+        {
+            Console.WriteLine($"Customer: {r.CustomerFirstName} {r.CustomerLastName}, Restaurant: {r.RestaurantName}, Date: {r.ReservationDate}");
+        }
     }
 }
