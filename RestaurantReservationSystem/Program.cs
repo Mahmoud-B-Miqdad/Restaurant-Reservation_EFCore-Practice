@@ -42,10 +42,9 @@ var host = Host.CreateDefaultBuilder()
         services.AddScoped<OrderItemService>();
 
         services.AddScoped<EmployeeRepository>();
-
         services.AddScoped<ReservationRepository>();
-
         services.AddScoped<OrderRepository>();
+        services.AddScoped<MenuItemRepository>();
 
         services.AddScoped<AppUtilities>();
     })
