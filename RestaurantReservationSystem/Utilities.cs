@@ -15,11 +15,13 @@ public class AppUtilities
     private readonly OrderService _orderServices;
     private readonly OrderItemService _orderItemServices;
     private readonly EmployeeRepository _employeeRepository;
+    private readonly ReservationRepository _reservationRepository;
+
     public AppUtilities(RestaurantReservationDbContext context, RestaurantService restaurantService,
         CustomerService customerService, EmployeeService employeeService,
         ReservationService reservationService, TableService tableServices,
         MenuItemService menuItemServices, OrderService orderServices, OrderItemService orderItemServices
-        , EmployeeRepository employeeRepository)
+        , EmployeeRepository employeeRepository, ReservationRepository reservationRepository)
     {
         _context = context;
         _restaurantService = restaurantService;
@@ -31,6 +33,7 @@ public class AppUtilities
         _orderServices = orderServices;
         _orderItemServices = orderItemServices;
         _employeeRepository = employeeRepository;
+        _reservationRepository = reservationRepository;
     }
 
     public async Task RunAsync()
@@ -142,11 +145,19 @@ public class AppUtilities
         //    Console.WriteLine($"Unexpected error: {ex.Message}");
         //}
 
-        var managers = await _employeeRepository.ListManagersAsync();
+        //var managers = await _employeeRepository.ListManagersAsync();
 
-        foreach (var manager in managers)
+        //foreach (var manager in managers)
+        //{
+        //    Console.WriteLine($"Manager: {manager.FirstName} {manager.LastName}");
+        //}
+
+        var reservations = await _reservationRepository.GetReservationsByCustomerAsync(4);
+
+        foreach (var reservation in reservations)
         {
-            Console.WriteLine($"Manager: {manager.FirstName} {manager.LastName}");
+            Console.WriteLine($"reservation Date: {reservation.ReservationDate} " +
+                $"reservation PartySize {reservation.PartySize}");
         }
     }
 }
