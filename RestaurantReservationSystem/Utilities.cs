@@ -16,12 +16,14 @@ public class AppUtilities
     private readonly OrderItemService _orderItemServices;
     private readonly EmployeeRepository _employeeRepository;
     private readonly ReservationRepository _reservationRepository;
+    private readonly OrderRepository _orderRepository;
 
     public AppUtilities(RestaurantReservationDbContext context, RestaurantService restaurantService,
         CustomerService customerService, EmployeeService employeeService,
         ReservationService reservationService, TableService tableServices,
         MenuItemService menuItemServices, OrderService orderServices, OrderItemService orderItemServices
-        , EmployeeRepository employeeRepository, ReservationRepository reservationRepository)
+        , EmployeeRepository employeeRepository, ReservationRepository reservationRepository
+        , OrderRepository orderRepository)
     {
         _context = context;
         _restaurantService = restaurantService;
@@ -34,6 +36,7 @@ public class AppUtilities
         _orderItemServices = orderItemServices;
         _employeeRepository = employeeRepository;
         _reservationRepository = reservationRepository;
+        _orderRepository = orderRepository;
     }
 
     public async Task RunAsync()
@@ -152,12 +155,27 @@ public class AppUtilities
         //    Console.WriteLine($"Manager: {manager.FirstName} {manager.LastName}");
         //}
 
-        var reservations = await _reservationRepository.GetReservationsByCustomerAsync(4);
+        //var reservations = await _reservationRepository.GetReservationsByCustomerAsync(4);
 
-        foreach (var reservation in reservations)
+        //foreach (var reservation in reservations)
+        //{
+        //    Console.WriteLine($"reservation Date: {reservation.ReservationDate} " +
+        //        $"reservation PartySize {reservation.PartySize}");
+        //}
+
+        int reservationId = 2;  // قم بتغيير هذه القيمة حسب الحاجة
+
+        var ordersAndMenuItems = await _orderRepository.ListOrdersAndMenuItemsAsync(reservationId);
+
+        foreach (var order in ordersAndMenuItems)
         {
-            Console.WriteLine($"reservation Date: {reservation.ReservationDate} " +
-                $"reservation PartySize {reservation.PartySize}");
+            Console.WriteLine($"Order ID: {order.OrderId}, Reservation ID: {order.ReservationId}" +
+                $" Order Date {order.OrderDate} Order Amount {order.TotalAmount}");
+
+            foreach (var orderItem in order.OrderItems)
+            {
+                Console.WriteLine($"Menu Item: {orderItem.MenuItem.Name}, Quantity: {orderItem.Quantity}");
+            }
         }
     }
 }
