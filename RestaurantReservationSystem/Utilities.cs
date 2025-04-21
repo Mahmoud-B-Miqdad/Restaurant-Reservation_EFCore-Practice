@@ -1,5 +1,6 @@
 ﻿using RestaurantReservation.Db;
 using RestaurantReservation.Db.Models;
+using RestaurantReservation.Db.Repositories;
 using RestaurantReservation.Db.Seeders;
 
 public class AppUtilities
@@ -13,10 +14,12 @@ public class AppUtilities
     private readonly MenuItemService _menuItemServices;
     private readonly OrderService _orderServices;
     private readonly OrderItemService _orderItemServices;
+    private readonly EmployeeRepository _employeeRepository;
     public AppUtilities(RestaurantReservationDbContext context, RestaurantService restaurantService,
         CustomerService customerService, EmployeeService employeeService,
         ReservationService reservationService, TableService tableServices,
-        MenuItemService menuItemServices, OrderService orderServices, OrderItemService orderItemServices)
+        MenuItemService menuItemServices, OrderService orderServices, OrderItemService orderItemServices
+        , EmployeeRepository employeeRepository)
     {
         _context = context;
         _restaurantService = restaurantService;
@@ -27,6 +30,7 @@ public class AppUtilities
         _menuItemServices = menuItemServices;
         _orderServices = orderServices;
         _orderItemServices = orderItemServices;
+        _employeeRepository = employeeRepository;
     }
 
     public async Task RunAsync()
@@ -125,17 +129,24 @@ public class AppUtilities
         //    Console.WriteLine($"Unexpected error: {ex.Message}");
         //}
 
-        try
+        //try
+        //{
+        //    await _orderItemServices.ExecuteExamplesAsync();
+        //}
+        //catch (InvalidOperationException ex)
+        //{
+        //    Console.WriteLine($"Operation failed: {ex.Message}");
+        //}
+        //catch (Exception ex)
+        //{
+        //    Console.WriteLine($"Unexpected error: {ex.Message}");
+        //}
+
+        var managers = await _employeeRepository.ListManagersAsync();
+
+        foreach (var manager in managers)
         {
-            await _orderItemServices.ExecuteExamplesAsync();
-        }
-        catch (InvalidOperationException ex)
-        {
-            Console.WriteLine($"Operation failed: {ex.Message}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Unexpected error: {ex.Message}");
+            Console.WriteLine($"Manager: {manager.FirstName} {manager.LastName}");
         }
     }
 }
