@@ -178,13 +178,19 @@ public class AppUtilities
         //    }
         //}
 
-        int reservationId = 1;
+        //int reservationId = 1;
 
-        var orderedMenuItems = await _menuItemRepository.ListOrderedMenuItemsAsync(reservationId);
+        //var orderedMenuItems = await _menuItemRepository.ListOrderedMenuItemsAsync(reservationId);
 
-        foreach (var menuItem in orderedMenuItems)
-        {
-            Console.WriteLine($"Menu Item: {menuItem.Name}, Price: {menuItem.Price}");
-        }
+        //foreach (var menuItem in orderedMenuItems)
+        //{
+        //    Console.WriteLine($"Menu Item: {menuItem.Name}, Price: {menuItem.Price}");
+        //}
+
+        int employeeId = 1; 
+
+        var averageOrderAmount = await _orderRepository.CalculateAverageOrderAmountAsync(employeeId);
+
+        Console.WriteLine($"Average Order Amount for Employee {employeeId}: {averageOrderAmount:C}");
     }
 }

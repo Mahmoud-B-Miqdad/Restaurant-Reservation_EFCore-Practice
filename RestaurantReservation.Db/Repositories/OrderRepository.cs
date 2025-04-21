@@ -20,5 +20,18 @@ namespace RestaurantReservation.Db.Repositories
                     .ThenInclude(oi => oi.MenuItem)
                 .ToListAsync();
         }
+
+        public async Task<decimal> CalculateAverageOrderAmountAsync(int employeeId)
+        {
+            var employeeOrders = await _context.Orders
+                .Where(o => o.EmployeeId == employeeId)
+                .ToListAsync();
+
+            if (!employeeOrders.Any())
+                return 0;
+
+            return employeeOrders.Average(o => o.TotalAmount);
+        }
+
     }
 }
