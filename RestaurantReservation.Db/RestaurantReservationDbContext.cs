@@ -112,6 +112,11 @@ namespace RestaurantReservation.Db
                 .HasNoKey()
                 .ToView("EmployeeRestaurantDetails");
 
+            modelBuilder.Entity<RevenueResult>()
+                .HasNoKey()
+                .Property(r => r.TotalRevenue)
+                .HasPrecision(18, 2);
+
             base.OnModelCreating(modelBuilder);
         }
     }

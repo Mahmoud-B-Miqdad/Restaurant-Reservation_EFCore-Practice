@@ -18,13 +18,15 @@ public class AppUtilities
     private readonly MenuItemRepository _menuItemRepository;
     private readonly ReservationReportRepository _reservationReportRepo;
     private readonly EmployeeReportRepository _employeeReportRepository;
+    private readonly RevenueReportRepository _revenueReportRepository;
     public AppUtilities(RestaurantReservationDbContext context, RestaurantService restaurantService,
         CustomerService customerService, EmployeeService employeeService,
         ReservationService reservationService, TableService tableServices,
         MenuItemService menuItemServices, OrderService orderServices, OrderItemService orderItemServices
         , EmployeeRepository employeeRepository, ReservationRepository reservationRepository
         , OrderRepository orderRepository, MenuItemRepository menuItemRepository, 
-        ReservationReportRepository reservationReportRepo, EmployeeReportRepository employeeReportRepository)
+        ReservationReportRepository reservationReportRepo, EmployeeReportRepository employeeReportRepository
+        , RevenueReportRepository revenueReportRepository)
     {
         _context = context;
         _restaurantService = restaurantService;
@@ -41,6 +43,7 @@ public class AppUtilities
         _menuItemRepository = menuItemRepository;
         _reservationReportRepo = reservationReportRepo;
         _employeeReportRepository = employeeReportRepository;
+        _revenueReportRepository = revenueReportRepository;
     }
 
     public async Task RunAsync()
@@ -204,12 +207,16 @@ public class AppUtilities
         //    Console.WriteLine($"Customer: {r.CustomerFirstName} {r.CustomerLastName}, Restaurant: {r.RestaurantName}, Date: {r.ReservationDate}");
         //}
 
-        var employee = await _employeeReportRepository.GetEmployeesAsync();
+        //var employee = await _employeeReportRepository.GetEmployeesAsync();
 
-        foreach (var e in employee)
-        {
-            Console.WriteLine($"Employee: {e.Employee_First_Name} {e.Employee_Last_Name}, Position: {e.Position}" +
-                $" Restaurant: {e.Restaurant_Name}");
-        }
+        //foreach (var e in employee)
+        //{
+        //    Console.WriteLine($"Employee: {e.Employee_First_Name} {e.Employee_Last_Name}, Position: {e.Position}" +
+        //        $" Restaurant: {e.Restaurant_Name}");
+        //}
+
+        var revenue = await _revenueReportRepository.GetTotalRevenueByRestaurantAsync(1);
+        Console.WriteLine($"Total Revenue for Restaurant #1: {revenue} $");
+
     }
 }

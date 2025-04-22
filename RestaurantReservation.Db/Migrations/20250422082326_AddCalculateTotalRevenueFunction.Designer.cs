@@ -12,7 +12,7 @@ using RestaurantReservation.Db;
 namespace RestaurantReservation.Db.Migrations
 {
     [DbContext(typeof(RestaurantReservationDbContext))]
-    [Migration("20250422073014_AddCalculateTotalRevenueFunction")]
+    [Migration("20250422082326_AddCalculateTotalRevenueFunction")]
     partial class AddCalculateTotalRevenueFunction
     {
         /// <inheritdoc />
