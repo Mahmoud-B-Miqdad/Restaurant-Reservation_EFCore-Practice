@@ -16,15 +16,15 @@ public class AppUtilities
     private readonly ReservationRepository _reservationRepository;
     private readonly OrderRepository _orderRepository;
     private readonly MenuItemRepository _menuItemRepository;
-    private readonly ReservationReportRepository _reportRepo;
-
+    private readonly ReservationReportRepository _reservationReportRepo;
+    private readonly EmployeeReportRepository _employeeReportRepository;
     public AppUtilities(RestaurantReservationDbContext context, RestaurantService restaurantService,
         CustomerService customerService, EmployeeService employeeService,
         ReservationService reservationService, TableService tableServices,
         MenuItemService menuItemServices, OrderService orderServices, OrderItemService orderItemServices
         , EmployeeRepository employeeRepository, ReservationRepository reservationRepository
         , OrderRepository orderRepository, MenuItemRepository menuItemRepository, 
-        ReservationReportRepository reportRepo)
+        ReservationReportRepository reservationReportRepo, EmployeeReportRepository employeeReportRepository)
     {
         _context = context;
         _restaurantService = restaurantService;
@@ -39,7 +39,8 @@ public class AppUtilities
         _reservationRepository = reservationRepository;
         _orderRepository = orderRepository;
         _menuItemRepository = menuItemRepository;
-        _reportRepo = reportRepo;
+        _reservationReportRepo = reservationReportRepo;
+        _employeeReportRepository = employeeReportRepository;
     }
 
     public async Task RunAsync()
@@ -196,11 +197,19 @@ public class AppUtilities
 
         //Console.WriteLine($"Average Order Amount for Employee {employeeId}: {averageOrderAmount:C}");
 
-        var reservations = await _reportRepo.GetReservationsAsync();
+        //var reservations = await _reservationReportRepo.GetReservationsAsync();
 
-        foreach (var r in reservations)
+        //foreach (var r in reservations)
+        //{
+        //    Console.WriteLine($"Customer: {r.CustomerFirstName} {r.CustomerLastName}, Restaurant: {r.RestaurantName}, Date: {r.ReservationDate}");
+        //}
+
+        var employee = await _employeeReportRepository.GetEmployeesAsync();
+
+        foreach (var e in employee)
         {
-            Console.WriteLine($"Customer: {r.CustomerFirstName} {r.CustomerLastName}, Restaurant: {r.RestaurantName}, Date: {r.ReservationDate}");
+            Console.WriteLine($"Employee: {e.Employee_First_Name} {e.Employee_Last_Name}, Position: {e.Position}" +
+                $" Restaurant: {e.Restaurant_Name}");
         }
     }
 }
