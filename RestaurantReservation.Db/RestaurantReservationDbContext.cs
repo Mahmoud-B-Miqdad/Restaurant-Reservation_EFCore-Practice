@@ -32,6 +32,8 @@ namespace RestaurantReservation.Db
         public DbSet<Table> Tables { get; set; }
         public DbSet<RevenueResult> RevenueResults { get; set; }
 
+        public DbSet<CustomerView> CustomerViews { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Reservation>()
@@ -116,6 +118,9 @@ namespace RestaurantReservation.Db
                 .HasNoKey()
                 .Property(r => r.TotalRevenue)
                 .HasPrecision(18, 2);
+
+            modelBuilder.Entity<CustomerView>()
+                .HasNoKey();
 
             base.OnModelCreating(modelBuilder);
         }
