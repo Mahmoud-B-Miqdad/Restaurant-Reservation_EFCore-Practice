@@ -19,7 +19,7 @@ namespace RestaurantReservation.Db.Migrations
                     r.PhoneNumber,
                     r.OpeningHours
                 FROM Employees e
-                JOIN Restaurants r ON e.restaurant_id = r.restaurant_id;
+                JOIN Restaurants r ON e.RestaurantId = r.RestaurantId;
             ");
         }
 

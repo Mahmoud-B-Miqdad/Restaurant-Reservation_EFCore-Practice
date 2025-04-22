@@ -106,6 +106,11 @@ namespace RestaurantReservation.Db
                 .HasNoKey()
                 .ToView("View_ReservationDetails");
 
+            modelBuilder
+                .Entity<EmployeeRestaurantDetails>()
+                .HasNoKey()
+                .ToView("EmployeeRestaurantDetails");
+
             base.OnModelCreating(modelBuilder);
         }
     }
