@@ -19,6 +19,8 @@ public class AppUtilities
     private readonly ReservationReportRepository _reservationReportRepo;
     private readonly EmployeeReportRepository _employeeReportRepository;
     private readonly RevenueReportRepository _revenueReportRepository;
+    private readonly CustomerReportRepository _customerReportRepository;
+
     public AppUtilities(RestaurantReservationDbContext context, RestaurantService restaurantService,
         CustomerService customerService, EmployeeService employeeService,
         ReservationService reservationService, TableService tableServices,
@@ -26,7 +28,7 @@ public class AppUtilities
         , EmployeeRepository employeeRepository, ReservationRepository reservationRepository
         , OrderRepository orderRepository, MenuItemRepository menuItemRepository, 
         ReservationReportRepository reservationReportRepo, EmployeeReportRepository employeeReportRepository
-        , RevenueReportRepository revenueReportRepository)
+        , RevenueReportRepository revenueReportRepository, CustomerReportRepository customerReportRepository)
     {
         _context = context;
         _restaurantService = restaurantService;
@@ -44,6 +46,7 @@ public class AppUtilities
         _reservationReportRepo = reservationReportRepo;
         _employeeReportRepository = employeeReportRepository;
         _revenueReportRepository = revenueReportRepository;
+        _customerReportRepository = customerReportRepository;
     }
 
     public async Task RunAsync()
@@ -215,8 +218,15 @@ public class AppUtilities
         //        $" Restaurant: {e.Restaurant_Name}");
         //}
 
-        var revenue = await _revenueReportRepository.GetTotalRevenueByRestaurantAsync(1);
-        Console.WriteLine($"Total Revenue for Restaurant #1: {revenue} $");
+        //var revenue = await _revenueReportRepository.GetTotalRevenueByRestaurantAsync(1);
+        //Console.WriteLine($"Total Revenue for Restaurant #1: {revenue} $");
 
+
+        var customers = await _customerReportRepository.GetCustomersByPartySizeAsync(4);
+        foreach (var c in customers)
+        {
+            Console.WriteLine($"Customer: {c.FirstName} {c.LastName} - Email: {c.Email} - Phone: {c.PhoneNumber}" +
+                $"PartySize {c.PartySize}");
+        }
     }
 }
