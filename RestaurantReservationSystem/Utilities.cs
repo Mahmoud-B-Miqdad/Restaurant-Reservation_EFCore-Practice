@@ -1,9 +1,9 @@
-﻿using RestaurantReservation.Db;
-using RestaurantReservation.Db.Repositories;
+﻿using RestaurantReservation.Db.Repositories;
+using RestaurantReservation.Db.Seeders;
 
 public class AppUtilities
 {
-    private readonly RestaurantReservationDbContext _context;
+    private readonly RestaurantReservationSeeder _DbSeeder;
     private readonly RestaurantService _restaurantService;
     private readonly CustomerService _customerService;
     private readonly EmployeeService _employeeService;
@@ -21,7 +21,7 @@ public class AppUtilities
     private readonly RevenueReportRepository _revenueReportRepository;
     private readonly CustomerReportRepository _customerReportRepository;
 
-    public AppUtilities(RestaurantReservationDbContext context, RestaurantService restaurantService,
+    public AppUtilities(RestaurantReservationSeeder DbSeeder, RestaurantService restaurantService,
         CustomerService customerService, EmployeeService employeeService,
         ReservationService reservationService, TableService tableServices,
         MenuItemService menuItemServices, OrderService orderServices, OrderItemService orderItemServices
@@ -30,7 +30,7 @@ public class AppUtilities
         ReservationReportRepository reservationReportRepo, EmployeeReportRepository employeeReportRepository
         , RevenueReportRepository revenueReportRepository, CustomerReportRepository customerReportRepository)
     {
-        _context = context;
+        _DbSeeder = DbSeeder;
         _restaurantService = restaurantService;
         _customerService = customerService;
         _employeeService = employeeService;
@@ -51,7 +51,7 @@ public class AppUtilities
 
     public async Task RunAsync()
     {
-        //await RestaurantReservationSeeder.SeedAsync(_context);
+        await _DbSeeder.SeedAsync();
 
         //try
         //{
@@ -222,11 +222,11 @@ public class AppUtilities
         //Console.WriteLine($"Total Revenue for Restaurant #1: {revenue} $");
 
 
-        var customers = await _customerReportRepository.GetCustomersByPartySizeAsync(4);
-        foreach (var c in customers)
-        {
-            Console.WriteLine($"Customer: {c.FirstName} {c.LastName} - Email: {c.Email} - Phone: {c.PhoneNumber}" +
-                $"PartySize {c.PartySize}");
-        }
+        //var customers = await _customerReportRepository.GetCustomersByPartySizeAsync(4);
+        //foreach (var c in customers)
+        //{
+        //    Console.WriteLine($"Customer: {c.FirstName} {c.LastName} - Email: {c.Email} - Phone: {c.PhoneNumber}" +
+        //        $"PartySize {c.PartySize}");
+        //}
     }
 }

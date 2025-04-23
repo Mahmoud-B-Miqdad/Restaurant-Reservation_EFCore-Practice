@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using RestaurantReservation.Services;
 using RestaurantReservation.Db.Repositories;
+using RestaurantReservation.Db.Seeders;
 
 var host = Host.CreateDefaultBuilder()
     .ConfigureLogging(logging =>
@@ -16,6 +17,8 @@ var host = Host.CreateDefaultBuilder()
     {
         services.AddDbContext<RestaurantReservationDbContext>(options =>
             options.UseSqlServer(context.Configuration.GetConnectionString("DefaultConnection")));
+
+        services.AddScoped<RestaurantReservationSeeder>();
 
         services.AddScoped<RestaurantOperations>();
         services.AddScoped<RestaurantService>();
