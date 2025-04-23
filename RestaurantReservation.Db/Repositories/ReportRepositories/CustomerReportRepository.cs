@@ -16,7 +16,7 @@ internal class CustomerReportRepository : ICustomerReportRepository
     {
         var param = new SqlParameter("@minPartySize", minPartySize);
         return await _context
-            .CustomerViews
+            .CustomerView
             .FromSqlRaw("EXEC GetCustomersByPartySize @minPartySize", param)
             .AsNoTracking()
             .ToListAsync();

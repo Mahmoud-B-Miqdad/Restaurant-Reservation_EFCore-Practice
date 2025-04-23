@@ -30,9 +30,9 @@ namespace RestaurantReservation.Db
         public DbSet<Reservation> Reservations { get; set; }
         public DbSet<Restaurant> Restaurants { get; set; }
         public DbSet<Table> Tables { get; set; }
-        public DbSet<RevenueResult> RevenueResults { get; set; }
+        public DbSet<RevenueResult> RevenueResult { get; set; }
 
-        public DbSet<CustomerView> CustomerViews { get; set; }
+        public DbSet<CustomerView> CustomerView { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

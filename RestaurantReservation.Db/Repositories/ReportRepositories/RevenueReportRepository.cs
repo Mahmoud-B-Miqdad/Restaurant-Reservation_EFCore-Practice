@@ -17,7 +17,7 @@ internal class RevenueReportRepository : IRevenueReportRepository
         var param = new SqlParameter("@restaurantId", restaurantId);
 
         var result = await _context
-            .RevenueResults
+            .RevenueResult
             .FromSqlRaw("SELECT dbo.CalculateTotalRevenue(@restaurantId) AS TotalRevenue", param)
             .AsNoTracking()
             .FirstOrDefaultAsync();
