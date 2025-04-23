@@ -1,35 +1,37 @@
-﻿using RestaurantReservation.Db.Repositories;
+﻿using RestaurantReservation.Db.Repositories.Interfaces;
 using RestaurantReservation.Db.Repositories.ReportRepositories;
 using RestaurantReservation.Db.Seeders;
+using RestaurantReservation.Db.Services.Interfaces;
+using RestaurantReservationSystem.EntityServices.Services.Interfaces;
 
 public class AppUtilities
 {
     private readonly RestaurantReservationSeeder _DbSeeder;
-    private readonly RestaurantService _restaurantService;
-    private readonly CustomerService _customerService;
-    private readonly EmployeeService _employeeService;
-    private readonly ReservationService _reservationServices;
-    private readonly TableService _tableServices;
-    private readonly MenuItemService _menuItemServices;
-    private readonly OrderService _orderServices;
-    private readonly OrderItemService _orderItemServices;
-    private readonly EmployeeRepository _employeeRepository;
-    private readonly ReservationRepository _reservationRepository;
-    private readonly OrderRepository _orderRepository;
-    private readonly MenuItemRepository _menuItemRepository;
-    private readonly ReservationReportRepository _reservationReportRepo;
-    private readonly EmployeeReportRepository _employeeReportRepository;
-    private readonly RevenueReportRepository _revenueReportRepository;
-    private readonly CustomerReportRepository _customerReportRepository;
+    private readonly IRestaurantService _restaurantService;
+    private readonly ICustomerService _customerService;
+    private readonly IEmployeeService _employeeService;
+    private readonly IReservationService _reservationServices;
+    private readonly ITableService _tableServices;
+    private readonly IMenuItemService _menuItemServices;
+    private readonly IOrderService _orderServices;
+    private readonly IOrderItemService _orderItemServices;
+    private readonly IEmployeeRepository _employeeRepository;
+    private readonly IReservationRepository _reservationRepository;
+    private readonly IOrderRepository _orderRepository;
+    private readonly IMenuItemRepository _menuItemRepository;
+    private readonly IReservationReportRepository _reservationReportRepo;
+    private readonly IEmployeeReportRepository _employeeReportRepository;
+    private readonly IRevenueReportRepository _revenueReportRepository;
+    private readonly ICustomerReportRepository _customerReportRepository;
 
-    public AppUtilities(RestaurantReservationSeeder DbSeeder, RestaurantService restaurantService,
-        CustomerService customerService, EmployeeService employeeService,
-        ReservationService reservationService, TableService tableServices,
-        MenuItemService menuItemServices, OrderService orderServices, OrderItemService orderItemServices
-        , EmployeeRepository employeeRepository,ReservationRepository reservationRepository
-        , OrderRepository orderRepository, MenuItemRepository menuItemRepository, 
-        ReservationReportRepository reservationReportRepo, EmployeeReportRepository employeeReportRepository
-        , RevenueReportRepository revenueReportRepository, CustomerReportRepository customerReportRepository)
+    public AppUtilities(RestaurantReservationSeeder DbSeeder, IRestaurantService restaurantService,
+        ICustomerService customerService, IEmployeeService employeeService,
+        IReservationService reservationService, ITableService tableServices,
+        IMenuItemService menuItemServices, IOrderService orderServices, IOrderItemService orderItemServices
+        , IEmployeeRepository employeeRepository, IReservationRepository reservationRepository
+        , IOrderRepository orderRepository, IMenuItemRepository menuItemRepository,
+        IReservationReportRepository reservationReportRepo, IEmployeeReportRepository employeeReportRepository
+        , IRevenueReportRepository revenueReportRepository, ICustomerReportRepository customerReportRepository)
     {
         _DbSeeder = DbSeeder;
         _restaurantService = restaurantService;
@@ -223,11 +225,11 @@ public class AppUtilities
         //Console.WriteLine($"Total Revenue for Restaurant #1: {revenue} $");
 
 
-        //var customers = await _customerReportRepository.GetCustomersByPartySizeAsync(4);
-        //foreach (var c in customers)
-        //{
-        //    Console.WriteLine($"Customer: {c.FirstName} {c.LastName} - Email: {c.Email} - Phone: {c.PhoneNumber}" +
-        //        $"PartySize {c.PartySize}");
-        //}
+        var customers = await _customerReportRepository.GetCustomersByPartySizeAsync(4);
+        foreach (var c in customers)
+        {
+            Console.WriteLine($"Customer: {c.FirstName} {c.LastName} - Email: {c.Email} - Phone: {c.PhoneNumber}" +
+                $"PartySize {c.PartySize}");
+        }
     }
 }

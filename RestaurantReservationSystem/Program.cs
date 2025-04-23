@@ -4,15 +4,15 @@ using Microsoft.Extensions.Configuration;
 using RestaurantReservation.Db;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using RestaurantReservation.Db.Repositories;
 using RestaurantReservation.Db.Seeders;
-using RestaurantReservation.Db.Repositories.ReportRepositories;
+using RestaurantReservation.Db.Services.Interfaces;
+using RestaurantReservationSystem.EntityServices.Services.Interfaces;
 
 var host = Host.CreateDefaultBuilder()
     .ConfigureLogging(logging =>
-     {
-         logging.ClearProviders();
-     })
+    {
+        logging.ClearProviders();
+    })
     .ConfigureServices((context, services) =>
     {
         services.AddDbContext<RestaurantReservationDbContext>(options =>
@@ -20,39 +20,16 @@ var host = Host.CreateDefaultBuilder()
 
         services.AddScoped<RestaurantReservationSeeder>();
 
-        services.AddScoped<RestaurantRepository>();
-        services.AddScoped<RestaurantService>();
+        services.AddRepositories();
 
-        services.AddScoped<CustomerRepository>();
-        services.AddScoped<CustomerService>();
-
-        services.AddScoped<EmployeeRepository>();
-        services.AddScoped<EmployeeService>();
-
-        services.AddScoped<ReservationRepository>();
-        services.AddScoped<ReservationService>();
-
-        services.AddScoped<TableRepository>();
-        services.AddScoped<TableService>();
-
-        services.AddScoped<MenuItemRepository>();
-        services.AddScoped<MenuItemService>();
-
-        services.AddScoped<OrderRepository>();
-        services.AddScoped<OrderService>();
-
-        services.AddScoped<OrderItemRepository>();
-        services.AddScoped<OrderItemService>();
-
-        services.AddScoped<EmployeeRepository>();
-        services.AddScoped<ReservationRepository>();
-        services.AddScoped<OrderRepository>();
-        services.AddScoped<MenuItemRepository>();
-
-        services.AddScoped<ReservationReportRepository>();
-        services.AddScoped<EmployeeReportRepository>();
-        services.AddScoped<RevenueReportRepository>();
-        services.AddScoped<CustomerReportRepository>();
+        services.AddScoped<ICustomerService, CustomerService>();
+        services.AddScoped<IRestaurantService, RestaurantService>();
+        services.AddScoped<IEmployeeService, EmployeeService>();
+        services.AddScoped<IReservationService, ReservationService>();
+        services.AddScoped<ITableService, TableService>();
+        services.AddScoped<IMenuItemService, MenuItemService>();
+        services.AddScoped<IOrderService, OrderService>();
+        services.AddScoped<IOrderItemService, OrderItemService>();
 
         services.AddScoped<AppUtilities>();
     })

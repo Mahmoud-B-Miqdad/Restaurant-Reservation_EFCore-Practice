@@ -82,8 +82,8 @@ public class TableService : ITableService
     public async Task ExecuteExamplesAsync()
     {
         //await AddTableAsync();
-        await UpdateTableAsync();
-        //await GetAllTablesAsync();
+        //await UpdateTableAsync();
+        await GetAllTablesAsync();
         //await DeleteTableAsync();
     }
 }

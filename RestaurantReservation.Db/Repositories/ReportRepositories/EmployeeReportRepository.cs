@@ -2,7 +2,7 @@
 
 namespace RestaurantReservation.Db.Repositories.ReportRepositories;
 
-public class EmployeeReportRepository
+internal class EmployeeReportRepository : IEmployeeReportRepository
 {
     private readonly RestaurantReservationDbContext _context;
 

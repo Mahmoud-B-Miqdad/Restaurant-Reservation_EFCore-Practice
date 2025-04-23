@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace RestaurantReservation.Db.Repositories.ReportRepositories;
 
-public class CustomerReportRepository
+internal class CustomerReportRepository : ICustomerReportRepository
 {
     private readonly RestaurantReservationDbContext _context;
 
