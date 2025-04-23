@@ -1,11 +1,13 @@
 ﻿using RestaurantReservation.Db.Models;
 using Microsoft.EntityFrameworkCore;
+using RestaurantReservation.Db.Services.Interfaces;
+using RestaurantReservation.Db.Repositories.Interfaces;
 
-public class RestaurantService
+public class RestaurantService : IRestaurantService
 {
-    private readonly RestaurantRepository _restaurantRepository;
+    private readonly IRestaurantRepository _restaurantRepository;
 
-    public RestaurantService(RestaurantRepository restaurantRepository)
+    public RestaurantService(IRestaurantRepository restaurantRepository)
     {
         _restaurantRepository = restaurantRepository;
     }

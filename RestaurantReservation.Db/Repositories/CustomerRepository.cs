@@ -2,7 +2,7 @@
 using RestaurantReservation.Db;
 using RestaurantReservation.Db.Models;
 using RestaurantReservation.Db.Repositories.Interfaces;
-public class CustomerRepository : ICustomerRepository
+internal class CustomerRepository : ICustomerRepository
 {
     private readonly RestaurantReservationDbContext _context;
 

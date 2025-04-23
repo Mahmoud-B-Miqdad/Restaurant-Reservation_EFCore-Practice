@@ -2,7 +2,7 @@
 
 namespace RestaurantReservation.Db.Repositories.Interfaces;
 
-internal interface IOrderRepository
+public interface IOrderRepository
 {
     Task<List<Order>> GetAllAsync();
     Task AddAsync(Order order);

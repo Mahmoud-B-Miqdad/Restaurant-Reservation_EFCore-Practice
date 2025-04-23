@@ -1,11 +1,13 @@
 ﻿using RestaurantReservation.Db.Models;
 using RestaurantReservation.Db.Repositories;
+using RestaurantReservation.Db.Repositories.Interfaces;
+using RestaurantReservation.Db.Services.Interfaces;
 
-public class EmployeeService
+public class EmployeeService : IEmployeeService
 {
-    private readonly EmployeeRepository _employeeOperations;
+    private readonly IEmployeeRepository _employeeOperations;
 
-    public EmployeeService(EmployeeRepository employeeOperations)
+    public EmployeeService(IEmployeeRepository employeeOperations)
     {
         _employeeOperations = employeeOperations;
     }

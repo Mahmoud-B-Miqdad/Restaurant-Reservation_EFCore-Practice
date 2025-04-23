@@ -1,10 +1,12 @@
 ﻿using RestaurantReservation.Db.Models;
+using RestaurantReservation.Db.Repositories.Interfaces;
+using RestaurantReservationSystem.EntityServices.Services.Interfaces;
 
-public class TableService
+public class TableService : ITableService
 {
-    private readonly TableRepository _tableRepository;
+    private readonly ITableRepository _tableRepository;
 
-    public TableService(TableRepository tableRepository)
+    public TableService(ITableRepository tableRepository)
     {
         _tableRepository = tableRepository;
     }

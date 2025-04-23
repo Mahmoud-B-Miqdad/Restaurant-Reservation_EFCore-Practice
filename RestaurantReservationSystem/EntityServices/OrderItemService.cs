@@ -1,11 +1,13 @@
 ﻿using RestaurantReservation.Db.Models;
 using RestaurantReservation.Db.Repositories;
+using RestaurantReservation.Db.Repositories.Interfaces;
+using RestaurantReservation.Db.Services.Interfaces;
 
-public class OrderItemService
+public class OrderItemService : IOrderItemService
 {
-    private readonly OrderItemRepository _orderItemRepository;
+    private readonly IOrderItemRepository _orderItemRepository;
 
-    public OrderItemService(OrderItemRepository orderItemRepository)
+    public OrderItemService(IOrderItemRepository orderItemRepository)
     {
         _orderItemRepository = orderItemRepository;
     }

@@ -2,7 +2,7 @@
 
 namespace RestaurantReservation.Db.Repositories.Interfaces
 {
-    internal interface IEmployeeRepository
+    public interface IEmployeeRepository
     {
         Task<List<Employee>> GetAllAsync();
         Task AddAsync(Employee employee);

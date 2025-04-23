@@ -3,7 +3,7 @@ using RestaurantReservation.Db.Models;
 using Microsoft.EntityFrameworkCore;
 using RestaurantReservation.Db.Repositories.Interfaces;
 
-public class TableRepository : ITableRepository
+internal class TableRepository : ITableRepository
 {
     private readonly RestaurantReservationDbContext _context;
 
