@@ -1,15 +1,13 @@
 ﻿using RestaurantReservation.Db.Models;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using RestaurantReservation.Db.Repositories;
 
 public class MenuItemService
 {
-    private readonly MenuItemOperations _menuItemOperations;
+    private readonly MenuItemRepository _menuItemRepository;
 
-    public MenuItemService(MenuItemOperations menuItemOperations)
+    public MenuItemService(MenuItemRepository menuItemRepository)
     {
-        _menuItemOperations = menuItemOperations;
+        _menuItemRepository = menuItemRepository;
     }
 
     public async Task AddMenuItemAsync()
@@ -24,7 +22,7 @@ public class MenuItemService
 
         try
         {
-            await _menuItemOperations.AddAsync(menuItem);
+            await _menuItemRepository.AddAsync(menuItem);
         }
         catch (Exception ex)
         {
@@ -36,7 +34,7 @@ public class MenuItemService
     {
         try
         {
-            var allItems = await _menuItemOperations.GetAllAsync();
+            var allItems = await _menuItemRepository.GetAllAsync();
             foreach (var item in allItems)
             {
                 Console.WriteLine($"[MenuItem] {item.ItemId} - Name: {item.Name}, Price: {item.Price}, RestaurantId: {item.RestaurantId}");
@@ -61,7 +59,7 @@ public class MenuItemService
 
         try
         {
-            await _menuItemOperations.UpdateAsync(updatedItem);
+            await _menuItemRepository.UpdateAsync(updatedItem);
         }
         catch (Exception ex)
         {
@@ -75,7 +73,7 @@ public class MenuItemService
 
         try
         {
-            await _menuItemOperations.DeleteAsync(itemIdToDelete);
+            await _menuItemRepository.DeleteAsync(itemIdToDelete);
         }
         catch (Exception ex)
         {

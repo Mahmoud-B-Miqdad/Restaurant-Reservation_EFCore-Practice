@@ -1,4 +1,5 @@
 ﻿using RestaurantReservation.Db.Repositories;
+using RestaurantReservation.Db.Repositories.ReportRepositories;
 using RestaurantReservation.Db.Seeders;
 
 public class AppUtilities
@@ -25,7 +26,7 @@ public class AppUtilities
         CustomerService customerService, EmployeeService employeeService,
         ReservationService reservationService, TableService tableServices,
         MenuItemService menuItemServices, OrderService orderServices, OrderItemService orderItemServices
-        , EmployeeRepository employeeRepository, ReservationRepository reservationRepository
+        , EmployeeRepository employeeRepository,ReservationRepository reservationRepository
         , OrderRepository orderRepository, MenuItemRepository menuItemRepository, 
         ReservationReportRepository reservationReportRepo, EmployeeReportRepository employeeReportRepository
         , RevenueReportRepository revenueReportRepository, CustomerReportRepository customerReportRepository)
@@ -51,7 +52,7 @@ public class AppUtilities
 
     public async Task RunAsync()
     {
-        await _DbSeeder.SeedAsync();
+        //await _DbSeeder.SeedAsync();
 
         //try
         //{

@@ -2,11 +2,11 @@
 
 public class TableService
 {
-    private readonly TableOperations _tableOperations;
+    private readonly TableRepository _tableRepository;
 
-    public TableService(TableOperations tableOperations)
+    public TableService(TableRepository tableRepository)
     {
-        _tableOperations = tableOperations;
+        _tableRepository = tableRepository;
     }
 
     public async Task AddTableAsync()
@@ -19,7 +19,7 @@ public class TableService
 
         try
         {
-            await _tableOperations.AddAsync(table);
+            await _tableRepository.AddAsync(table);
         }
         catch (Exception ex)
         {
@@ -31,7 +31,7 @@ public class TableService
     {
         try
         {
-            var all = await _tableOperations.GetAllAsync();
+            var all = await _tableRepository.GetAllAsync();
             foreach (var table in all)
             {
                 Console.WriteLine($"[Table] {table.TableId} - RestaurantId: {table.RestaurantId}, " +
@@ -55,7 +55,7 @@ public class TableService
 
         try
         {
-            await _tableOperations.UpdateAsync(table);
+            await _tableRepository.UpdateAsync(table);
         }
         catch (Exception ex)
         {
@@ -69,7 +69,7 @@ public class TableService
 
         try
         {
-            await _tableOperations.DeleteAsync(tableIdToDelete);
+            await _tableRepository.DeleteAsync(tableIdToDelete);
         }
         catch (Exception ex)
         {

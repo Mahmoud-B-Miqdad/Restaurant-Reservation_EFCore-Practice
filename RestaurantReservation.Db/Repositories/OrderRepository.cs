@@ -33,5 +33,32 @@ namespace RestaurantReservation.Db.Repositories
             return employeeOrders.Average(o => o.TotalAmount);
         }
 
+        public async Task<List<Order>> GetAllAsync() => await _context.Orders.ToListAsync();
+
+
+        public async Task AddAsync(Order order)
+        {
+            _context.Orders.Add(order);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateAsync(Order order)
+        {
+            var existingOrder = await _context.Orders.FindAsync(order.OrderId);
+            if (existingOrder == null)
+                return;
+
+            _context.Entry(existingOrder).CurrentValues.SetValues(order);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            var order = await _context.Orders.FindAsync(id);
+            if (order is null) return;
+
+            _context.Orders.Remove(order);
+            await _context.SaveChangesAsync();
+        }
     }
 }

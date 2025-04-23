@@ -1,13 +1,12 @@
 ﻿using RestaurantReservation.Db.Models;
-using RestaurantReservation.Services;
-
+using RestaurantReservation.Db.Repositories;
 public class OrderService
 {
-    private readonly OrderOperations _orderOperations;
+    private readonly OrderRepository _orderRepository;
 
-    public OrderService(OrderOperations orderOperations)
+    public OrderService(OrderRepository orderRepository)
     {
-        _orderOperations = orderOperations;
+        this._orderRepository = orderRepository;
     }
 
     public async Task AddOrderAsync()
@@ -22,7 +21,7 @@ public class OrderService
 
         try
         {
-            await _orderOperations.AddAsync(order);
+            await _orderRepository.AddAsync(order);
         }
         catch (Exception ex)
         {
@@ -34,7 +33,7 @@ public class OrderService
     {
         try
         {
-            var allOrders = await _orderOperations.GetAllAsync();
+            var allOrders = await _orderRepository.GetAllAsync();
             foreach (var order in allOrders)
             {
                 Console.WriteLine($"[Order] ID: {order.OrderId}, ReservationId: {order.ReservationId}, EmployeeId: {order.EmployeeId}, Total: {order.TotalAmount}");
@@ -59,7 +58,7 @@ public class OrderService
 
         try
         {
-            await _orderOperations.UpdateAsync(updatedOrder);
+            await _orderRepository.UpdateAsync(updatedOrder);
         }
         catch (Exception ex)
         {
@@ -73,7 +72,7 @@ public class OrderService
 
         try
         {
-            await _orderOperations.DeleteAsync(orderIdToDelete);
+            await _orderRepository.DeleteAsync(orderIdToDelete);
         }
         catch (Exception ex)
         {

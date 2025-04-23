@@ -3,11 +3,11 @@ using Microsoft.EntityFrameworkCore;
 
 public class RestaurantService
 {
-    private readonly RestaurantOperations _restaurantOperations;
+    private readonly RestaurantRepository _restaurantRepository;
 
-    public RestaurantService(RestaurantOperations restaurantOperations)
+    public RestaurantService(RestaurantRepository restaurantRepository)
     {
-        _restaurantOperations = restaurantOperations;
+        _restaurantRepository = restaurantRepository;
     }
 
     public async Task AddRestaurantAsync()
@@ -22,7 +22,7 @@ public class RestaurantService
 
         try
         {
-            await _restaurantOperations.AddAsync(restaurant);
+            await _restaurantRepository.AddAsync(restaurant);
         }
         catch (DbUpdateException ex)
         {
@@ -34,7 +34,7 @@ public class RestaurantService
     {
         try
         {
-            var all = await _restaurantOperations.GetAllAsync();
+            var all = await _restaurantRepository.GetAllAsync();
             foreach (var restaurant in all)
             {
                 Console.WriteLine($"[Restaurant] {restaurant.RestaurantId} - {restaurant.Name}, {restaurant.Address}");
@@ -59,7 +59,7 @@ public class RestaurantService
 
         try
         {
-            await _restaurantOperations.UpdateAsync(restaurant);
+            await _restaurantRepository.UpdateAsync(restaurant);
         }
         catch (DbUpdateConcurrencyException ex)
         {
@@ -73,7 +73,7 @@ public class RestaurantService
 
         try
         {
-            await _restaurantOperations.DeleteAsync(restaurantIdToDelete);
+            await _restaurantRepository.DeleteAsync(restaurantIdToDelete);
         }
         catch (DbUpdateException ex)
         {

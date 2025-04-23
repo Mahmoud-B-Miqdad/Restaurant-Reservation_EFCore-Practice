@@ -2,11 +2,11 @@
 using RestaurantReservation.Db;
 using Microsoft.EntityFrameworkCore;
 
-public class RestaurantOperations
+public class RestaurantRepository
 {
     private readonly RestaurantReservationDbContext _context;
 
-    public RestaurantOperations(RestaurantReservationDbContext context)
+    public RestaurantRepository(RestaurantReservationDbContext context)
     {
         _context = context;
     }

@@ -4,9 +4,9 @@ using Microsoft.Extensions.Configuration;
 using RestaurantReservation.Db;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using RestaurantReservation.Services;
 using RestaurantReservation.Db.Repositories;
 using RestaurantReservation.Db.Seeders;
+using RestaurantReservation.Db.Repositories.ReportRepositories;
 
 var host = Host.CreateDefaultBuilder()
     .ConfigureLogging(logging =>
@@ -20,28 +20,28 @@ var host = Host.CreateDefaultBuilder()
 
         services.AddScoped<RestaurantReservationSeeder>();
 
-        services.AddScoped<RestaurantOperations>();
+        services.AddScoped<RestaurantRepository>();
         services.AddScoped<RestaurantService>();
 
-        services.AddScoped<CustomerOperations>();
+        services.AddScoped<CustomerRepository>();
         services.AddScoped<CustomerService>();
 
-        services.AddScoped<EmployeeOperations>();
+        services.AddScoped<EmployeeRepository>();
         services.AddScoped<EmployeeService>();
 
-        services.AddScoped<ReservationOperations>();
+        services.AddScoped<ReservationRepository>();
         services.AddScoped<ReservationService>();
 
-        services.AddScoped<TableOperations>();
+        services.AddScoped<TableRepository>();
         services.AddScoped<TableService>();
 
-        services.AddScoped<MenuItemOperations>();
+        services.AddScoped<MenuItemRepository>();
         services.AddScoped<MenuItemService>();
 
-        services.AddScoped<OrderOperations>();
+        services.AddScoped<OrderRepository>();
         services.AddScoped<OrderService>();
 
-        services.AddScoped<OrderItemOperations>();
+        services.AddScoped<OrderItemRepository>();
         services.AddScoped<OrderItemService>();
 
         services.AddScoped<EmployeeRepository>();

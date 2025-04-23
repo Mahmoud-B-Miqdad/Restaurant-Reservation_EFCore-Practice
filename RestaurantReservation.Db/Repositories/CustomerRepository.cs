@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RestaurantReservation.Db;
 using RestaurantReservation.Db.Models;
-public class CustomerOperations
+public class CustomerRepository
 {
     private readonly RestaurantReservationDbContext _context;
 
-    public CustomerOperations(RestaurantReservationDbContext context)
+    public CustomerRepository(RestaurantReservationDbContext context)
     {
         _context = context;
     }

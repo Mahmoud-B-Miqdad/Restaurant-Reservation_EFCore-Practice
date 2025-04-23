@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace RestaurantReservation.Db.Repositories;
+namespace RestaurantReservation.Db.Repositories.ReportRepositories;
 
 public class EmployeeReportRepository
 {

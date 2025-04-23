@@ -1,12 +1,12 @@
 ﻿using RestaurantReservation.Db.Models;
-
+using RestaurantReservation.Db.Repositories;
 public class ReservationService
 {
-    private readonly ReservationOperations _reservationOperations;
+    private readonly ReservationRepository _reservationRepository;
 
-    public ReservationService(ReservationOperations reservationOperations)
+    public ReservationService(ReservationRepository reservationRepository)
     {
-        _reservationOperations = reservationOperations;
+        _reservationRepository = reservationRepository;
     }
 
     public async Task AddReservationAsync()
@@ -22,7 +22,7 @@ public class ReservationService
 
         try
         {
-            await _reservationOperations.AddAsync(reservation);
+            await _reservationRepository.AddAsync(reservation);
         }
         catch (Exception ex)
         {
@@ -34,7 +34,7 @@ public class ReservationService
     {
         try
         {
-            var all = await _reservationOperations.GetAllAsync();
+            var all = await _reservationRepository.GetAllAsync();
             foreach (var reservation in all)
             {
                 Console.WriteLine($"[Reservation] {reservation.ReservationId} - CustomerId: {reservation.CustomerId}, " +
@@ -62,7 +62,7 @@ public class ReservationService
 
         try
         {
-            await _reservationOperations.UpdateAsync(reservation);
+            await _reservationRepository.UpdateAsync(reservation);
         }
         catch (Exception ex)
         {
@@ -76,7 +76,7 @@ public class ReservationService
 
         try
         {
-            await _reservationOperations.DeleteAsync(reservationIdToDelete);
+            await _reservationRepository.DeleteAsync(reservationIdToDelete);
         }
         catch (Exception ex)
         {

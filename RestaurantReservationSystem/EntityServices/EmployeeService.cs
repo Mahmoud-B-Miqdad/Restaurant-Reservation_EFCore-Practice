@@ -1,10 +1,11 @@
 ﻿using RestaurantReservation.Db.Models;
+using RestaurantReservation.Db.Repositories;
 
 public class EmployeeService
 {
-    private readonly EmployeeOperations _employeeOperations;
+    private readonly EmployeeRepository _employeeOperations;
 
-    public EmployeeService(EmployeeOperations employeeOperations)
+    public EmployeeService(EmployeeRepository employeeOperations)
     {
         _employeeOperations = employeeOperations;
     }

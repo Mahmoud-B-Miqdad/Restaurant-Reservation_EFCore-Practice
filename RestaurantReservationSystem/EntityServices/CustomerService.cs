@@ -3,11 +3,11 @@ using Microsoft.EntityFrameworkCore;
 
 public class CustomerService
 {
-    private readonly CustomerOperations _customerOperations;
+    private readonly CustomerRepository _customerRepository;
 
-    public CustomerService(CustomerOperations customerOperations)
+    public CustomerService(CustomerRepository customerRepository)
     {
-        _customerOperations = customerOperations;
+        _customerRepository = customerRepository;
     }
 
     public async Task AddCustomerAsync()
@@ -22,7 +22,7 @@ public class CustomerService
 
         try
         {
-            await _customerOperations.AddAsync(customer);
+            await _customerRepository.AddAsync(customer);
         }
         catch (DbUpdateException ex)
         {
@@ -34,7 +34,7 @@ public class CustomerService
     {
         try
         {
-            var all = await _customerOperations.GetAllAsync();
+            var all = await _customerRepository.GetAllAsync();
             foreach (var customer in all)
             {
                 Console.WriteLine($"[Customer] {customer.FirstName} - {customer.LastName}," +
@@ -60,7 +60,7 @@ public class CustomerService
 
         try
         {
-            await _customerOperations.UpdateAsync(customer);
+            await _customerRepository.UpdateAsync(customer);
         }
         catch (DbUpdateConcurrencyException ex)
         {
@@ -74,7 +74,7 @@ public class CustomerService
 
         try
         {
-            await _customerOperations.DeleteAsync(customerIdToDelete);
+            await _customerRepository.DeleteAsync(customerIdToDelete);
         }
         catch (DbUpdateException ex)
         {
@@ -91,6 +91,6 @@ public class CustomerService
         await AddCustomerAsync();
         await UpdateCustomerAsync();
         await GetAllCustomersAsync();
-        //await DeleteCustomerAsync();
+        await DeleteCustomerAsync();
     }
 }

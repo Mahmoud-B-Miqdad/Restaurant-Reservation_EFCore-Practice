@@ -1,13 +1,13 @@
 ﻿using RestaurantReservation.Db.Models;
-using RestaurantReservation.Services;
+using RestaurantReservation.Db.Repositories;
 
 public class OrderItemService
 {
-    private readonly OrderItemOperations _orderItemOperations;
+    private readonly OrderItemRepository _orderItemRepository;
 
-    public OrderItemService(OrderItemOperations orderItemOperations)
+    public OrderItemService(OrderItemRepository orderItemRepository)
     {
-        _orderItemOperations = orderItemOperations;
+        _orderItemRepository = orderItemRepository;
     }
 
     public async Task AddOrderItemAsync()
@@ -21,7 +21,7 @@ public class OrderItemService
 
         try
         {
-            await _orderItemOperations.AddAsync(orderItem);
+            await _orderItemRepository.AddAsync(orderItem);
         }
         catch (Exception ex)
         {
@@ -33,7 +33,7 @@ public class OrderItemService
     {
         try
         {
-            var allOrderItems = await _orderItemOperations.GetAllAsync();
+            var allOrderItems = await _orderItemRepository.GetAllAsync();
             foreach (var item in allOrderItems)
             {
                 Console.WriteLine($"[OrderItem] ID: {item.OrderItemId}, OrderId: {item.OrderId}, ItemId: {item.ItemId}, Quantity: {item.Quantity}");
@@ -57,7 +57,7 @@ public class OrderItemService
 
         try
         {
-            await _orderItemOperations.UpdateAsync(updatedOrderItem);
+            await _orderItemRepository.UpdateAsync(updatedOrderItem);
         }
         catch (Exception ex)
         {
@@ -71,7 +71,7 @@ public class OrderItemService
 
         try
         {
-            await _orderItemOperations.DeleteAsync(itemIdToDelete);
+            await _orderItemRepository.DeleteAsync(itemIdToDelete);
         }
         catch (Exception ex)
         {
