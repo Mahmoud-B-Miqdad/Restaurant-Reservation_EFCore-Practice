@@ -33,17 +33,12 @@ public class ReservationService : IReservationService
         }
     }
 
-    public async Task GetAllReservationsAsync()
+    public async Task<IEnumerable<Reservation>> GetAllReservationsAsync()
     {
         try
         {
             var all = await _reservationRepository.GetAllAsync();
-            foreach (var reservation in all)
-            {
-                Console.WriteLine($"[Reservation] {reservation.ReservationId} - CustomerId: {reservation.CustomerId}, " +
-                    $"RestaurantId: {reservation.RestaurantId}, TableId: {reservation.TableId}, " +
-                    $"ReservationDate: {reservation.ReservationDate}, PartySize: {reservation.PartySize}");
-            }
+            return all;
         }
         catch (Exception ex)
         {
@@ -109,7 +104,14 @@ public class ReservationService : IReservationService
             updatedReservationDate: DefaultTestValues.ReservationDateAfterTwoDays,
             updatedPartySize: DefaultTestValues.UpdatedPartySize);
 
-        await GetAllReservationsAsync();
+        var reservations = await GetAllReservationsAsync();
+        foreach (var reservation in reservations)
+        {
+            Console.WriteLine($"[Reservation] {reservation.ReservationId} - CustomerId: {reservation.CustomerId}, " +
+                $"RestaurantId: {reservation.RestaurantId}, TableId: {reservation.TableId}, " +
+                $"ReservationDate: {reservation.ReservationDate}, PartySize: {reservation.PartySize}");
+        }
+
         await DeleteReservationAsync();
     }
 }

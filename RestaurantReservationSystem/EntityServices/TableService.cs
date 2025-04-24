@@ -30,16 +30,12 @@ public class TableService : ITableService
             throw new InvalidOperationException(DefaultErrorMessages.AddFailed, ex);
         }
     }
-    public async Task GetAllTablesAsync()
+    public async Task<IEnumerable<Table>> GetAllTablesAsync()
     {
         try
         {
             var all = await _tableRepository.GetAllAsync();
-            foreach (var table in all)
-            {
-                Console.WriteLine($"[Table] {table.TableId} - RestaurantId: {table.RestaurantId}, " +
-                    $"Capacity: {table.Capacity}");
-            }
+            return all;
         }
         catch (Exception ex)
         {
@@ -95,7 +91,12 @@ public class TableService : ITableService
             updatedRestaurantId: DefaultTestValues.Id4,
             updatedCapacity: DefaultTestValues.UpdatedCapacity);
 
-        await GetAllTablesAsync();
+        var tables = await GetAllTablesAsync();
+        foreach (var table in tables)
+        {
+            Console.WriteLine($"[Table] {table.TableId} - RestaurantId: {table.RestaurantId}, " +
+                $"Capacity: {table.Capacity}");
+        }
         await DeleteTableAsync();
     }
 }

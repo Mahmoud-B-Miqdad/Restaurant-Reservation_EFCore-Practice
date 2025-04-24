@@ -33,15 +33,12 @@ public class MenuItemService : IMenuItemService
         }
     }
 
-    public async Task GetAllMenuItemsAsync()
+    public async Task<IEnumerable<MenuItem>> GetAllMenuItemsAsync()
     {
         try
         {
             var allItems = await _menuItemRepository.GetAllAsync();
-            foreach (var item in allItems)
-            {
-                Console.WriteLine($"[MenuItem] {item.ItemId} - Name: {item.Name}, Price: {item.Price}, RestaurantId: {item.RestaurantId}");
-            }
+            return allItems;
         }
         catch (Exception ex)
         {
@@ -104,7 +101,12 @@ public class MenuItemService : IMenuItemService
             Updateddescription: DefaultTestValues.UpdatedMenuItemDescription,
             Updatedprice: DefaultTestValues.UpdatedMenuItemPrice);
 
-        await GetAllMenuItemsAsync();
+        var menueItems =  await GetAllMenuItemsAsync();
+        foreach (var item in menueItems)
+        {
+            Console.WriteLine($"[MenuItem] {item.ItemId} - Name: {item.Name}, Price: {item.Price}, RestaurantId: {item.RestaurantId}");
+        }
+
         await DeleteMenuItemAsync();
     }
 }

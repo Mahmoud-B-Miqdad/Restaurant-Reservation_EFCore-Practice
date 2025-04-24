@@ -33,15 +33,12 @@ public class OrderItemService : IOrderItemService
         }
     }
 
-    public async Task GetAllOrderItemsAsync()
+    public async Task<IEnumerable<OrderItem>> GetAllOrderItemsAsync()
     {
         try
         {
             var allOrderItems = await _orderItemRepository.GetAllAsync();
-            foreach (var item in allOrderItems)
-            {
-                Console.WriteLine($"[OrderItem] ID: {item.OrderItemId}, OrderId: {item.OrderId}, ItemId: {item.ItemId}, Quantity: {item.Quantity}");
-            }
+            return allOrderItems;
         }
         catch (Exception ex)
         {
@@ -101,7 +98,12 @@ public class OrderItemService : IOrderItemService
             UpdateditemId: DefaultTestValues.Id4,
             Updatedquantity: DefaultTestValues.UpdatedQuantity);
 
-        await GetAllOrderItemsAsync();
+        var orderItems = await GetAllOrderItemsAsync();
+        foreach (var item in orderItems)
+        {
+            Console.WriteLine($"[OrderItem] ID: {item.OrderItemId}, OrderId: {item.OrderId}, ItemId: {item.ItemId}, Quantity: {item.Quantity}");
+        }
+
         await DeleteOrderItemAsync();
     }
 }

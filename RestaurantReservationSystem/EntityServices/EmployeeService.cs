@@ -33,15 +33,12 @@ public class EmployeeService : IEmployeeService
         }
     }
 
-    public async Task GetAllEmployeesAsync()
+    public async Task<IEnumerable<Employee>> GetAllEmployeesAsync()
     {
         try
         {
             var all = await _employeeOperations.GetAllAsync();
-            foreach (var employee in all)
-            {
-                Console.WriteLine($"[Employee] {employee.FirstName} {employee.LastName}, {employee.Position}");
-            }
+            return all;
         }
         catch (Exception ex)
         {
@@ -106,7 +103,11 @@ public class EmployeeService : IEmployeeService
             Updatedposition: DefaultTestValues.UpdatedPosition,
             UpdatedrestaurantId: DefaultTestValues.Id4);
 
-        await GetAllEmployeesAsync();
+        var employees = await GetAllEmployeesAsync();
+        foreach (var employee in employees)
+        {
+            Console.WriteLine($"[Employee] {employee.FirstName} {employee.LastName}, {employee.Position}");
+        }
         await DeleteEmployeeAsync();
     }
 }

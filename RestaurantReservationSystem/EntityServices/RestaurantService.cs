@@ -33,15 +33,12 @@ public class RestaurantService : IRestaurantService
         }
     }
 
-    public async Task GetAllRestaurantsAsync()
+    public async Task<IEnumerable<Restaurant>> GetAllRestaurantsAsync()
     {
         try
         {
             var all = await _restaurantRepository.GetAllAsync();
-            foreach (var restaurant in all)
-            {
-                Console.WriteLine($"[Restaurant] {restaurant.RestaurantId} - {restaurant.Name}, {restaurant.Address}");
-            }
+            return all;
         }
         catch (Exception ex)
         {
@@ -104,7 +101,12 @@ public class RestaurantService : IRestaurantService
             updatedPhoneNumber: DefaultTestValues.UpdatedPhoneNumber,
             updatedOpeningHours: DefaultTestValues.UpdatedOpeningHours);
 
-        await GetAllRestaurantsAsync();
+        var restaurants = await GetAllRestaurantsAsync();
+        foreach (var restaurant in restaurants)
+        {
+            Console.WriteLine($"[Restaurant] {restaurant.RestaurantId} - {restaurant.Name}, {restaurant.Address}");
+        }
+
         await DeleteRestaurantAsync();
     }
 }

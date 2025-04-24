@@ -33,16 +33,12 @@ public class CustomerService : ICustomerService
         }
     }
 
-    public async Task GetAllCustomersAsync()
+    public async Task<IEnumerable<Customer>> GetAllCustomersAsync()
     {
         try
         {
             var all = await _customerRepository.GetAllAsync();
-            foreach (var customer in all)
-            {
-                Console.WriteLine($"[Customer] {customer.FirstName} - {customer.LastName}," +
-                    $" {customer.Email}, {customer.PhoneNumber}");
-            }
+            return all;
         }
         catch (Exception ex)
         {
@@ -105,7 +101,13 @@ public class CustomerService : ICustomerService
             Updatedemail: DefaultTestValues.UpdatedEmail,
             UpdatedphoneNumber: DefaultTestValues.UpdatedPhoneNumber);
 
-        await GetAllCustomersAsync();
+        var customers = await GetAllCustomersAsync();
+        foreach (var customer in customers)
+        {
+            Console.WriteLine($"[Customer] {customer.FirstName} - {customer.LastName}," +
+                $" {customer.Email}, {customer.PhoneNumber}");
+        }
+
         await DeleteCustomerAsync();
     }
 }

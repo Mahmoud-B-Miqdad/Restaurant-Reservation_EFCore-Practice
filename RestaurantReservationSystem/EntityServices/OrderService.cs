@@ -33,15 +33,12 @@ public class OrderService : IOrderService
         }
     }
 
-    public async Task GetAllOrdersAsync()
+    public async Task<IEnumerable<Order>> GetAllOrdersAsync()
     {
         try
         {
             var allOrders = await _orderRepository.GetAllAsync();
-            foreach (var order in allOrders)
-            {
-                Console.WriteLine($"[Order] ID: {order.OrderId}, ReservationId: {order.ReservationId}, EmployeeId: {order.EmployeeId}, Total: {order.TotalAmount}");
-            }
+            return allOrders;
         }
         catch (Exception ex)
         {
@@ -104,7 +101,12 @@ public class OrderService : IOrderService
             UpdatedOrderDate: DefaultTestValues.CurrentDate,
             UpdatedTotalAmount: DefaultTestValues.UpdatedTotalAmount);
 
-        await GetAllOrdersAsync();
+        var orders = await GetAllOrdersAsync();
+        foreach (var order in orders)
+        {
+            Console.WriteLine($"[Order] ID: {order.OrderId}, ReservationId: {order.ReservationId}, EmployeeId: {order.EmployeeId}, Total: {order.TotalAmount}");
+        }
+
         await DeleteOrderAsync();
     }
 }
