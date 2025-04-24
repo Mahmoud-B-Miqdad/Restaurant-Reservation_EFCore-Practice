@@ -68,9 +68,8 @@ public class OrderService : IOrderService
         }
     }
 
-    public async Task DeleteOrderAsync()
+    public async Task DeleteOrderAsync(int orderIdToDelete)
     {
-        int orderIdToDelete = 1;
 
         try
         {
@@ -107,6 +106,6 @@ public class OrderService : IOrderService
             Console.WriteLine($"[Order] ID: {order.OrderId}, ReservationId: {order.ReservationId}, EmployeeId: {order.EmployeeId}, Total: {order.TotalAmount}");
         }
 
-        await DeleteOrderAsync();
+        await DeleteOrderAsync(1);
     }
 }

@@ -68,9 +68,8 @@ public class RestaurantService : IRestaurantService
         }
     }
 
-    public async Task DeleteRestaurantAsync()
+    public async Task DeleteRestaurantAsync(int restaurantIdToDelete)
     {
-        int restaurantIdToDelete = 2;
 
         try
         {
@@ -107,6 +106,6 @@ public class RestaurantService : IRestaurantService
             Console.WriteLine($"[Restaurant] {restaurant.RestaurantId} - {restaurant.Name}, {restaurant.Address}");
         }
 
-        await DeleteRestaurantAsync();
+        await DeleteRestaurantAsync(2);
     }
 }

@@ -68,9 +68,8 @@ public class CustomerService : ICustomerService
         }
     }
 
-    public async Task DeleteCustomerAsync()
+    public async Task DeleteCustomerAsync(int customerIdToDelete)
     {
-        int customerIdToDelete = 2;
 
         try
         {
@@ -108,6 +107,6 @@ public class CustomerService : ICustomerService
                 $" {customer.Email}, {customer.PhoneNumber}");
         }
 
-        await DeleteCustomerAsync();
+        await DeleteCustomerAsync(2);
     }
 }

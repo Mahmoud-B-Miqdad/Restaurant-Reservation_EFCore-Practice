@@ -67,9 +67,8 @@ public class OrderItemService : IOrderItemService
         }
     }
 
-    public async Task DeleteOrderItemAsync()
+    public async Task DeleteOrderItemAsync(int itemIdToDelete)
     {
-        int itemIdToDelete = 1; 
 
         try
         {
@@ -104,6 +103,6 @@ public class OrderItemService : IOrderItemService
             Console.WriteLine($"[OrderItem] ID: {item.OrderItemId}, OrderId: {item.OrderId}, ItemId: {item.ItemId}, Quantity: {item.Quantity}");
         }
 
-        await DeleteOrderItemAsync();
+        await DeleteOrderItemAsync(2);
     }
 }

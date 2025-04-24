@@ -68,9 +68,8 @@ public class MenuItemService : IMenuItemService
         }
     }
 
-    public async Task DeleteMenuItemAsync()
+    public async Task DeleteMenuItemAsync(int itemIdToDelete)
     {
-        int itemIdToDelete = 1; 
 
         try
         {
@@ -107,6 +106,6 @@ public class MenuItemService : IMenuItemService
             Console.WriteLine($"[MenuItem] {item.ItemId} - Name: {item.Name}, Price: {item.Price}, RestaurantId: {item.RestaurantId}");
         }
 
-        await DeleteMenuItemAsync();
+        await DeleteMenuItemAsync(1);
     }
 }

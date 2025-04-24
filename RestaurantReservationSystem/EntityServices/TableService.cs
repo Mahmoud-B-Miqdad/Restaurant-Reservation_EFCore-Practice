@@ -62,10 +62,8 @@ public class TableService : ITableService
         }
     }
 
-    public async Task DeleteTableAsync()
+    public async Task DeleteTableAsync(int tableIdToDelete)
     {
-        int tableIdToDelete = 1; 
-
         try
         {
             await _tableRepository.DeleteAsync(tableIdToDelete);
@@ -97,6 +95,6 @@ public class TableService : ITableService
             Console.WriteLine($"[Table] {table.TableId} - RestaurantId: {table.RestaurantId}, " +
                 $"Capacity: {table.Capacity}");
         }
-        await DeleteTableAsync();
+        await DeleteTableAsync(1);
     }
 }

@@ -69,9 +69,8 @@ public class ReservationService : IReservationService
         }
     }
 
-    public async Task DeleteReservationAsync()
+    public async Task DeleteReservationAsync(int reservationIdToDelete)
     {
-        int reservationIdToDelete = 1; 
 
         try
         {
@@ -112,6 +111,6 @@ public class ReservationService : IReservationService
                 $"ReservationDate: {reservation.ReservationDate}, PartySize: {reservation.PartySize}");
         }
 
-        await DeleteReservationAsync();
+        await DeleteReservationAsync(1);
     }
 }

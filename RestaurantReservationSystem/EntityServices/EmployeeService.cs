@@ -70,9 +70,8 @@ public class EmployeeService : IEmployeeService
         }
     }
 
-    public async Task DeleteEmployeeAsync()
+    public async Task DeleteEmployeeAsync(int employeeIdToDelete)
     {
-        int employeeIdToDelete = 2; 
 
         try
         {
@@ -108,6 +107,6 @@ public class EmployeeService : IEmployeeService
         {
             Console.WriteLine($"[Employee] {employee.FirstName} {employee.LastName}, {employee.Position}");
         }
-        await DeleteEmployeeAsync();
+        await DeleteEmployeeAsync(2);
     }
 }
