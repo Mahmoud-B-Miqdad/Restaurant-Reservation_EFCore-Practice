@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using RestaurantReservation.Db.Services.Interfaces;
 using RestaurantReservation.Db.Repositories.Interfaces;
+using RestaurantReservationSystem.Constants;
 
 public class CustomerService : ICustomerService 
 {
@@ -28,7 +29,7 @@ public class CustomerService : ICustomerService
         }
         catch (DbUpdateException ex)
         {
-            throw new InvalidOperationException("Failed to add the customer. Ensure all required fields are valid.", ex);
+            throw new InvalidOperationException(DefaultErrorMessages.AddFailed, ex);
         }
     }
 
@@ -45,7 +46,7 @@ public class CustomerService : ICustomerService
         }
         catch (Exception ex)
         {
-            throw new InvalidOperationException("Failed to retrieve customer from the database.", ex);
+            throw new InvalidOperationException(DefaultErrorMessages.RetrieveFailed, ex);
         }
     }
 
@@ -67,7 +68,7 @@ public class CustomerService : ICustomerService
         }
         catch (DbUpdateConcurrencyException ex)
         {
-            throw new InvalidOperationException("Failed to update the customer. It may have been modified or deleted by another process.", ex);
+            throw new InvalidOperationException(DefaultErrorMessages.UpdateFailed, ex);
         }
     }
 
@@ -81,28 +82,28 @@ public class CustomerService : ICustomerService
         }
         catch (DbUpdateException ex)
         {
-            throw new InvalidOperationException("Cannot delete the customer because it has related data (e.g., employees or reservations).", ex);
+            throw new InvalidOperationException(DefaultErrorMessages.DeleteWithRelations, ex);
         }
         catch (Exception ex)
         {
-            throw new InvalidOperationException("Unexpected error occurred while deleting the customer.", ex);
+            throw new InvalidOperationException(DefaultErrorMessages.DeleteUnexpected, ex);
         }
     }
 
     public async Task ExecuteExamplesAsync()
     {
         await AddCustomerAsync(
-            firstName: "Test",
-            lastName: "Test", 
-            email: "Test@gmail.com",
-            phoneNumber: "0590000000");
+            firstName: DefaultTestValues.DefaultName,
+            lastName: DefaultTestValues.DefaultName,
+            email: DefaultTestValues.DefaultEmail,
+            phoneNumber: DefaultTestValues.DefaultPhoneNumber);
 
         await UpdateCustomerAsync(
-            id: 1, 
-            UpdatedfirstName: "Updated Test",
-            UpdatedlastName: "Updated Test",
-            Updatedemail: "UpdatedTest@gmail.com",
-            UpdatedphoneNumber: "0599999999");
+            id: DefaultTestValues.Id1,
+            UpdatedfirstName: DefaultTestValues.UpdatedName,
+            UpdatedlastName: DefaultTestValues.UpdatedName,
+            Updatedemail: DefaultTestValues.UpdatedEmail,
+            UpdatedphoneNumber: DefaultTestValues.UpdatedPhoneNumber);
 
         await GetAllCustomersAsync();
         await DeleteCustomerAsync();

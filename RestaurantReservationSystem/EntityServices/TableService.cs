@@ -1,5 +1,7 @@
-﻿using RestaurantReservation.Db.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using RestaurantReservation.Db.Models;
 using RestaurantReservation.Db.Repositories.Interfaces;
+using RestaurantReservationSystem.Constants;
 using RestaurantReservationSystem.EntityServices.Services.Interfaces;
 
 public class TableService : ITableService
@@ -25,7 +27,7 @@ public class TableService : ITableService
         }
         catch (Exception ex)
         {
-            throw new InvalidOperationException("Failed to add the table.", ex);
+            throw new InvalidOperationException(DefaultErrorMessages.AddFailed, ex);
         }
     }
     public async Task GetAllTablesAsync()
@@ -41,7 +43,7 @@ public class TableService : ITableService
         }
         catch (Exception ex)
         {
-            throw new InvalidOperationException("Failed to retrieve tables from the database.", ex);
+            throw new InvalidOperationException(DefaultErrorMessages.RetrieveFailed, ex);
         }
     }
 
@@ -60,7 +62,7 @@ public class TableService : ITableService
         }
         catch (Exception ex)
         {
-            throw new InvalidOperationException("Failed to update the table.", ex);
+            throw new InvalidOperationException(DefaultErrorMessages.UpdateFailed, ex);
         }
     }
 
@@ -72,22 +74,26 @@ public class TableService : ITableService
         {
             await _tableRepository.DeleteAsync(tableIdToDelete);
         }
+        catch (DbUpdateException ex)
+        {
+            throw new InvalidOperationException(DefaultErrorMessages.DeleteWithRelations, ex);
+        }
         catch (Exception ex)
         {
-            throw new InvalidOperationException("Failed to delete the table.", ex);
+            throw new InvalidOperationException(DefaultErrorMessages.DeleteUnexpected, ex);
         }
     }
 
     public async Task ExecuteExamplesAsync()
     {
         await AddTableAsync(
-            restaurantId: 1,
-            capacity: 4);
+            restaurantId: DefaultTestValues.Id1,
+            capacity: DefaultTestValues.DefaultCapacity);
 
         await UpdateTableAsync(
-            tableId: 1,
-            updatedRestaurantId: 4,
-            updatedCapacity: 6);
+            tableId: DefaultTestValues.Id1,
+            updatedRestaurantId: DefaultTestValues.Id4,
+            updatedCapacity: DefaultTestValues.UpdatedCapacity);
 
         await GetAllTablesAsync();
         await DeleteTableAsync();

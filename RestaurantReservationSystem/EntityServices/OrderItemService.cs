@@ -1,7 +1,9 @@
-﻿using RestaurantReservation.Db.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using RestaurantReservation.Db.Models;
 using RestaurantReservation.Db.Repositories;
 using RestaurantReservation.Db.Repositories.Interfaces;
 using RestaurantReservation.Db.Services.Interfaces;
+using RestaurantReservationSystem.Constants;
 
 public class OrderItemService : IOrderItemService
 {
@@ -27,7 +29,7 @@ public class OrderItemService : IOrderItemService
         }
         catch (Exception ex)
         {
-            throw new InvalidOperationException("Failed to add the order item.", ex);
+            throw new InvalidOperationException(DefaultErrorMessages.AddFailed, ex);
         }
     }
 
@@ -43,7 +45,7 @@ public class OrderItemService : IOrderItemService
         }
         catch (Exception ex)
         {
-            throw new InvalidOperationException("Failed to retrieve order items from the database.", ex);
+            throw new InvalidOperationException(DefaultErrorMessages.RetrieveFailed, ex);
         }
     }
 
@@ -64,7 +66,7 @@ public class OrderItemService : IOrderItemService
         }
         catch (Exception ex)
         {
-            throw new InvalidOperationException("Failed to update the order item.", ex);
+            throw new InvalidOperationException(DefaultErrorMessages.UpdateFailed, ex);
         }
     }
 
@@ -76,24 +78,28 @@ public class OrderItemService : IOrderItemService
         {
             await _orderItemRepository.DeleteAsync(itemIdToDelete);
         }
+        catch (DbUpdateException ex)
+        {
+            throw new InvalidOperationException(DefaultErrorMessages.DeleteWithRelations, ex);
+        }
         catch (Exception ex)
         {
-            throw new InvalidOperationException("Failed to delete the order item.", ex);
+            throw new InvalidOperationException(DefaultErrorMessages.DeleteUnexpected, ex);
         }
     }
 
     public async Task ExecuteExamplesAsync()
     {
         await AddOrderItemAsync(
-            orderId: 1,
-            itemId: 1,
-            quantity: 20);
+            orderId: DefaultTestValues.Id1,
+            itemId: DefaultTestValues.Id1,
+            quantity: DefaultTestValues.DefaultQuantity);
 
         await UpdateOrderItemAsync(
-            orderItemId: 1,
-            UpdatedorderId: 2,
-            UpdateditemId: 4,
-            Updatedquantity: 30);
+            orderItemId: DefaultTestValues.Id1,
+            UpdatedorderId: DefaultTestValues.Id2,
+            UpdateditemId: DefaultTestValues.Id4,
+            Updatedquantity: DefaultTestValues.UpdatedQuantity);
 
         await GetAllOrderItemsAsync();
         await DeleteOrderItemAsync();

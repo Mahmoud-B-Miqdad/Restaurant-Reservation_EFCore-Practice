@@ -1,6 +1,8 @@
-﻿using RestaurantReservation.Db.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using RestaurantReservation.Db.Models;
 using RestaurantReservation.Db.Repositories.Interfaces;
 using RestaurantReservation.Db.Services.Interfaces;
+using RestaurantReservationSystem.Constants;
 
 public class EmployeeService : IEmployeeService
 {
@@ -27,7 +29,7 @@ public class EmployeeService : IEmployeeService
         }
         catch (Exception ex)
         {
-            throw new InvalidOperationException("Failed to add the employee. Ensure all required fields are valid.", ex);
+            throw new InvalidOperationException(DefaultErrorMessages.AddFailed, ex);
         }
     }
 
@@ -43,7 +45,7 @@ public class EmployeeService : IEmployeeService
         }
         catch (Exception ex)
         {
-            throw new InvalidOperationException("Failed to retrieve employees from the database.", ex);
+            throw new InvalidOperationException(DefaultErrorMessages.RetrieveFailed, ex);
         }
     }
 
@@ -67,7 +69,7 @@ public class EmployeeService : IEmployeeService
         }
         catch (Exception ex)
         {
-            throw new InvalidOperationException("Failed to update the employee. It may have been modified or deleted by another process.", ex);
+            throw new InvalidOperationException(DefaultErrorMessages.UpdateFailed, ex);
         }
     }
 
@@ -79,26 +81,30 @@ public class EmployeeService : IEmployeeService
         {
             await _employeeOperations.DeleteAsync(employeeIdToDelete);
         }
+        catch (DbUpdateException ex)
+        {
+            throw new InvalidOperationException(DefaultErrorMessages.DeleteWithRelations, ex);
+        }
         catch (Exception ex)
         {
-            throw new InvalidOperationException("Unexpected error occurred while deleting the employee.", ex);
+            throw new InvalidOperationException(DefaultErrorMessages.DeleteUnexpected, ex);
         }
     }
 
     public async Task ExecuteExamplesAsync()
     {
         await AddEmployeeAsync(
-            firstName: "Test",
-            lastName: "Test",
-            position: "TestPosition",
-            restaurantId: 2);
+            firstName: DefaultTestValues.DefaultName,
+            lastName: DefaultTestValues.DefaultName,
+            position: DefaultTestValues.DefaultPosition,
+            restaurantId: DefaultTestValues.Id2);
 
         await UpdateEmployeeAsync(
-            employeeId: 1,
-            UpdatedfirstName: "Updated Test",
-            UpdatedlastName: "Updated Test",
-            Updatedposition: "Updatedposition",
-            UpdatedrestaurantId: 4);
+            employeeId: DefaultTestValues.Id1,
+            UpdatedfirstName: DefaultTestValues.UpdatedName,
+            UpdatedlastName: DefaultTestValues.UpdatedName,
+            Updatedposition: DefaultTestValues.UpdatedPosition,
+            UpdatedrestaurantId: DefaultTestValues.Id4);
 
         await GetAllEmployeesAsync();
         await DeleteEmployeeAsync();

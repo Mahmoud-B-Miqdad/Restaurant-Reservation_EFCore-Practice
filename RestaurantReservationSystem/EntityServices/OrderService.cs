@@ -1,7 +1,9 @@
-﻿using RestaurantReservation.Db.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using RestaurantReservation.Db.Models;
 using RestaurantReservation.Db.Repositories;
 using RestaurantReservation.Db.Repositories.Interfaces;
 using RestaurantReservation.Db.Services.Interfaces;
+using RestaurantReservationSystem.Constants;
 public class OrderService : IOrderService
 {
     private readonly IOrderRepository _orderRepository;
@@ -27,7 +29,7 @@ public class OrderService : IOrderService
         }
         catch (Exception ex)
         {
-            throw new InvalidOperationException("Failed to add the order.", ex);
+            throw new InvalidOperationException(DefaultErrorMessages.AddFailed, ex);
         }
     }
 
@@ -43,7 +45,7 @@ public class OrderService : IOrderService
         }
         catch (Exception ex)
         {
-            throw new InvalidOperationException("Failed to retrieve orders from the database.", ex);
+            throw new InvalidOperationException(DefaultErrorMessages.RetrieveFailed, ex);
         }
     }
 
@@ -65,7 +67,7 @@ public class OrderService : IOrderService
         }
         catch (Exception ex)
         {
-            throw new InvalidOperationException("Failed to update the order.", ex);
+            throw new InvalidOperationException(DefaultErrorMessages.UpdateFailed, ex);
         }
     }
 
@@ -77,27 +79,30 @@ public class OrderService : IOrderService
         {
             await _orderRepository.DeleteAsync(orderIdToDelete);
         }
+        catch (DbUpdateException ex)
+        {
+            throw new InvalidOperationException(DefaultErrorMessages.DeleteWithRelations, ex);
+        }
         catch (Exception ex)
         {
-            throw new InvalidOperationException("Failed to delete the order.", ex);
+            throw new InvalidOperationException(DefaultErrorMessages.DeleteUnexpected, ex);
         }
     }
 
     public async Task ExecuteExamplesAsync()
     {
         await AddOrderAsync(
-            reservationId: 1,
-            employeeId: 1,
-            orderDate: DateTime.Now,
-            totalAmount: 50.00m);
+            reservationId: DefaultTestValues.Id1,
+            employeeId: DefaultTestValues.Id1,
+            orderDate: DefaultTestValues.CurrentDate,
+            totalAmount: DefaultTestValues.DefaultTotalAmount);
 
         await UpdateOrderAsync(
-            orderId: 1,
-            UpdatedreservationId: 1,
-            UpdatedemployeeId: 1,
-            UpdatedOrderDate: DateTime.Now,
-            UpdatedTotalAmount: 65.00m
-        );
+            orderId: DefaultTestValues.Id1,
+            UpdatedreservationId: DefaultTestValues.Id1,
+            UpdatedemployeeId: DefaultTestValues.Id1,
+            UpdatedOrderDate: DefaultTestValues.CurrentDate,
+            UpdatedTotalAmount: DefaultTestValues.UpdatedTotalAmount);
 
         await GetAllOrdersAsync();
         await DeleteOrderAsync();

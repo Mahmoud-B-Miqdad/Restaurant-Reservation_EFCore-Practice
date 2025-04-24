@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using RestaurantReservation.Db.Constants;
 using RestaurantReservation.Db.Models;
 using RestaurantReservation.Db.Repositories.Interfaces;
 
@@ -16,7 +17,7 @@ namespace RestaurantReservation.Db.Repositories
         public async Task<List<Employee>> ListManagersAsync()
         {
             return await _context.Employees
-                                 .Where(e => e.Position == "Manager")
+                                 .Where(e => e.Position == EmployeePositions.Manager)
                                  .ToListAsync();
         }
 

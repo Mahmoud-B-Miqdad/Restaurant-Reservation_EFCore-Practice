@@ -1,6 +1,8 @@
-﻿using RestaurantReservation.Db.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using RestaurantReservation.Db.Models;
 using RestaurantReservation.Db.Repositories.Interfaces;
 using RestaurantReservation.Db.Services.Interfaces;
+using RestaurantReservationSystem.Constants;
 
 public class MenuItemService : IMenuItemService
 {
@@ -27,7 +29,7 @@ public class MenuItemService : IMenuItemService
         }
         catch (Exception ex)
         {
-            throw new InvalidOperationException("Failed to add the menu item.", ex);
+            throw new InvalidOperationException(DefaultErrorMessages.AddFailed, ex);
         }
     }
 
@@ -43,7 +45,7 @@ public class MenuItemService : IMenuItemService
         }
         catch (Exception ex)
         {
-            throw new InvalidOperationException("Failed to retrieve menu items from the database.", ex);
+            throw new InvalidOperationException(DefaultErrorMessages.RetrieveFailed, ex);
         }
     }
 
@@ -65,7 +67,7 @@ public class MenuItemService : IMenuItemService
         }
         catch (Exception ex)
         {
-            throw new InvalidOperationException("Failed to update the menu item.", ex);
+            throw new InvalidOperationException(DefaultErrorMessages.UpdateFailed, ex);
         }
     }
 
@@ -77,25 +79,30 @@ public class MenuItemService : IMenuItemService
         {
             await _menuItemRepository.DeleteAsync(itemIdToDelete);
         }
+        catch (DbUpdateException ex)
+        {
+            throw new InvalidOperationException(DefaultErrorMessages.DeleteWithRelations, ex);
+        }
         catch (Exception ex)
         {
-            throw new InvalidOperationException("Failed to delete the menu item.", ex);
+            throw new InvalidOperationException(DefaultErrorMessages.DeleteUnexpected, ex);
         }
     }
 
     public async Task ExecuteExamplesAsync()
     {
         await AddMenuItemAsync(
-            restaurantId: 2,
-            name: "Grilled Chicken",
-            description: "Delicious grilled chicken served with vegetables.", 
-            price: 12.99m);
+            restaurantId: DefaultTestValues.Id2,
+            name: DefaultTestValues.DefaultMenuItemName,
+            description: DefaultTestValues.DefaultMenuItemDescription,
+            price: DefaultTestValues.DefaultMenuItemPrice);
 
         await UpdateMenuItemAsync(
-            itemId: 1,
-            UpdatedrestaurantId: 4, "Grilled Chicken (Updated)",
-            Updateddescription: "Updated description for grilled chicken.",
-            Updatedprice: 14.99m);
+            itemId: DefaultTestValues.Id1,
+            UpdatedrestaurantId: DefaultTestValues.Id4,
+            DefaultTestValues.UpdatedMenuItemName,
+            Updateddescription: DefaultTestValues.UpdatedMenuItemDescription,
+            Updatedprice: DefaultTestValues.UpdatedMenuItemPrice);
 
         await GetAllMenuItemsAsync();
         await DeleteMenuItemAsync();

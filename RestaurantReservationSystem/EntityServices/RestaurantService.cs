@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using RestaurantReservation.Db.Services.Interfaces;
 using RestaurantReservation.Db.Repositories.Interfaces;
+using RestaurantReservationSystem.Constants;
 
 public class RestaurantService : IRestaurantService
 {
@@ -28,7 +29,7 @@ public class RestaurantService : IRestaurantService
         }
         catch (DbUpdateException ex)
         {
-            throw new InvalidOperationException("Failed to add the restaurant. Ensure all required fields are valid.", ex);
+            throw new InvalidOperationException(DefaultErrorMessages.AddFailed, ex);
         }
     }
 
@@ -44,7 +45,7 @@ public class RestaurantService : IRestaurantService
         }
         catch (Exception ex)
         {
-            throw new InvalidOperationException("Failed to retrieve restaurants from the database.", ex);
+            throw new InvalidOperationException(DefaultErrorMessages.RetrieveFailed, ex);
         }
     }
 
@@ -66,7 +67,7 @@ public class RestaurantService : IRestaurantService
         }
         catch (DbUpdateConcurrencyException ex)
         {
-            throw new InvalidOperationException("Failed to update the restaurant. It may have been modified or deleted by another process.", ex);
+            throw new InvalidOperationException(DefaultErrorMessages.UpdateFailed, ex);
         }
     }
 
@@ -80,28 +81,28 @@ public class RestaurantService : IRestaurantService
         }
         catch (DbUpdateException ex)
         {
-            throw new InvalidOperationException("Cannot delete the restaurant because it has related data (e.g., employees or reservations).", ex);
+            throw new InvalidOperationException(DefaultErrorMessages.DeleteWithRelations, ex);
         }
         catch (Exception ex)
         {
-            throw new InvalidOperationException("Unexpected error occurred while deleting the restaurant.", ex);
+            throw new InvalidOperationException(DefaultErrorMessages.DeleteUnexpected, ex);
         }
     }
 
     public async Task ExecuteExamplesAsync()
     {
         await AddRestaurantAsync(
-            name: "TestRestaurant",
-            address: "TestAddress",
-            phoneNumber: "0590000000",
-            openingHours: "8:00 - 16:00");
+            name: DefaultTestValues.DefaultRestaurantName,
+            address: DefaultTestValues.DefaultRestaurantAddress,
+            phoneNumber: DefaultTestValues.DefaultPhoneNumber,
+            openingHours: DefaultTestValues.DefaultOpeningHours);
 
         await UpdateRestaurantAsync(
-            restaurantId: 1,
-            updatedName: "UpdatedRestaurant",
-            updatedAddress: "UpdatedAddress",
-            updatedPhoneNumber: "0599999999",
-            updatedOpeningHours: "9:00 - 17:00");
+            restaurantId: DefaultTestValues.Id1,
+            updatedName: DefaultTestValues.UpdatedRestaurantName,
+            updatedAddress: DefaultTestValues.UpdatedRestaurantAddress,
+            updatedPhoneNumber: DefaultTestValues.UpdatedPhoneNumber,
+            updatedOpeningHours: DefaultTestValues.UpdatedOpeningHours);
 
         await GetAllRestaurantsAsync();
         await DeleteRestaurantAsync();
