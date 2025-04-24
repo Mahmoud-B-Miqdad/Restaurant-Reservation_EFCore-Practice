@@ -8,7 +8,7 @@ namespace RestaurantReservation.Db.Services.Interfaces
         Task UpdateOrderAsync(int UpdatedorderId, int UpdatedreservationId,
         int UpdatedemployeeId, DateTime UpdatedOrderDate, decimal UpdatedTotalAmount);
         Task<IEnumerable<Order>> GetAllOrdersAsync();
-        Task DeleteOrderAsync();
+        Task DeleteOrderAsync(int orderIdToDelete);
         Task ExecuteExamplesAsync();
     }
 }

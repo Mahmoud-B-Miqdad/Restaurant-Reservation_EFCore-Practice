@@ -7,7 +7,7 @@ namespace RestaurantReservationSystem.EntityServices.Services.Interfaces
         Task AddTableAsync(int restaurantId, int capacity);
         Task UpdateTableAsync(int tableId, int updatedRestaurantId, int updatedCapacity);
         Task<IEnumerable<Table>> GetAllTablesAsync();
-        Task DeleteTableAsync();
+        Task DeleteTableAsync(int tableIdToDelete);
         Task ExecuteExamplesAsync();
     }
 }

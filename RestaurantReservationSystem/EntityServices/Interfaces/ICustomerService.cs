@@ -8,7 +8,7 @@ namespace RestaurantReservation.Db.Services.Interfaces
         Task UpdateCustomerAsync(int id, string UpdatedfirstName, string UpdatedlastName,
         string Updatedemail, string UpdatedphoneNumber);
         Task<IEnumerable<Customer>> GetAllCustomersAsync();
-        Task DeleteCustomerAsync();
+        Task DeleteCustomerAsync(int customerIdToDelete);
         Task ExecuteExamplesAsync();
     }
 }

@@ -51,8 +51,8 @@ public class MenuItemService : IMenuItemService
     {
         var updatedItem = new MenuItem
         {
-            ItemId = 1, 
-            RestaurantId = 1,
+            ItemId = itemId, 
+            RestaurantId = UpdatedrestaurantId,
             Name = Updatedname,
             Description = Updateddescription,
             Price = Updatedprice
