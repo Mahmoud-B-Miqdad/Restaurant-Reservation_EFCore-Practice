@@ -2,11 +2,14 @@
 using RestaurantReservation.Db.Repositories;
 using RestaurantReservation.Db.Repositories.Interfaces;
 using RestaurantReservation.Db.Repositories.ReportRepositories;
+using RestaurantReservation.Db.Seeders;
 
 public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddRepositories(this IServiceCollection services)
     {
+        services.AddScoped<RestaurantReservationSeeder>();
+
         services.AddScoped<ICustomerRepository, CustomerRepository>();
         services.AddScoped<IRestaurantRepository, RestaurantRepository>();
         services.AddScoped<IEmployeeRepository, EmployeeRepository>();

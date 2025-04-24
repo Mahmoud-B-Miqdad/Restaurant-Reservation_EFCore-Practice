@@ -2,7 +2,7 @@
 
 namespace RestaurantReservation.Db.Seeders;
 
-public class OrderSeeder : IDataSeeder<Order>
+internal class OrderSeeder : IDataSeeder<Order>
 {
     private readonly List<Reservation> _reservations;
     private readonly List<Employee> _employees;

@@ -3,15 +3,15 @@ using RestaurantReservation.Db.Models;
 
 namespace RestaurantReservation.Db.Seeders;
 
-public class RestaurantSeeder : IDataSeeder<Restaurant>
+internal class RestaurantSeeder : IDataSeeder<Restaurant>
 {
     public async Task<List<Restaurant>> SeedAsync(RestaurantReservationDbContext context)
     {
-        //if (await context.Restaurants.AnyAsync()) return await context.Restaurants.ToListAsync();
+        if (await context.Restaurants.AnyAsync()) return await context.Restaurants.ToListAsync();
 
         var restaurants = new List<Restaurant>
         {
-            new() { Name = "Bistro Palace", Address = "Downtown", PhoneNumber = "0123456789", OpeningHours = "08:00 - 23:00" },
+            new() { Name = "mm Palace", Address = "Downtown", PhoneNumber = "0123456789", OpeningHours = "08:00 - 23:00" },
             new() { Name = "Ocean View", Address = "Beach Road", PhoneNumber = "0987654321", OpeningHours = "10:00 - 22:00" },
             new() { Name = "Mountain Grill", Address = "Hilltop", PhoneNumber = "0111222333", OpeningHours = "12:00 - 23:00" },
             new() { Name = "City Cafe", Address = "Central Square", PhoneNumber = "0223344556", OpeningHours = "07:00 - 20:00" },

@@ -2,7 +2,7 @@
 
 namespace RestaurantReservation.Db.Seeders;
 
-public class CustomerSeeder : IDataSeeder<Customer>
+internal class CustomerSeeder : IDataSeeder<Customer>
 {
     public async Task<List<Customer>> SeedAsync(RestaurantReservationDbContext context)
     {

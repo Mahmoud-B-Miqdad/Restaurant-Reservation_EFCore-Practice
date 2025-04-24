@@ -1,6 +1,6 @@
 ﻿namespace RestaurantReservation.Db.Seeders;
 
-public class RestaurantReservationSeeder
+internal class RestaurantReservationSeeder
 {
     private readonly RestaurantReservationDbContext _context;
 
