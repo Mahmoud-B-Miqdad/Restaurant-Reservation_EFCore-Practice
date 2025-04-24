@@ -8,7 +8,7 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddRepositories(this IServiceCollection services)
     {
-        services.AddScoped<RestaurantReservationSeeder>();
+        services.AddScoped<IRestaurantReservationSeeder, RestaurantReservationSeeder>();
 
         services.AddScoped<ICustomerRepository, CustomerRepository>();
         services.AddScoped<IRestaurantRepository, RestaurantRepository>();

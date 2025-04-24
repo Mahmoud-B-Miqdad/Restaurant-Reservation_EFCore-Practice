@@ -6,7 +6,7 @@ using RestaurantReservationSystem.EntityServices.Services.Interfaces;
 
 public class AppUtilities
 {
-    private readonly RestaurantReservationSeeder _DbSeeder;
+    private readonly IRestaurantReservationSeeder _DbSeeder;
     private readonly IRestaurantService _restaurantService;
     private readonly ICustomerService _customerService;
     private readonly IEmployeeService _employeeService;
@@ -24,7 +24,7 @@ public class AppUtilities
     private readonly IRevenueReportRepository _revenueReportRepository;
     private readonly ICustomerReportRepository _customerReportRepository;
 
-    public AppUtilities(RestaurantReservationSeeder DbSeeder, IRestaurantService restaurantService,
+    public AppUtilities(IRestaurantReservationSeeder DbSeeder, IRestaurantService restaurantService,
         ICustomerService customerService, IEmployeeService employeeService,
         IReservationService reservationService, ITableService tableServices,
         IMenuItemService menuItemServices, IOrderService orderServices, IOrderItemService orderItemServices
