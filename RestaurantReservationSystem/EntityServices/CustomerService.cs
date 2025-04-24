@@ -12,14 +12,14 @@ public class CustomerService : ICustomerService
         _customerRepository = customerRepository;
     }
 
-    public async Task AddCustomerAsync()
+    public async Task AddCustomerAsync(string firstName, string lastName, string email, string phoneNumber)
     {
         var customer = new Customer
         {
-            FirstName = "Test",
-            LastName = "Test",
-            Email = "Test@gmail.com",
-            PhoneNumber = "1234567890"
+            FirstName = firstName,
+            LastName = lastName,
+            Email = email,
+            PhoneNumber = phoneNumber
         };
 
         try
@@ -49,15 +49,16 @@ public class CustomerService : ICustomerService
         }
     }
 
-    public async Task UpdateCustomerAsync()
+    public async Task UpdateCustomerAsync(int id, string UpdatedfirstName, string UpdatedlastName, 
+        string Updatedemail, string UpdatedphoneNumber)
     {
         var customer = new Customer
         {
-            CustomerId = 1,
-            FirstName = "Updated FirstName",
-            LastName = "Updated LastName",
-            PhoneNumber = "0599999999",
-            Email = "Updated Test@gmail.com"
+            CustomerId = id,
+            FirstName = UpdatedfirstName,
+            LastName = UpdatedlastName,
+            PhoneNumber = Updatedemail,
+            Email = UpdatedphoneNumber
         };
 
         try
@@ -90,8 +91,19 @@ public class CustomerService : ICustomerService
 
     public async Task ExecuteExamplesAsync()
     {
-        await AddCustomerAsync();
-        await UpdateCustomerAsync();
+        await AddCustomerAsync(
+            firstName: "Test",
+            lastName: "Test", 
+            email: "Test@gmail.com",
+            phoneNumber: "0590000000");
+
+        await UpdateCustomerAsync(
+            id: 1, 
+            UpdatedfirstName: "Updated Test",
+            UpdatedlastName: "Updated Test",
+            Updatedemail: "UpdatedTest@gmail.com",
+            UpdatedphoneNumber: "0599999999");
+
         await GetAllCustomersAsync();
         await DeleteCustomerAsync();
     }

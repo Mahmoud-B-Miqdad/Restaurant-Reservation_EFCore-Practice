@@ -11,14 +11,14 @@ public class OrderService : IOrderService
         this._orderRepository = orderRepository;
     }
 
-    public async Task AddOrderAsync()
+    public async Task AddOrderAsync(int reservationId, int employeeId, DateTime orderDate, decimal totalAmount)
     {
         var order = new Order
         {
-            ReservationId = 1, 
-            EmployeeId = 1,
-            OrderDate = DateTime.Now,
-            TotalAmount = 50.00m
+            ReservationId = reservationId,
+            EmployeeId = employeeId,
+            OrderDate = orderDate,
+            TotalAmount = totalAmount
         };
 
         try
@@ -47,15 +47,16 @@ public class OrderService : IOrderService
         }
     }
 
-    public async Task UpdateOrderAsync()
+    public async Task UpdateOrderAsync(int orderId, int UpdatedreservationId,
+        int UpdatedemployeeId, DateTime UpdatedOrderDate, decimal UpdatedTotalAmount)
     {
         var updatedOrder = new Order
         {
-            OrderId = 1,
-            ReservationId = 1,
-            EmployeeId = 1,
-            OrderDate = DateTime.Now,
-            TotalAmount = 65.00m
+            OrderId = orderId,
+            ReservationId = UpdatedreservationId,
+            EmployeeId = UpdatedemployeeId,
+            OrderDate = UpdatedOrderDate,
+            TotalAmount = UpdatedTotalAmount
         };
 
         try
@@ -84,8 +85,20 @@ public class OrderService : IOrderService
 
     public async Task ExecuteExamplesAsync()
     {
-        await AddOrderAsync();
-        await UpdateOrderAsync();
+        await AddOrderAsync(
+            reservationId: 1,
+            employeeId: 1,
+            orderDate: DateTime.Now,
+            totalAmount: 50.00m);
+
+        await UpdateOrderAsync(
+            orderId: 1,
+            UpdatedreservationId: 1,
+            UpdatedemployeeId: 1,
+            UpdatedOrderDate: DateTime.Now,
+            UpdatedTotalAmount: 65.00m
+        );
+
         await GetAllOrdersAsync();
         await DeleteOrderAsync();
     }

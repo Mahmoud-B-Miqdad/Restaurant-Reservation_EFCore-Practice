@@ -11,12 +11,12 @@ public class TableService : ITableService
         _tableRepository = tableRepository;
     }
 
-    public async Task AddTableAsync()
+    public async Task AddTableAsync(int restaurantId, int capacity)
     {
         var table = new Table
         {
-            RestaurantId = 1, 
-            Capacity = 4
+            RestaurantId = restaurantId,
+            Capacity = capacity
         };
 
         try
@@ -28,7 +28,6 @@ public class TableService : ITableService
             throw new InvalidOperationException("Failed to add the table.", ex);
         }
     }
-
     public async Task GetAllTablesAsync()
     {
         try
@@ -46,13 +45,13 @@ public class TableService : ITableService
         }
     }
 
-    public async Task UpdateTableAsync()
+    public async Task UpdateTableAsync(int tableId, int updatedRestaurantId, int updatedCapacity)
     {
         var table = new Table
         {
-            TableId = 1, 
-            RestaurantId = 4, 
-            Capacity = 6
+            TableId = tableId,
+            RestaurantId = updatedRestaurantId,
+            Capacity = updatedCapacity
         };
 
         try
@@ -81,9 +80,16 @@ public class TableService : ITableService
 
     public async Task ExecuteExamplesAsync()
     {
-        //await AddTableAsync();
-        //await UpdateTableAsync();
+        await AddTableAsync(
+            restaurantId: 1,
+            capacity: 4);
+
+        await UpdateTableAsync(
+            tableId: 1,
+            updatedRestaurantId: 4,
+            updatedCapacity: 6);
+
         await GetAllTablesAsync();
-        //await DeleteTableAsync();
+        await DeleteTableAsync();
     }
 }

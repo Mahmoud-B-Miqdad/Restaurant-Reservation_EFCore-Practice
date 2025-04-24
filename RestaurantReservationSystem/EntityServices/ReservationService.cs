@@ -1,5 +1,4 @@
 ﻿using RestaurantReservation.Db.Models;
-using RestaurantReservation.Db.Repositories;
 using RestaurantReservation.Db.Repositories.Interfaces;
 using RestaurantReservation.Db.Services.Interfaces;
 public class ReservationService : IReservationService
@@ -11,15 +10,15 @@ public class ReservationService : IReservationService
         _reservationRepository = reservationRepository;
     }
 
-    public async Task AddReservationAsync()
+    public async Task AddReservationAsync(int customerId, int restaurantId, int tableId, DateTime reservationDate, int partySize)
     {
         var reservation = new Reservation
         {
-            CustomerId = 1, 
-            RestaurantId = 1, 
-            TableId = 1, 
-            ReservationDate = DateTime.Now.AddDays(1), 
-            PartySize = 4 
+            CustomerId = customerId,
+            RestaurantId = restaurantId,
+            TableId = tableId,
+            ReservationDate = reservationDate,
+            PartySize = partySize
         };
 
         try
@@ -50,16 +49,17 @@ public class ReservationService : IReservationService
         }
     }
 
-    public async Task UpdateReservationAsync()
+    public async Task UpdateReservationAsync(int reservationId, int updatedCustomerId, int updatedRestaurantId, 
+        int updatedTableId, DateTime updatedReservationDate, int updatedPartySize)
     {
         var reservation = new Reservation
         {
-            ReservationId = 3, 
-            CustomerId = 4, 
-            RestaurantId = 4, 
-            TableId = 4, 
-            ReservationDate = DateTime.Now.AddDays(2),
-            PartySize = 10 
+            ReservationId = reservationId,
+            CustomerId = updatedCustomerId,
+            RestaurantId = updatedRestaurantId,
+            TableId = updatedTableId,
+            ReservationDate = updatedReservationDate,
+            PartySize = updatedPartySize
         };
 
         try
@@ -88,8 +88,21 @@ public class ReservationService : IReservationService
 
     public async Task ExecuteExamplesAsync()
     {
-        await AddReservationAsync();
-        await UpdateReservationAsync();
+        await AddReservationAsync(
+            customerId: 1,
+            restaurantId: 1,
+            tableId: 1,
+            reservationDate: DateTime.Now.AddDays(1),
+            partySize: 4);
+
+        await UpdateReservationAsync(
+            reservationId: 3,
+            updatedCustomerId: 4,
+            updatedRestaurantId: 4,
+            updatedTableId: 4,
+            updatedReservationDate: DateTime.Now.AddDays(2),
+            updatedPartySize: 10);
+
         await GetAllReservationsAsync();
         await DeleteReservationAsync();
     }

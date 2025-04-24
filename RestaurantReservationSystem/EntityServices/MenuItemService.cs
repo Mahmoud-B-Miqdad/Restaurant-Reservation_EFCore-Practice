@@ -1,5 +1,4 @@
 ﻿using RestaurantReservation.Db.Models;
-using RestaurantReservation.Db.Repositories;
 using RestaurantReservation.Db.Repositories.Interfaces;
 using RestaurantReservation.Db.Services.Interfaces;
 
@@ -12,14 +11,14 @@ public class MenuItemService : IMenuItemService
         _menuItemRepository = menuItemRepository;
     }
 
-    public async Task AddMenuItemAsync()
+    public async Task AddMenuItemAsync(int restaurantId, string name, string description, decimal price)
     {
         var menuItem = new MenuItem
         {
-            RestaurantId = 1,
-            Name = "Grilled Chicken",
-            Description = "Delicious grilled chicken served with vegetables.",
-            Price = 12.99m
+            RestaurantId = restaurantId,
+            Name = name,
+            Description = description,
+            Price = price
         };
 
         try
@@ -48,15 +47,16 @@ public class MenuItemService : IMenuItemService
         }
     }
 
-    public async Task UpdateMenuItemAsync()
+    public async Task UpdateMenuItemAsync(int itemId, int UpdatedrestaurantId, string Updatedname,
+        string Updateddescription, decimal Updatedprice)
     {
         var updatedItem = new MenuItem
         {
             ItemId = 1, 
             RestaurantId = 1,
-            Name = "Grilled Chicken (Updated)",
-            Description = "Updated description for grilled chicken.",
-            Price = 14.99m
+            Name = Updatedname,
+            Description = Updateddescription,
+            Price = Updatedprice
         };
 
         try
@@ -85,8 +85,18 @@ public class MenuItemService : IMenuItemService
 
     public async Task ExecuteExamplesAsync()
     {
-        await AddMenuItemAsync();
-        await UpdateMenuItemAsync();
+        await AddMenuItemAsync(
+            restaurantId: 2,
+            name: "Grilled Chicken",
+            description: "Delicious grilled chicken served with vegetables.", 
+            price: 12.99m);
+
+        await UpdateMenuItemAsync(
+            itemId: 1,
+            UpdatedrestaurantId: 4, "Grilled Chicken (Updated)",
+            Updateddescription: "Updated description for grilled chicken.",
+            Updatedprice: 14.99m);
+
         await GetAllMenuItemsAsync();
         await DeleteMenuItemAsync();
     }

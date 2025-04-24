@@ -12,14 +12,14 @@ public class RestaurantService : IRestaurantService
         _restaurantRepository = restaurantRepository;
     }
 
-    public async Task AddRestaurantAsync()
+    public async Task AddRestaurantAsync(string name, string address, string phoneNumber, string openingHours)
     {
         var restaurant = new Restaurant
         {
-            Name = "Test Restaurant",
-            Address = "Gaza",
-            PhoneNumber = "0590000000",
-            OpeningHours = "8:00 - 16:00"
+            Name = name,
+            Address = address,
+            PhoneNumber = phoneNumber,
+            OpeningHours = openingHours
         };
 
         try
@@ -48,15 +48,16 @@ public class RestaurantService : IRestaurantService
         }
     }
 
-    public async Task UpdateRestaurantAsync()
+    public async Task UpdateRestaurantAsync(int restaurantId, string updatedName, string updatedAddress,
+        string updatedPhoneNumber, string updatedOpeningHours)
     {
         var restaurant = new Restaurant
         {
-            RestaurantId = 1,
-            Name = "Updated Name",
-            Address = "Updated Address",
-            PhoneNumber = "0599999999",
-            OpeningHours = "9:00 - 17:00"
+            RestaurantId = restaurantId,
+            Name = updatedName,
+            Address = updatedAddress,
+            PhoneNumber = updatedPhoneNumber,
+            OpeningHours = updatedOpeningHours
         };
 
         try
@@ -89,8 +90,19 @@ public class RestaurantService : IRestaurantService
 
     public async Task ExecuteExamplesAsync()
     {
-        await AddRestaurantAsync();
-        await UpdateRestaurantAsync();
+        await AddRestaurantAsync(
+            name: "TestRestaurant",
+            address: "TestAddress",
+            phoneNumber: "0590000000",
+            openingHours: "8:00 - 16:00");
+
+        await UpdateRestaurantAsync(
+            restaurantId: 1,
+            updatedName: "UpdatedRestaurant",
+            updatedAddress: "UpdatedAddress",
+            updatedPhoneNumber: "0599999999",
+            updatedOpeningHours: "9:00 - 17:00");
+
         await GetAllRestaurantsAsync();
         await DeleteRestaurantAsync();
     }

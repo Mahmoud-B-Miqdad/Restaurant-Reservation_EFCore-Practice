@@ -12,13 +12,13 @@ public class OrderItemService : IOrderItemService
         _orderItemRepository = orderItemRepository;
     }
 
-    public async Task AddOrderItemAsync()
+    public async Task AddOrderItemAsync(int orderId,int itemId, int quantity)
     {
         var orderItem = new OrderItem
         {
-            OrderId = 1,     
-            ItemId = 1,
-            Quantity = 20
+            OrderId = orderId,     
+            ItemId = itemId,
+            Quantity = quantity
         };
 
         try
@@ -47,14 +47,15 @@ public class OrderItemService : IOrderItemService
         }
     }
 
-    public async Task UpdateOrderItemAsync()
+    public async Task UpdateOrderItemAsync(int orderItemId, int UpdatedorderId, int UpdateditemId, 
+        int Updatedquantity)
     {
         var updatedOrderItem = new OrderItem
         {
-            OrderItemId = 1, 
-            OrderId = 1,
-            ItemId = 1,
-            Quantity = 30
+            OrderItemId = orderItemId, 
+            OrderId = UpdatedorderId,
+            ItemId = UpdateditemId,
+            Quantity = Updatedquantity
         };
 
         try
@@ -83,9 +84,18 @@ public class OrderItemService : IOrderItemService
 
     public async Task ExecuteExamplesAsync()
     {
-        //await AddOrderItemAsync();
-        await UpdateOrderItemAsync();
-        //await GetAllOrderItemsAsync();
-        //await DeleteOrderItemAsync();
+        await AddOrderItemAsync(
+            orderId: 1,
+            itemId: 1,
+            quantity: 20);
+
+        await UpdateOrderItemAsync(
+            orderItemId: 1,
+            UpdatedorderId: 2,
+            UpdateditemId: 4,
+            Updatedquantity: 30);
+
+        await GetAllOrderItemsAsync();
+        await DeleteOrderItemAsync();
     }
 }

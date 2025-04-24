@@ -2,8 +2,9 @@
 {
     public interface ICustomerService
     {
-        Task AddCustomerAsync();
-        Task UpdateCustomerAsync();
+        Task AddCustomerAsync(string firstName, string lastName, string email, string phoneNumber);
+        Task UpdateCustomerAsync(int id, string UpdatedfirstName, string UpdatedlastName,
+        string Updatedemail, string UpdatedphoneNumber);
         Task GetAllCustomersAsync();
         Task DeleteCustomerAsync();
         Task ExecuteExamplesAsync();

@@ -1,5 +1,4 @@
 ﻿using RestaurantReservation.Db.Models;
-using RestaurantReservation.Db.Repositories;
 using RestaurantReservation.Db.Repositories.Interfaces;
 using RestaurantReservation.Db.Services.Interfaces;
 
@@ -12,15 +11,15 @@ public class EmployeeService : IEmployeeService
         _employeeOperations = employeeOperations;
     }
 
-    public async Task AddEmployeeAsync()
+    public async Task AddEmployeeAsync(string firstName, string lastName, string position, int restaurantId)
+{
+    var employee = new Employee
     {
-        var employee = new Employee
-        {
-            FirstName = "Test",
-            LastName = "Test",
-            Position = "Test",
-            RestaurantId = 1  
-        };
+        FirstName = firstName,
+        LastName = lastName,
+        Position = position,
+        RestaurantId = restaurantId
+    };
 
         try
         {
@@ -48,16 +47,19 @@ public class EmployeeService : IEmployeeService
         }
     }
 
-    public async Task UpdateEmployeeAsync()
+    public async Task UpdateEmployeeAsync(int employeeId, string UpdatedfirstName, 
+        string UpdatedlastName, string Updatedposition, int UpdatedrestaurantId)
     {
+
         var employee = new Employee
         {
-            EmployeeId = 1,  
-            FirstName = "Updated Test",
-            LastName = "Updated Test",
-            Position = "Updated Test",
-            RestaurantId = 1
+            EmployeeId = employeeId,
+            FirstName = UpdatedfirstName,
+            LastName = UpdatedlastName,
+            Position = Updatedposition,
+            RestaurantId = UpdatedrestaurantId
         };
+
 
         try
         {
@@ -85,8 +87,19 @@ public class EmployeeService : IEmployeeService
 
     public async Task ExecuteExamplesAsync()
     {
-        await AddEmployeeAsync();
-        await UpdateEmployeeAsync();
+        await AddEmployeeAsync(
+            firstName: "Test",
+            lastName: "Test",
+            position: "TestPosition",
+            restaurantId: 2);
+
+        await UpdateEmployeeAsync(
+            employeeId: 1,
+            UpdatedfirstName: "Updated Test",
+            UpdatedlastName: "Updated Test",
+            Updatedposition: "Updatedposition",
+            UpdatedrestaurantId: 4);
+
         await GetAllEmployeesAsync();
         await DeleteEmployeeAsync();
     }

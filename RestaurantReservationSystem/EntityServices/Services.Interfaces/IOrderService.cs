@@ -2,8 +2,9 @@
 {
     public interface IOrderService
     {
-        Task AddOrderAsync();
-        Task UpdateOrderAsync();
+        Task AddOrderAsync(int reservationId, int employeeId, DateTime orderDate, decimal totalAmount);
+        Task UpdateOrderAsync(int UpdatedorderId, int UpdatedreservationId,
+        int UpdatedemployeeId, DateTime UpdatedOrderDate, decimal UpdatedTotalAmount);
         Task GetAllOrdersAsync();
         Task DeleteOrderAsync();
         Task ExecuteExamplesAsync();
