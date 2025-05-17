@@ -1,4 +1,4 @@
-﻿using RestaurantReservation.Db.Models;
+﻿using RestaurantReservation.Db.Entities;
 
 namespace RestaurantReservationSystem.EntityServices.Services.Interfaces
 {

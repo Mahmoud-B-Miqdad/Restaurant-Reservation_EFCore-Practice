@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RestaurantReservation.Db;
-using RestaurantReservation.Db.Models;
+using RestaurantReservation.Db.Entities;
 using RestaurantReservation.Db.Repositories.Interfaces;
 internal class CustomerRepository : ICustomerRepository
 {

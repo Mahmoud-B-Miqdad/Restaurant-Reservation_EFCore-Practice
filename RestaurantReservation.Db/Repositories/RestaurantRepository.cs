@@ -1,4 +1,4 @@
-﻿using RestaurantReservation.Db.Models;
+﻿using RestaurantReservation.Db.Entities;
 using RestaurantReservation.Db;
 using Microsoft.EntityFrameworkCore;
 using RestaurantReservation.Db.Repositories.Interfaces;
