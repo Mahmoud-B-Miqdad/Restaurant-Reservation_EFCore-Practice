@@ -15,7 +15,7 @@ namespace RestaurantReservationSystem.API.Validators
                 .MaximumLength(200).WithMessage("Address must not exceed 200 characters.");
 
             RuleFor(r => r.PhoneNumber)
-                .Matches("^\d{10,15}$")
+                .Matches(@"^\d{10,15}$")
                 .When(r => !string.IsNullOrWhiteSpace(r.PhoneNumber))
                 .WithMessage("Phone number must be between 10 and 15 digits.");
 

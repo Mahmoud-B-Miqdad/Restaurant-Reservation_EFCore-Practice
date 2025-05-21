@@ -17,6 +17,10 @@ internal class TableRepository : ITableRepository
         return await _context.Tables.ToListAsync();
     }
 
+    public async Task<Table> GetByIdAsync(int id)
+    {
+        return await _context.Tables.FindAsync(id);
+    }
     public async Task AddAsync(Table table)
     {
         await _context.Tables.AddAsync(table);

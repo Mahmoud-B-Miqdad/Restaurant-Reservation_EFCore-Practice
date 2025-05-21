@@ -23,6 +23,11 @@ namespace RestaurantReservation.Db.Repositories
 
         public async Task<List<Employee>> GetAllAsync() => await _context.Employees.ToListAsync();
 
+        public async Task<Employee> GetByIdAsync(int id)
+        {
+            return await _context.Employees.FindAsync(id);
+        }
+
         public async Task AddAsync(Employee employee)
         {
             _context.Employees.Add(employee);

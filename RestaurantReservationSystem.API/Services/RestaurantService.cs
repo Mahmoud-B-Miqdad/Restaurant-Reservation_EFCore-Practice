@@ -2,7 +2,7 @@
 using RestaurantReservation.Db.Entities;
 using RestaurantReservation.Db.Repositories.Interfaces;
 using RestaurantReservationSystem.API.DTOs;
-using RestaurantReservationSystem.API.Interfaces;
+using RestaurantReservationSystem.API.Services.Interfaces;
 
 namespace RestaurantReservationSystem.API.Services
 {

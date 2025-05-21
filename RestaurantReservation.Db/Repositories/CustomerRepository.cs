@@ -16,6 +16,11 @@ internal class CustomerRepository : ICustomerRepository
         return await _context.Customers.ToListAsync();
     }
 
+    public async Task<Customer> GetByIdAsync(int id)
+    {
+        return await _context.Customers.FindAsync(id);
+    }
+
     public async Task AddAsync(Customer customer)
     {
         await _context.Customers.AddAsync(customer);

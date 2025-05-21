@@ -15,6 +15,11 @@ internal class OrderItemRepository : IOrderItemRepository
 
     public async Task<List<OrderItem>> GetAllAsync() => await _context.OrderItems.ToListAsync();
 
+    public async Task<OrderItem> GetByIdAsync(int id)
+    {
+        return await _context.OrderItems.FindAsync(id);
+    }
+
     public async Task AddAsync(OrderItem orderItem)
     {
         _context.OrderItems.Add(orderItem);

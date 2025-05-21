@@ -36,7 +36,10 @@ namespace RestaurantReservation.Db.Repositories
 
         public async Task<List<Order>> GetAllAsync() => await _context.Orders.ToListAsync();
 
-
+        public async Task<Order> GetByIdAsync(int id)
+        {
+            return await _context.Orders.FindAsync(id);
+        }
         public async Task AddAsync(Order order)
         {
             _context.Orders.Add(order);
