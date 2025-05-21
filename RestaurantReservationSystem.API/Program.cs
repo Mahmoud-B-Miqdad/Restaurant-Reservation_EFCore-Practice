@@ -1,16 +1,19 @@
+using RestaurantReservationSystem.API.Services;
+using RestaurantReservationSystem.API.Services.Interfaces;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.AddAutoMapper(typeof(RestaurantReservationSystem.API.Mapping.AutoMapperProfile).Assembly);
 
-builder.Services.AddControllers();
+builder.Services.AddRepositories(builder.Configuration.GetConnectionString("DefaultConnection"));
+builder.Services.AddScoped<IRestaurantService, RestaurantService>();
+
+builder.Services.AddControllers()
+    .AddNewtonsoftJson();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
 
 app.MapControllers();
 

@@ -36,14 +36,14 @@ namespace RestaurantReservationSystem.API.Services
             return _mapper.Map<RestaurantResponse>(restaurant);
         }
 
-        public async Task<bool> UpdateAsync(int id, RestaurantRequest request)
+        public async Task<RestaurantResponse?> UpdateAsync(int id, RestaurantRequest request)
         {
             var existing = await _repository.GetByIdAsync(id);
-            if (existing == null) return false;
+            if (existing == null) return null;
 
             var updated = _mapper.Map(request, existing);
             await _repository.UpdateAsync(updated);
-            return true;
+            return _mapper.Map<RestaurantResponse>(updated);
         }
 
         public async Task<bool> DeleteAsync(int id)

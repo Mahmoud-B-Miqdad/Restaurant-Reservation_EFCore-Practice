@@ -8,7 +8,7 @@ namespace RestaurantReservationSystem.API.Services.Interfaces
         Task<IEnumerable<RestaurantResponse>> GetAllAsync();
         Task<RestaurantResponse> GetByIdAsync(int id);
         Task<RestaurantResponse> CreateAsync(RestaurantRequest request);
-        Task<bool> UpdateAsync(int id, RestaurantRequest request);
+        Task<RestaurantResponse?> UpdateAsync(int id, RestaurantRequest request);
         Task<bool> DeleteAsync(int id);
     }
 }

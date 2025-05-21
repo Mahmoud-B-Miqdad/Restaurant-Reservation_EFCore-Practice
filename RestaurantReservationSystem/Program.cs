@@ -17,7 +17,7 @@ var host = Host.CreateDefaultBuilder()
         services.AddDbContext<RestaurantReservationDbContext>(options =>
             options.UseSqlServer(context.Configuration.GetConnectionString("DefaultConnection")));
 
-        services.AddRepositories();
+        services.AddRepositories(context.Configuration.GetConnectionString("DefaultConnection"));
 
         services.AddScoped<ICustomerService, CustomerService>();
         services.AddScoped<IRestaurantService, RestaurantService>();
