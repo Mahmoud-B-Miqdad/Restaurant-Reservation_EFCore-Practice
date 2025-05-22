@@ -164,5 +164,20 @@ namespace RestaurantReservationSystem.API.Controllers
             return Ok(ApiResponse<IEnumerable<TableResponse>>.SuccessResponse(tables));
         }
 
+        /// <summary>
+        /// Retrieves all menu items offered by a specific restaurant.
+        /// </summary>
+        /// <param name="id">The unique identifier of the restaurant.</param>
+        /// <returns>
+        /// An <see cref="IActionResult"/> containing a successful <see cref="ApiResponse{T}"/> 
+        /// with a list of <see cref="MenuItemResponse"/> if the restaurant exists; otherwise, a not found response.
+        /// </returns>
+        [HttpGet("{id}/menu-items")]
+        public async Task<IActionResult> GetMenuItems(int id)
+        {
+            var menuItems = await _restaurantService.GetMenuItemsAsync(id);
+            return Ok(ApiResponse<IEnumerable<MenuItemResponse>>.SuccessResponse(menuItems));
+        }
+
     }
 }

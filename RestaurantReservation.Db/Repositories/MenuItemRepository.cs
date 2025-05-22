@@ -54,5 +54,12 @@ namespace RestaurantReservation.Db.Repositories
             _context.MenuItems.Remove(menuItem);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<IEnumerable<MenuItem>> GetByRestaurantIdAsync(int restaurantId)
+        {
+            return await _context.MenuItems
+                .Where(e => e.RestaurantId == restaurantId)
+                .ToListAsync();
+        }
     }
 }

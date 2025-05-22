@@ -15,6 +15,7 @@ namespace RestaurantReservationSystem.API.Services
         private readonly IRestaurantRepository _restaurantRepository;
         private readonly IEmployeeRepository _employeeRepository;
         private readonly ITableRepository _tableRepository;
+        private readonly IMenuItemRepository _menuItemRepository;
         private readonly IMapper _mapper;
 
         /// <summary>
@@ -23,12 +24,13 @@ namespace RestaurantReservationSystem.API.Services
         /// <param name="restaurantRepository">The restaurant repository.</param>
         /// <param name="mapper">The AutoMapper instance.</param>
         public RestaurantService(IRestaurantRepository restaurantRepository, IMapper mapper, IEmployeeRepository employeeRepository,
-            ITableRepository tableRrepository)
+            ITableRepository tableRrepository, IMenuItemRepository menuItemRepository)
         {
             _restaurantRepository = restaurantRepository;
             _mapper = mapper;
             _employeeRepository = employeeRepository;
             _tableRepository = tableRrepository;
+            _menuItemRepository = menuItemRepository;
         }
 
         /// <inheritdoc />
@@ -86,6 +88,12 @@ namespace RestaurantReservationSystem.API.Services
         {
             var tables = await _tableRepository.GetByRestaurantIdAsync(restaurantId);
             return _mapper.Map<IEnumerable<TableResponse>>(tables);
+        }
+
+        public async Task<IEnumerable<MenuItemResponse>> GetMenuItemsAsync(int restaurantId)
+        {
+            var menuItem = await _menuItemRepository.GetByRestaurantIdAsync(restaurantId);
+            return _mapper.Map<IEnumerable<MenuItemResponse>>(menuItem);
         }
     }
 }
