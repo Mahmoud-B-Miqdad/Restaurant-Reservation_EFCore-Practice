@@ -16,6 +16,7 @@ namespace RestaurantReservationSystem.API.Services
         private readonly IEmployeeRepository _employeeRepository;
         private readonly ITableRepository _tableRepository;
         private readonly IMenuItemRepository _menuItemRepository;
+        private readonly IReservationRepository _reservationRepository;
         private readonly IMapper _mapper;
 
         /// <summary>
@@ -24,13 +25,14 @@ namespace RestaurantReservationSystem.API.Services
         /// <param name="restaurantRepository">The restaurant repository.</param>
         /// <param name="mapper">The AutoMapper instance.</param>
         public RestaurantService(IRestaurantRepository restaurantRepository, IMapper mapper, IEmployeeRepository employeeRepository,
-            ITableRepository tableRrepository, IMenuItemRepository menuItemRepository)
+            ITableRepository tableRrepository, IMenuItemRepository menuItemRepository, IReservationRepository reservationRepository)
         {
             _restaurantRepository = restaurantRepository;
             _mapper = mapper;
             _employeeRepository = employeeRepository;
             _tableRepository = tableRrepository;
             _menuItemRepository = menuItemRepository;
+            _reservationRepository = reservationRepository;
         }
 
         /// <inheritdoc />
@@ -90,10 +92,18 @@ namespace RestaurantReservationSystem.API.Services
             return _mapper.Map<IEnumerable<TableResponse>>(tables);
         }
 
+        /// <inheritdoc />
         public async Task<IEnumerable<MenuItemResponse>> GetMenuItemsAsync(int restaurantId)
         {
             var menuItem = await _menuItemRepository.GetByRestaurantIdAsync(restaurantId);
             return _mapper.Map<IEnumerable<MenuItemResponse>>(menuItem);
+        }
+
+        /// <inheritdoc />
+        public async Task<IEnumerable<ReservationResponse>> GetReservationsAsync(int restaurantId)
+        {
+            var reservation = await _reservationRepository.GetByRestaurantIdAsync(restaurantId);
+            return _mapper.Map<IEnumerable<ReservationResponse>>(reservation);
         }
     }
 }

@@ -69,5 +69,16 @@ namespace RestaurantReservationSystem.API.Services.Interfaces
         /// of <see cref="MenuItemResponse"/> representing the menu items of the specified restaurant.
         /// </returns>
         Task<IEnumerable<MenuItemResponse>> GetMenuItemsAsync(int restaurantId);
+
+        /// <summary>
+        /// Retrieves all reservations made for a specific restaurant.
+        /// </summary>
+        /// <param name="restaurantId">The unique identifier of the restaurant.</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation. The task result contains a collection of 
+        /// <see cref="ReservationResponse"/> objects representing the reservations for the specified restaurant.
+        /// </returns>
+        Task<IEnumerable<ReservationResponse>> GetReservationsAsync(int restaurantId);
+
     }
 }

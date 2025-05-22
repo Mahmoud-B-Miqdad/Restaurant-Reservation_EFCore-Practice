@@ -144,6 +144,10 @@ namespace RestaurantReservationSystem.API.Controllers
         [HttpGet("{id}/employees")]
         public async Task<IActionResult> GetEmployees(int id)
         {
+            var restaurant = await _restaurantService.GetByIdAsync(id);
+            if (restaurant == null)
+                return NotFound(ApiResponse<RestaurantResponse>.FailResponse("Restaurant not found"));
+
             var employees = await _restaurantService.GetEmployeesAsync(id);
             return Ok(ApiResponse<IEnumerable<EmployeeResponse>>.SuccessResponse(employees));
         }
@@ -160,6 +164,10 @@ namespace RestaurantReservationSystem.API.Controllers
         [HttpGet("{id}/tables")]
         public async Task<IActionResult> GetTables(int id)
         {
+            var restaurant = await _restaurantService.GetByIdAsync(id);
+            if (restaurant == null)
+                return NotFound(ApiResponse<RestaurantResponse>.FailResponse("Restaurant not found"));
+
             var tables = await _restaurantService.GetTablesAsync(id);
             return Ok(ApiResponse<IEnumerable<TableResponse>>.SuccessResponse(tables));
         }
@@ -175,9 +183,31 @@ namespace RestaurantReservationSystem.API.Controllers
         [HttpGet("{id}/menu-items")]
         public async Task<IActionResult> GetMenuItems(int id)
         {
+            var restaurant = await _restaurantService.GetByIdAsync(id);
+            if (restaurant == null)
+                return NotFound(ApiResponse<RestaurantResponse>.FailResponse("Restaurant not found"));
+
             var menuItems = await _restaurantService.GetMenuItemsAsync(id);
             return Ok(ApiResponse<IEnumerable<MenuItemResponse>>.SuccessResponse(menuItems));
         }
 
+        /// <summary>
+        /// Retrieves all reservations made for the specified restaurant.
+        /// </summary>
+        /// <param name="id">The unique identifier of the restaurant.</param>
+        /// <returns>
+        /// An <see cref="IActionResult"/> containing a successful <see cref="ApiResponse{T}"/> with a list
+        /// of <see cref="ReservationResponse"/> objects representing the reservations for the restaurant.
+        /// </returns>
+        [HttpGet("{id}/reservations")]
+        public async Task<IActionResult> GetReservations(int id)
+        {
+            var restaurant = await _restaurantService.GetByIdAsync(id);
+            if (restaurant == null)
+                return NotFound(ApiResponse<RestaurantResponse>.FailResponse("Restaurant not found"));
+
+            var reservations = await _restaurantService.GetReservationsAsync(id);
+            return Ok(ApiResponse<IEnumerable<ReservationResponse>>.SuccessResponse(reservations));
+        }
     }
 }
