@@ -81,6 +81,11 @@ namespace RestaurantReservationSystem.API.Services
             return _mapper.Map<IEnumerable<EmployeeResponse>>(employees);
         }
 
-
+        /// <inheritdoc />
+        public async Task<IEnumerable<TableResponse>> GetTablesAsync(int restaurantId)
+        {
+            var tables = await _tableRepository.GetByRestaurantIdAsync(restaurantId);
+            return _mapper.Map<IEnumerable<TableResponse>>(tables);
+        }
     }
 }

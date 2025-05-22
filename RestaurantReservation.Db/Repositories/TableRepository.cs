@@ -46,4 +46,11 @@ internal class TableRepository : ITableRepository
             await _context.SaveChangesAsync();
         }
     }
+
+    public async Task<IEnumerable<Table>> GetByRestaurantIdAsync(int restaurantId)
+    {
+        return await _context.Tables
+            .Where(e => e.RestaurantId == restaurantId)
+            .ToListAsync();
+    }
 }

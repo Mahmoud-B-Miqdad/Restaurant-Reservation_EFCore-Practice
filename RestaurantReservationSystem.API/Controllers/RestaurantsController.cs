@@ -148,5 +148,21 @@ namespace RestaurantReservationSystem.API.Controllers
             return Ok(ApiResponse<IEnumerable<EmployeeResponse>>.SuccessResponse(employees));
         }
 
+
+        /// <summary>
+        /// Retrieves all tables associated with the specified restaurant.
+        /// </summary>
+        /// <param name="id">The unique identifier of the restaurant.</param>
+        /// <returns>
+        /// An <see cref="IActionResult"/> containing a successful <see cref="ApiResponse{T}"/> 
+        /// with a list of <see cref="TableResponse"/> objects representing the tables of the restaurant.
+        /// </returns>
+        [HttpGet("{id}/tables")]
+        public async Task<IActionResult> GetTables(int id)
+        {
+            var tables = await _restaurantService.GetTablesAsync(id);
+            return Ok(ApiResponse<IEnumerable<TableResponse>>.SuccessResponse(tables));
+        }
+
     }
 }

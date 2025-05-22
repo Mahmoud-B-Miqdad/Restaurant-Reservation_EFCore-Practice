@@ -50,5 +50,15 @@ namespace RestaurantReservationSystem.API.Services.Interfaces
         /// <returns>A task that represents the asynchronous operation. The task result contains a collection of employee response DTOs.</returns>
         Task<IEnumerable<EmployeeResponse>> GetEmployeesAsync(int restaurantId);
 
+        /// <summary>
+        /// Retrieves a collection of tables associated with a specific restaurant.
+        /// </summary>
+        /// <param name="restaurantId">The unique identifier of the restaurant.</param>
+        /// <returns>
+        /// A task representing the asynchronous operation. The task result contains
+        /// an enumerable collection of <see cref="TableResponse"/> objects representing the tables.
+        /// </returns>
+        Task<IEnumerable<TableResponse>> GetTablesAsync(int restaurantId);
+
     }
 }
