@@ -9,5 +9,6 @@ namespace RestaurantReservation.Db.Repositories.Interfaces
         Task AddAsync(Employee employee);
         Task UpdateAsync(Employee employee);
         Task DeleteAsync(int id);
+        Task<IEnumerable<Employee>> GetByRestaurantIdAsync(int restaurantId);
     }
 }

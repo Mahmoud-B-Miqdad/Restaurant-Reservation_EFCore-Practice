@@ -132,5 +132,21 @@ namespace RestaurantReservationSystem.API.Controllers
 
             return Ok(ApiResponse<string>.SuccessResponse("Restaurant deleted successfully"));
         }
+
+        /// <summary>
+        /// Retrieves all employees working at the specified restaurant.
+        /// </summary>
+        /// <param name="id">The unique identifier of the restaurant.</param>
+        /// <returns>
+        /// An <see cref="IActionResult"/> containing a successful <see cref="ApiResponse{T}"/> with a list
+        /// of <see cref="EmployeeResponse"/> if the restaurant exists; otherwise, a not found response.
+        /// </returns>
+        [HttpGet("{id}/employees")]
+        public async Task<IActionResult> GetEmployees(int id)
+        {
+            var employees = await _restaurantService.GetEmployeesAsync(id);
+            return Ok(ApiResponse<IEnumerable<EmployeeResponse>>.SuccessResponse(employees));
+        }
+
     }
 }

@@ -12,31 +12,36 @@ namespace RestaurantReservationSystem.API.Services
     /// </summary>
     public class RestaurantService : IRestaurantService
     {
-        private readonly IRestaurantRepository _repository;
+        private readonly IRestaurantRepository _restaurantRepository;
+        private readonly IEmployeeRepository _employeeRepository;
+        private readonly ITableRepository _tableRepository;
         private readonly IMapper _mapper;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RestaurantService"/> class.
         /// </summary>
-        /// <param name="repository">The restaurant repository.</param>
+        /// <param name="restaurantRepository">The restaurant repository.</param>
         /// <param name="mapper">The AutoMapper instance.</param>
-        public RestaurantService(IRestaurantRepository repository, IMapper mapper)
+        public RestaurantService(IRestaurantRepository restaurantRepository, IMapper mapper, IEmployeeRepository employeeRepository,
+            ITableRepository tableRrepository)
         {
-            _repository = repository;
+            _restaurantRepository = restaurantRepository;
             _mapper = mapper;
+            _employeeRepository = employeeRepository;
+            _tableRepository = tableRrepository;
         }
 
         /// <inheritdoc />
         public async Task<IEnumerable<RestaurantResponse>> GetAllAsync()
         {
-            var restaurants = await _repository.GetAllAsync();
+            var restaurants = await _restaurantRepository.GetAllAsync();
             return _mapper.Map<IEnumerable<RestaurantResponse>>(restaurants);
         }
 
         /// <inheritdoc />
         public async Task<RestaurantResponse> GetByIdAsync(int id)
         {
-            var restaurant = await _repository.GetByIdAsync(id);
+            var restaurant = await _restaurantRepository.GetByIdAsync(id);
             return _mapper.Map<RestaurantResponse>(restaurant);
         }
 
@@ -44,29 +49,38 @@ namespace RestaurantReservationSystem.API.Services
         public async Task<RestaurantResponse> CreateAsync(RestaurantRequest request)
         {
             var restaurant = _mapper.Map<Restaurant>(request);
-            await _repository.AddAsync(restaurant);
+            await _restaurantRepository.AddAsync(restaurant);
             return _mapper.Map<RestaurantResponse>(restaurant);
         }
 
         /// <inheritdoc />
         public async Task<RestaurantResponse?> UpdateAsync(int id, RestaurantRequest request)
         {
-            var existing = await _repository.GetByIdAsync(id);
+            var existing = await _restaurantRepository.GetByIdAsync(id);
             if (existing == null) return null;
 
             var updated = _mapper.Map(request, existing);
-            await _repository.UpdateAsync(updated);
+            await _restaurantRepository.UpdateAsync(updated);
             return _mapper.Map<RestaurantResponse>(updated);
         }
 
         /// <inheritdoc />
         public async Task<bool> DeleteAsync(int id)
         {
-            var existing = await _repository.GetByIdAsync(id);
+            var existing = await _restaurantRepository.GetByIdAsync(id);
             if (existing == null) return false;
 
-            await _repository.DeleteAsync(id);
+            await _restaurantRepository.DeleteAsync(id);
             return true;
         }
+
+        /// <inheritdoc />
+        public async Task<IEnumerable<EmployeeResponse>> GetEmployeesAsync(int restaurantId)
+        {
+            var employees = await _employeeRepository.GetByRestaurantIdAsync(restaurantId);
+            return _mapper.Map<IEnumerable<EmployeeResponse>>(employees);
+        }
+
+
     }
 }

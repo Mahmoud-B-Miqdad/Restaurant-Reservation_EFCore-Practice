@@ -42,5 +42,13 @@ namespace RestaurantReservationSystem.API.Services.Interfaces
         /// <param name="id">The ID of the restaurant to delete.</param>
         /// <returns>True if the restaurant was deleted successfully; otherwise, false.</returns>
         Task<bool> DeleteAsync(int id);
+
+        /// <summary>
+        /// Retrieves a list of employees who work at the specified restaurant.
+        /// </summary>
+        /// <param name="restaurantId">The ID of the restaurant to get employees for.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains a collection of employee response DTOs.</returns>
+        Task<IEnumerable<EmployeeResponse>> GetEmployeesAsync(int restaurantId);
+
     }
 }
