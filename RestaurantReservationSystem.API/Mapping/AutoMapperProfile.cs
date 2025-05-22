@@ -1,9 +1,13 @@
 ﻿using AutoMapper;
 using RestaurantReservation.Db.Entities;
-using RestaurantReservationSystem.API.DTOs;
+using RestaurantReservationSystem.API.DTOs.Requests;
+using RestaurantReservationSystem.API.DTOs.Responses;
 
 namespace RestaurantReservationSystem.API.Mapping
 {
+    /// <summary>
+    /// Defines mapping configuration between domain entities and DTOs using AutoMapper.
+    /// </summary>
     public class AutoMapperProfile : Profile
     {
         public AutoMapperProfile()

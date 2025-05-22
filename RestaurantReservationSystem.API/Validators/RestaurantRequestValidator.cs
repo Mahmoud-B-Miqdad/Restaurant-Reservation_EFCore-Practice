@@ -1,10 +1,17 @@
 ﻿using FluentValidation;
-using RestaurantReservationSystem.API.DTOs;
+using RestaurantReservationSystem.API.DTOs.Requests;
 
 namespace RestaurantReservationSystem.API.Validators
 {
+    /// <summary>
+    /// Validator for the <see cref="RestaurantRequest"/> DTO.
+    /// Defines validation rules for creating or updating a restaurant.
+    /// </summary>
     public class RestaurantRequestValidator : AbstractValidator<RestaurantRequest>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RestaurantRequestValidator"/> class.
+        /// </summary>
         public RestaurantRequestValidator()
         {
             RuleFor(r => r.Name)
