@@ -56,11 +56,11 @@ namespace RestaurantReservationSystem.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(RestaurantRequest request)
         {
-            var created = await _restaurantService.CreateAsync(request);
+            var createdRestaurant = await _restaurantService.CreateAsync(request);
             return CreatedAtAction(
                 nameof(GetById),
-                new { id = created.RestaurantId },
-                ApiResponse<RestaurantResponse>.SuccessResponse(created));
+                new { id = createdRestaurant.RestaurantId },
+                ApiResponse<RestaurantResponse>.SuccessResponse(createdRestaurant));
         }
 
         /// <summary>
@@ -72,11 +72,11 @@ namespace RestaurantReservationSystem.API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, RestaurantRequest request)
         {
-            var updated = await _restaurantService.UpdateAsync(id, request);
-            if (updated == null)
+            var updatedRestaurant = await _restaurantService.UpdateAsync(id, request);
+            if (updatedRestaurant == null)
                 return NotFound(ApiResponse<RestaurantResponse>.FailResponse("Restaurant not found"));
 
-            return Ok(ApiResponse<RestaurantResponse>.SuccessResponse(updated));
+            return Ok(ApiResponse<RestaurantResponse>.SuccessResponse(updatedRestaurant));
         }
 
         /// <summary>
@@ -111,11 +111,11 @@ namespace RestaurantReservationSystem.API.Controllers
             if (!TryValidateModel(restaurantToPatch))
                 return BadRequest(ModelState);
 
-            var updated = await _restaurantService.UpdateAsync(id, restaurantToPatch);
-            if (updated == null)
+            var updatedRestaurant = await _restaurantService.UpdateAsync(id, restaurantToPatch);
+            if (updatedRestaurant == null)
                 return NotFound(ApiResponse<string>.FailResponse("Failed to update restaurant"));
 
-            return Ok(ApiResponse<RestaurantResponse>.SuccessResponse(updated));
+            return Ok(ApiResponse<RestaurantResponse>.SuccessResponse(updatedRestaurant));
         }
 
         /// <summary>
@@ -126,8 +126,8 @@ namespace RestaurantReservationSystem.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var deleted = await _restaurantService.DeleteAsync(id);
-            if (!deleted)
+            var deletedRestaurant = await _restaurantService.DeleteAsync(id);
+            if (!deletedRestaurant)
                 return NotFound(ApiResponse<string>.FailResponse("Restaurant not found"));
 
             return Ok(ApiResponse<string>.SuccessResponse("Restaurant deleted successfully"));

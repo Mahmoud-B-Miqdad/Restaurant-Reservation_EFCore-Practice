@@ -1,0 +1,170 @@
+﻿using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Mvc;
+using RestaurantReservationSystem.API.DTOs.Requests;
+using RestaurantReservationSystem.API.DTOs.Responses;
+using RestaurantReservationSystem.API.Responses;
+using RestaurantReservationSystem.API.Services.Interfaces;
+
+namespace RestaurantReservationSystem.API.Controllers
+{
+    /// <summary>
+    /// Controller for managing employee-related operations.
+    /// </summary>
+    [ApiController]
+    [Route("api/Employees")]
+    public class EmployeesController : ControllerBase
+    {
+        private readonly IEmployeeService _employeeService;
+
+        public EmployeesController(IEmployeeService employeSservice)
+        {
+            _employeeService = employeSservice;
+        }
+
+        /// <summary>
+        /// Retrieves all employees.
+        /// </summary>
+        /// <returns>List of all employees.</returns>
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var employees = await _employeeService.GetAllAsync();
+            return Ok(ApiResponse<IEnumerable<EmployeeResponse>>.SuccessResponse(employees));
+        }
+
+        /// <summary>
+        /// Retrieves a specific employee by ID.
+        /// </summary>
+        /// <param name="id">Employee ID</param>
+        /// <returns>The employee details if found.</returns>
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var employee = await _employeeService.GetByIdAsync(id);
+            if (employee == null)
+                return NotFound(ApiResponse<EmployeeResponse>.FailResponse("Employee not found"));
+
+            return Ok(ApiResponse<EmployeeResponse>.SuccessResponse(employee));
+        }
+
+        /// <summary>
+        /// Creates a new employee.
+        /// </summary>
+        /// <param name="request">Employee creation request payload</param>
+        /// <returns>The created employee with location header.</returns>
+        [HttpPost]
+        public async Task<IActionResult> Create(EmployeeRequest request)
+        {
+            var createdEmployee = await _employeeService.CreateAsync(request);
+            return CreatedAtAction(
+                nameof(GetById),
+                new { id = createdEmployee.EmployeeId },
+                ApiResponse<EmployeeResponse>.SuccessResponse(createdEmployee));
+        }
+
+        /// <summary>
+        /// Updates an existing employee completely.
+        /// </summary>
+        /// <param name="id">Employee ID</param>
+        /// <param name="request">Updated employee data</param>
+        /// <returns>The updated employee details.</returns>
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, EmployeeRequest request)
+        {
+            var updatedEmployee = await _employeeService.UpdateAsync(id, request);
+            if (updatedEmployee == null)
+                return NotFound(ApiResponse<string>.FailResponse("Employee not found"));
+
+            return Ok(ApiResponse<EmployeeResponse>.SuccessResponse(updatedEmployee));
+        }
+
+        /// <summary>
+        /// Applies partial update to an employee.
+        /// </summary>
+        /// <param name="id">Employee ID</param>
+        /// <param name="patchDoc">JSON Patch document</param>
+        /// <returns>The updated employee details.</returns>
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> Patch(int id, [FromBody] JsonPatchDocument<EmployeeRequest> patchDoc)
+        {
+            if (patchDoc == null)
+                return BadRequest(ApiResponse<string>.FailResponse("Patch document cannot be null"));
+
+            var existingEmployee = await _employeeService.GetByIdAsync(id);
+            if (existingEmployee == null)
+                return NotFound(ApiResponse<string>.FailResponse("Restaurant not found"));
+
+            var employeeToPatch = new EmployeeRequest
+            {
+                RestaurantId = existingEmployee.RestaurantId,
+                FirstName = existingEmployee.FirstName,
+                LastName = existingEmployee.LastName,
+                Position = existingEmployee.Position
+            };
+
+            patchDoc.ApplyTo(employeeToPatch, ModelState);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ApiResponse<string>.FailResponse("Invalid patch document"));
+
+            if (!TryValidateModel(employeeToPatch))
+                return BadRequest(ModelState);
+
+            var updatedEmployee = await _employeeService.UpdateAsync(id, employeeToPatch);
+            if (updatedEmployee == null)
+                return NotFound(ApiResponse<string>.FailResponse("Failed to update restaurant"));
+
+            return Ok(ApiResponse<EmployeeResponse>.SuccessResponse(updatedEmployee));
+        }
+
+        /// <summary>
+        /// Deletes an employee by ID.
+        /// </summary>
+        /// <param name="id">Employee ID</param>
+        /// <returns>Success message if deleted.</returns>
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var deletedEmployee = await _employeeService.DeleteAsync(id);
+            if (!deletedEmployee)
+                return NotFound(ApiResponse<string>.FailResponse("Employee not found"));
+
+            return Ok(ApiResponse<string>.SuccessResponse("Employee deleted successfully"));
+        }
+
+        /// <summary>
+        /// Retrieves all orders handled by the specified employee.
+        /// </summary>
+        /// <param name="id">Employee ID</param>
+        /// <returns>List of orders assigned to the employee.</returns>
+        [HttpGet("{id}/orders")]
+        public async Task<IActionResult> GetOrders(int id)
+        {
+            var employee = await _employeeService.GetByIdAsync(id);
+            if (employee == null)
+                return NotFound(ApiResponse<EmployeeResponse>.FailResponse("Employee not found"));
+
+            var orders = await _employeeService.GetOrdersAsync(id);
+            return Ok(ApiResponse<IEnumerable<OrderResponse>>.SuccessResponse(orders));
+        }
+
+        /// <summary>
+        /// Retrieves the restaurant to which the employee belongs.
+        /// </summary>
+        /// <param name="id">Employee ID</param>
+        /// <returns>Restaurant details of the employee.</returns>
+        [HttpGet("{id}/restaurant")]
+        public async Task<IActionResult> GetRestaurant(int id)
+        {
+            var employee = await _employeeService.GetByIdAsync(id);
+            if (employee == null)
+                return NotFound(ApiResponse<EmployeeResponse>.FailResponse("Employee not found"));
+
+            var restaurant = await _employeeService.GetRestaurantAsync(id);
+            if (restaurant == null)
+                return NotFound(ApiResponse<RestaurantResponse>.FailResponse("Restaurant not found"));
+
+            return Ok(ApiResponse<RestaurantResponse>.SuccessResponse(restaurant));
+        }
+    }
+}

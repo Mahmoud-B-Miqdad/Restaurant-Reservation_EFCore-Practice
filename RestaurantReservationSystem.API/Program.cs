@@ -8,6 +8,7 @@ builder.Services.AddAutoMapper(typeof(RestaurantReservationSystem.API.Mapping.Au
 
 builder.Services.AddRepositories(builder.Configuration.GetConnectionString("DefaultConnection"));
 builder.Services.AddScoped<IRestaurantService, RestaurantService>();
+builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 
 builder.Services.AddControllers()
     .AddNewtonsoftJson();
