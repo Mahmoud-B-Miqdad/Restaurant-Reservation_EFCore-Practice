@@ -60,13 +60,6 @@ namespace RestaurantReservation.Db.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Order>> GetOrdersByEmployeeIdAsync(int employeeId)
-        {
-            return await _context.Orders
-                .Where(o => o.EmployeeId == employeeId)
-                .ToListAsync();
-        }
-
         public async Task<Restaurant?> GetRestaurantByEmployeeIdAsync(int employeeId)
         {
             var employee = await _context.Employees

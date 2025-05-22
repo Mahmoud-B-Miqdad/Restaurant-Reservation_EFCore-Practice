@@ -53,4 +53,13 @@ internal class TableRepository : ITableRepository
             .Where(e => e.RestaurantId == restaurantId)
             .ToListAsync();
     }
+
+    public async Task<Restaurant?> GetRestaurantByTableIdAsync(int tableId)
+    {
+        var table = await _context.Tables
+            .Include(e => e.Restaurant)
+            .FirstOrDefaultAsync(e => e.TableId == tableId);
+
+        return table?.Restaurant;
+    }
 }

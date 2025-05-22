@@ -38,7 +38,7 @@ namespace RestaurantReservationSystem.API.Controllers
         /// <param name="id">Employee ID</param>
         /// <returns>The employee details if found.</returns>
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<IActionResult> GetByIdAsync(int id)
         {
             var employee = await _employeeService.GetByIdAsync(id);
             if (employee == null)
@@ -53,11 +53,11 @@ namespace RestaurantReservationSystem.API.Controllers
         /// <param name="request">Employee creation request payload</param>
         /// <returns>The created employee with location header.</returns>
         [HttpPost]
-        public async Task<IActionResult> Create(EmployeeRequest request)
+        public async Task<IActionResult> CreateAsync(EmployeeRequest request)
         {
             var createdEmployee = await _employeeService.CreateAsync(request);
             return CreatedAtAction(
-                nameof(GetById),
+                nameof(GetByIdAsync),
                 new { id = createdEmployee.EmployeeId },
                 ApiResponse<EmployeeResponse>.SuccessResponse(createdEmployee));
         }
@@ -69,7 +69,7 @@ namespace RestaurantReservationSystem.API.Controllers
         /// <param name="request">Updated employee data</param>
         /// <returns>The updated employee details.</returns>
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, EmployeeRequest request)
+        public async Task<IActionResult> UpdateAsync(int id, EmployeeRequest request)
         {
             var updatedEmployee = await _employeeService.UpdateAsync(id, request);
             if (updatedEmployee == null)
@@ -85,7 +85,7 @@ namespace RestaurantReservationSystem.API.Controllers
         /// <param name="patchDoc">JSON Patch document</param>
         /// <returns>The updated employee details.</returns>
         [HttpPatch("{id}")]
-        public async Task<IActionResult> Patch(int id, [FromBody] JsonPatchDocument<EmployeeRequest> patchDoc)
+        public async Task<IActionResult> PatchAsync(int id, [FromBody] JsonPatchDocument<EmployeeRequest> patchDoc)
         {
             if (patchDoc == null)
                 return BadRequest(ApiResponse<string>.FailResponse("Patch document cannot be null"));
@@ -123,7 +123,7 @@ namespace RestaurantReservationSystem.API.Controllers
         /// <param name="id">Employee ID</param>
         /// <returns>Success message if deleted.</returns>
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> DeleteAsync(int id)
         {
             var deletedEmployee = await _employeeService.DeleteAsync(id);
             if (!deletedEmployee)
@@ -138,7 +138,7 @@ namespace RestaurantReservationSystem.API.Controllers
         /// <param name="id">Employee ID</param>
         /// <returns>List of orders assigned to the employee.</returns>
         [HttpGet("{id}/orders")]
-        public async Task<IActionResult> GetOrders(int id)
+        public async Task<IActionResult> GetOrdersAsync(int id)
         {
             var employee = await _employeeService.GetByIdAsync(id);
             if (employee == null)
@@ -154,7 +154,7 @@ namespace RestaurantReservationSystem.API.Controllers
         /// <param name="id">Employee ID</param>
         /// <returns>Restaurant details of the employee.</returns>
         [HttpGet("{id}/restaurant")]
-        public async Task<IActionResult> GetRestaurant(int id)
+        public async Task<IActionResult> GetRestaurantAsync(int id)
         {
             var employee = await _employeeService.GetByIdAsync(id);
             if (employee == null)

@@ -62,5 +62,12 @@ namespace RestaurantReservation.Db.Repositories
                 .Where(e => e.RestaurantId == restaurantId)
                 .ToListAsync();
         }
+
+        public async Task<IEnumerable<Reservation>> GetReservationsByTableIdAsync(int tableId)
+        {
+            return await _context.Reservations
+                .Where(o => o.TableId == tableId)
+                .ToListAsync();
+        }
     }
 }

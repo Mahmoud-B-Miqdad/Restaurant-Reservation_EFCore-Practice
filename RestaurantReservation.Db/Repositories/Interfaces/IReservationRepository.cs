@@ -10,4 +10,5 @@ public interface IReservationRepository
     Task UpdateAsync(Reservation reservation);
     Task DeleteAsync(int id);
     Task<IEnumerable<Reservation>> GetByRestaurantIdAsync(int restaurantId);
+    Task<IEnumerable<Reservation>> GetReservationsByTableIdAsync(int tableId);
 }

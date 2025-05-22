@@ -14,6 +14,7 @@ namespace RestaurantReservationSystem.API.Services
     public class EmployeeService : IEmployeeService
     {
         private readonly IEmployeeRepository _employeeRepository;
+        private readonly IOrderRepository _orderRepository;
         private readonly IMapper _mapper;
 
         // <summary>
@@ -21,9 +22,9 @@ namespace RestaurantReservationSystem.API.Services
         /// </summary>
         /// <param name="repository">The repository responsible for employee data access.</param>
         /// <param name="mapper">The mapper used to convert between entities and DTOs.</param>
-        public EmployeeService(IEmployeeRepository employeeRepository, IMapper mapper)
+        public EmployeeService(IEmployeeRepository repository, IMapper mapper)
         {
-            _employeeRepository = employeeRepository;
+            _employeeRepository = repository;
             _mapper = mapper;
         }
 
@@ -73,7 +74,7 @@ namespace RestaurantReservationSystem.API.Services
         /// <inheritdoc />
         public async Task<IEnumerable<OrderResponse>> GetOrdersAsync(int employeeId)
         {
-            var orders = await _employeeRepository.GetOrdersByEmployeeIdAsync(employeeId);
+            var orders = await _orderRepository.GetOrdersByEmployeeIdAsync(employeeId);
             return _mapper.Map<IEnumerable<OrderResponse>>(orders);
         }
 

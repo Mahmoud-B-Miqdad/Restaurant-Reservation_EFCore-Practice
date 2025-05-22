@@ -27,7 +27,7 @@ namespace RestaurantReservationSystem.API.Controllers
         /// </summary>
         /// <returns>A list of restaurants wrapped in an API response.</returns>
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAllAsync()
         {
             var restaurants = await _restaurantService.GetAllAsync();
             return Ok(ApiResponse<IEnumerable<RestaurantResponse>>.SuccessResponse(restaurants));
@@ -39,7 +39,7 @@ namespace RestaurantReservationSystem.API.Controllers
         /// <param name="id">The ID of the restaurant.</param>
         /// <returns>The restaurant details or a 404 error if not found.</returns>
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<IActionResult> GetByIdAsync(int id)
         {
             var restaurant = await _restaurantService.GetByIdAsync(id);
             if (restaurant == null)
@@ -54,11 +54,11 @@ namespace RestaurantReservationSystem.API.Controllers
         /// <param name="request">The restaurant details to create.</param>
         /// <returns>The created restaurant with its assigned ID.</returns>
         [HttpPost]
-        public async Task<IActionResult> Create(RestaurantRequest request)
+        public async Task<IActionResult> CreateAsync(RestaurantRequest request)
         {
             var createdRestaurant = await _restaurantService.CreateAsync(request);
             return CreatedAtAction(
-                nameof(GetById),
+                nameof(GetByIdAsync),
                 new { id = createdRestaurant.RestaurantId },
                 ApiResponse<RestaurantResponse>.SuccessResponse(createdRestaurant));
         }
@@ -70,7 +70,7 @@ namespace RestaurantReservationSystem.API.Controllers
         /// <param name="request">The updated restaurant details.</param>
         /// <returns>The updated restaurant or 404 if not found.</returns>
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, RestaurantRequest request)
+        public async Task<IActionResult> UpdateAsync(int id, RestaurantRequest request)
         {
             var updatedRestaurant = await _restaurantService.UpdateAsync(id, request);
             if (updatedRestaurant == null)
@@ -86,7 +86,7 @@ namespace RestaurantReservationSystem.API.Controllers
         /// <param name="patchDoc">The JSON Patch document containing the operations.</param>
         /// <returns>The updated restaurant or appropriate error messages.</returns>
         [HttpPatch("{id}")]
-        public async Task<IActionResult> Patch(int id, [FromBody] JsonPatchDocument<RestaurantRequest> patchDoc)
+        public async Task<IActionResult> PatchAsync(int id, [FromBody] JsonPatchDocument<RestaurantRequest> patchDoc)
         {
             if (patchDoc == null)
                 return BadRequest(ApiResponse<string>.FailResponse("Patch document cannot be null"));
@@ -124,7 +124,7 @@ namespace RestaurantReservationSystem.API.Controllers
         /// <param name="id">The ID of the restaurant to delete.</param>
         /// <returns>Success message or 404 if not found.</returns>
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> DeleteAsync(int id)
         {
             var deletedRestaurant = await _restaurantService.DeleteAsync(id);
             if (!deletedRestaurant)
@@ -142,7 +142,7 @@ namespace RestaurantReservationSystem.API.Controllers
         /// of <see cref="EmployeeResponse"/> if the restaurant exists; otherwise, a not found response.
         /// </returns>
         [HttpGet("{id}/employees")]
-        public async Task<IActionResult> GetEmployees(int id)
+        public async Task<IActionResult> GetEmployeesAsync(int id)
         {
             var restaurant = await _restaurantService.GetByIdAsync(id);
             if (restaurant == null)
@@ -162,7 +162,7 @@ namespace RestaurantReservationSystem.API.Controllers
         /// with a list of <see cref="TableResponse"/> objects representing the tables of the restaurant.
         /// </returns>
         [HttpGet("{id}/tables")]
-        public async Task<IActionResult> GetTables(int id)
+        public async Task<IActionResult> GetTablesAsync(int id)
         {
             var restaurant = await _restaurantService.GetByIdAsync(id);
             if (restaurant == null)
@@ -181,7 +181,7 @@ namespace RestaurantReservationSystem.API.Controllers
         /// with a list of <see cref="MenuItemResponse"/> if the restaurant exists; otherwise, a not found response.
         /// </returns>
         [HttpGet("{id}/menu-items")]
-        public async Task<IActionResult> GetMenuItems(int id)
+        public async Task<IActionResult> GetMenuItemsAsync(int id)
         {
             var restaurant = await _restaurantService.GetByIdAsync(id);
             if (restaurant == null)
@@ -200,7 +200,7 @@ namespace RestaurantReservationSystem.API.Controllers
         /// of <see cref="ReservationResponse"/> objects representing the reservations for the restaurant.
         /// </returns>
         [HttpGet("{id}/reservations")]
-        public async Task<IActionResult> GetReservations(int id)
+        public async Task<IActionResult> GetReservationsAsync(int id)
         {
             var restaurant = await _restaurantService.GetByIdAsync(id);
             if (restaurant == null)
