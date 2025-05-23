@@ -225,5 +225,21 @@ namespace RestaurantReservationSystem.API.Controllers
 
             return Ok(ApiResponse<IEnumerable<ReservationResponse>>.SuccessResponse(reservationsByCustomer));
         }
+
+        /// <summary>
+        /// Retrieves all Ordered Menu Items handled by the specified reservation.
+        /// </summary>
+        /// <param name="id">Reservation ID</param>
+        /// <returns>List of Ordered Menu Items assigned to the reservation.</returns>
+        [HttpGet("{id}/menu-items")]
+        public async Task<IActionResult> GetOrderedMenuItemsAsync(int id)
+        {
+            var menuItems = await _reservationService.GetByIdAsync(id);
+            if (menuItems == null)
+                return NotFound(ApiResponse<MenuItemResponse>.FailResponse("MenuItem not found"));
+
+            var orderedMenuItems = await _reservationService.GetOrderedMenuItemsAsync(id);
+            return Ok(ApiResponse<IEnumerable<MenuItemResponse>>.SuccessResponse(orderedMenuItems));
+        }
     }
 }

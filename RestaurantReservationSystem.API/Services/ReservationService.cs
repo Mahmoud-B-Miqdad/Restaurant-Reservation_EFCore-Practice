@@ -14,6 +14,7 @@ namespace RestaurantReservationSystem.API.Services
     {
         private readonly IReservationRepository _reservationRepository;
         private readonly IOrderRepository _orderRepository;
+        private readonly IMenuItemRepository _menuItemRepository;
         private readonly IMapper _mapper;
 
         /// <summary>
@@ -21,11 +22,12 @@ namespace RestaurantReservationSystem.API.Services
         /// </summary>
         /// <param name="repository">The repository responsible for reservation data access.</param>
         /// <param name="mapper">The mapper used to convert between entities and DTOs.</param>
-        public ReservationService(IReservationRepository repository, IMapper mapper, IOrderRepository orderRepository)
+        public ReservationService(IReservationRepository repository, IMapper mapper, IOrderRepository orderRepository, IMenuItemRepository menuItemRepository)
         {
             _reservationRepository = repository;
             _orderRepository = orderRepository;
             _mapper = mapper;
+            _menuItemRepository = menuItemRepository;
         }
 
         /// <inheritdoc />
@@ -104,6 +106,13 @@ namespace RestaurantReservationSystem.API.Services
         {
             var reservationsByCustomer = await _reservationRepository.GetReservationsByCustomerAsync(customerId);
             return _mapper.Map<IEnumerable<ReservationResponse>>(reservationsByCustomer);
+        }
+
+        /// <inheritdoc />
+        public async Task<IEnumerable<MenuItemResponse>> GetOrderedMenuItemsAsync(int reservationId)
+        {
+            var orderedMenuItems = await _menuItemRepository.ListOrderedMenuItemsAsync(reservationId);
+            return _mapper.Map<IEnumerable<MenuItemResponse>>(orderedMenuItems);
         }
     }
 }

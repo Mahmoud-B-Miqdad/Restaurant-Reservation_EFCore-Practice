@@ -79,5 +79,12 @@ namespace RestaurantReservationSystem.API.Services.Interfaces
         /// The task result contains a list of Reservation response DTOs.
         /// </returns>
         Task<IEnumerable<ReservationResponse>> GetReservationsByCustomerAsync(int customerId);
+
+        /// <summary>
+        /// Retrieves all Ordered Menu Items handled by a specific reservation.
+        /// </summary>
+        /// <param name="reservationId">The unique identifier of the reservation</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains a list of menuItem response DTOs.</returns>
+        Task<IEnumerable<MenuItemResponse>> GetOrderedMenuItemsAsync(int reservationId);
     }
 }

@@ -11,4 +11,5 @@ public interface IMenuItemRepository
     Task DeleteAsync(int id);
     Task<IEnumerable<MenuItem>> GetByRestaurantIdAsync(int restaurantId);
     Task<Restaurant?> GetRestaurantByMenuItemIdAsync(int menuItemId);
+    Task<List<MenuItem>> ListOrderedMenuItemsAsync(int reservationId);
 }
