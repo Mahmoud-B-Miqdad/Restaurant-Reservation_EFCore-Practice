@@ -4,7 +4,6 @@ using RestaurantReservation.Db.Repositories.Interfaces;
 using RestaurantReservationSystem.API.DTOs.Requests;
 using RestaurantReservationSystem.API.DTOs.Responses;
 using RestaurantReservationSystem.API.Services.Interfaces;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace RestaurantReservationSystem.API.Services
 {
@@ -17,29 +16,30 @@ namespace RestaurantReservationSystem.API.Services
         private readonly IOrderRepository _orderRepository;
         private readonly IMapper _mapper;
 
-        // <summary>
+        /// <summary>
         /// Initializes a new instance of the <see cref="EmployeeService"/> class.
         /// </summary>
         /// <param name="repository">The repository responsible for employee data access.</param>
         /// <param name="mapper">The mapper used to convert between entities and DTOs.</param>
-        public EmployeeService(IEmployeeRepository repository, IMapper mapper)
+        public EmployeeService(IEmployeeRepository repository, IMapper mapper, IOrderRepository orderRepository)
         {
             _employeeRepository = repository;
+            _orderRepository = orderRepository;
             _mapper = mapper;
         }
 
         /// <inheritdoc />
         public async Task<List<EmployeeResponse>> ListManagersAsync()
         {
-            var employees = await _employeeRepository.ListManagersAsync();
-            return _mapper.Map<List<EmployeeResponse>>(employees);
+            var managers = await _employeeRepository.ListManagersAsync();
+            return _mapper.Map<List<EmployeeResponse>>(managers);
         }
 
         /// <inheritdoc />
         public async Task<List<EmployeeResponse>> GetAllAsync()
         {
-            var managers = await _employeeRepository.GetAllAsync();
-            return _mapper.Map<List<EmployeeResponse>>(managers);
+            var employees = await _employeeRepository.GetAllAsync();
+            return _mapper.Map<List<EmployeeResponse>>(employees);
         }
 
         /// <inheritdoc />

@@ -11,4 +11,8 @@ public interface IReservationRepository
     Task DeleteAsync(int id);
     Task<IEnumerable<Reservation>> GetByRestaurantIdAsync(int restaurantId);
     Task<IEnumerable<Reservation>> GetReservationsByTableIdAsync(int tableId);
+    Task<Customer?> GetCustomerByReservationIdAsync(int reservationId);
+    Task<Restaurant?> GetRestaurantByReservationIdAsync(int reservationId);
+    Task<Table?> GetTableByReservationIdAsync(int reservationId);
+    Task<List<Reservation>> GetReservationsByCustomerAsync(int customerId);
 }

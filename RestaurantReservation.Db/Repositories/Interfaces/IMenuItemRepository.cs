@@ -10,4 +10,6 @@ public interface IMenuItemRepository
     Task UpdateAsync(MenuItem menuItem);
     Task DeleteAsync(int id);
     Task<IEnumerable<MenuItem>> GetByRestaurantIdAsync(int restaurantId);
+    Task<Restaurant?> GetRestaurantByMenuItemIdAsync(int menuItemId);
+    Task<List<MenuItem>> ListOrderedMenuItemsAsync(int reservationId);
 }

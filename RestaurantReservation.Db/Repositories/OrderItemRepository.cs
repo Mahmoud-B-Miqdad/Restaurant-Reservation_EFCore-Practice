@@ -44,4 +44,18 @@ internal class OrderItemRepository : IOrderItemRepository
         _context.OrderItems.Remove(orderItem);
         await _context.SaveChangesAsync();
     }
+
+    public async Task<IEnumerable<OrderItem>> GetOrderItemsByOrderIdAsync(int orderId)
+    {
+        return await _context.OrderItems
+            .Where(o => o.OrderId == orderId)
+            .ToListAsync();
+    }
+
+    public async Task<IEnumerable<OrderItem>> GetOrderItemsByMenuItemIdAsync(int menuItemId)
+    {
+        return await _context.OrderItems
+            .Where(o => o.MenuItem.ItemId == menuItemId)
+            .ToListAsync();
+    }
 }

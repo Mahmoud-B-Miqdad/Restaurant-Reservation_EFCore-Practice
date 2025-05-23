@@ -69,5 +69,32 @@ namespace RestaurantReservation.Db.Repositories
                 .Where(o => o.TableId == tableId)
                 .ToListAsync();
         }
+
+        public async Task<Customer?> GetCustomerByReservationIdAsync(int reservationId)
+        {
+            var reservations = await _context.Reservations
+                .Include(r => r.Customer)
+                .FirstOrDefaultAsync(r => r.ReservationId == reservationId);
+
+            return reservations?.Customer;
+        }
+
+        public async Task<Restaurant?> GetRestaurantByReservationIdAsync(int reservationId)
+        {
+            var reservations = await _context.Reservations
+                .Include(r => r.Restaurant)
+                .FirstOrDefaultAsync(r => r.ReservationId == reservationId);
+
+            return reservations?.Restaurant;
+        }
+
+        public async Task<Table?> GetTableByReservationIdAsync(int reservationId)
+        {
+            var reservations = await _context.Reservations
+                .Include(r => r.Table)
+                .FirstOrDefaultAsync(r => r.ReservationId == reservationId);
+
+            return reservations?.Table;
+        }
     }
 }

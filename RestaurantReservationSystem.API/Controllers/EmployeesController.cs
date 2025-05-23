@@ -26,7 +26,7 @@ namespace RestaurantReservationSystem.API.Controllers
         /// </summary>
         /// <returns>List of all managers.</returns>
         [HttpGet("managers")]
-        public async Task<IActionResult> GetAllManagers()
+        public async Task<IActionResult> GetAllManagersAsync()
         {
             var managers = await _employeeService.ListManagersAsync();
             return Ok(ApiResponse<IEnumerable<EmployeeResponse>>.SuccessResponse(managers));
@@ -37,7 +37,7 @@ namespace RestaurantReservationSystem.API.Controllers
         /// </summary>
         /// <returns>List of all employees.</returns>
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAllAsync()
         {
             var employees = await _employeeService.GetAllAsync();
             return Ok(ApiResponse<IEnumerable<EmployeeResponse>>.SuccessResponse(employees));
