@@ -19,7 +19,7 @@ namespace RestaurantReservationSystem.API.Mapping
             CreateMap<EmployeeRequest, Employee>();
 
             CreateMap<Table, TableResponse>();
-            CreateMap<TableResponse, Table>();
+            CreateMap<TableRequest, Table>();
 
             CreateMap<MenuItem, MenuItemResponse>();
             CreateMap<MenuItemRequest, MenuItem>();

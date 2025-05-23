@@ -56,10 +56,11 @@ namespace RestaurantReservationSystem.API.Controllers
         public async Task<IActionResult> CreateAsync(EmployeeRequest request)
         {
             var createdEmployee = await _employeeService.CreateAsync(request);
-            return CreatedAtAction(
+            CreatedAtAction(
                 nameof(GetByIdAsync),
                 new { id = createdEmployee.EmployeeId },
-                ApiResponse<EmployeeResponse>.SuccessResponse(createdEmployee));
+               createdEmployee);
+            return Ok(ApiResponse<EmployeeResponse>.SuccessResponse(createdEmployee));
         }
 
         /// <summary>
@@ -92,7 +93,7 @@ namespace RestaurantReservationSystem.API.Controllers
 
             var existingEmployee = await _employeeService.GetByIdAsync(id);
             if (existingEmployee == null)
-                return NotFound(ApiResponse<string>.FailResponse("Restaurant not found"));
+                return NotFound(ApiResponse<string>.FailResponse("Employee not found"));
 
             var employeeToPatch = new EmployeeRequest
             {
@@ -112,7 +113,7 @@ namespace RestaurantReservationSystem.API.Controllers
 
             var updatedEmployee = await _employeeService.UpdateAsync(id, employeeToPatch);
             if (updatedEmployee == null)
-                return NotFound(ApiResponse<string>.FailResponse("Failed to update restaurant"));
+                return NotFound(ApiResponse<string>.FailResponse("Failed to update employee"));
 
             return Ok(ApiResponse<EmployeeResponse>.SuccessResponse(updatedEmployee));
         }

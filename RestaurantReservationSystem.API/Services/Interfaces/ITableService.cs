@@ -59,5 +59,14 @@ namespace RestaurantReservationSystem.API.Interfaces
         /// The task result contains the restaurant response DTO if found; otherwise, null.
         /// </returns>
         Task<RestaurantResponse?> GetRestaurantAsync(int tableId);
+
+        /// <summary>
+        /// Retrieves all reservations handled by a specific table.
+        /// </summary>
+        /// <param name="tableId">The unique identifier of the table.</param>
+        /// <returns>A task that represents the asynchronous operation.
+        /// The task result contains a list of reservation response DTOs.
+        /// </returns>
+        Task<IEnumerable<ReservationResponse>> GetReservationsAsync(int tableId);
     }
 }

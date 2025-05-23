@@ -57,10 +57,17 @@ namespace RestaurantReservationSystem.API.Controllers
         public async Task<IActionResult> CreateAsync(RestaurantRequest request)
         {
             var createdRestaurant = await _restaurantService.CreateAsync(request);
-            return CreatedAtAction(
+
+            if (createdRestaurant == null)
+                return BadRequest(ApiResponse<string>.FailResponse("Failed to create restaurant"));
+
+            CreatedAtAction(
                 nameof(GetByIdAsync),
                 new { id = createdRestaurant.RestaurantId },
-                ApiResponse<RestaurantResponse>.SuccessResponse(createdRestaurant));
+                createdRestaurant);
+
+            return Ok(ApiResponse<RestaurantResponse>.SuccessResponse(createdRestaurant));
+
         }
 
         /// <summary>
