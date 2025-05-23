@@ -11,7 +11,7 @@ namespace RestaurantReservationSystem.API.Controllers
     /// Controller for managing restaurant tables.
     /// </summary>
     [ApiController]
-    [Route("api/Tables")]
+    [Route("api/tables")]
     public class TableController : ControllerBase
     {
         private readonly ITableService _tableService;

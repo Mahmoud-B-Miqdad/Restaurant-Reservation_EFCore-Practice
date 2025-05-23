@@ -29,10 +29,17 @@ namespace RestaurantReservationSystem.API.Services
         }
 
         /// <inheritdoc />
+        public async Task<List<EmployeeResponse>> ListManagersAsync()
+        {
+            var employees = await _employeeRepository.ListManagersAsync();
+            return _mapper.Map<List<EmployeeResponse>>(employees);
+        }
+
+        /// <inheritdoc />
         public async Task<List<EmployeeResponse>> GetAllAsync()
         {
-            var employees = await _employeeRepository.GetAllAsync();
-            return _mapper.Map<List<EmployeeResponse>>(employees);
+            var managers = await _employeeRepository.GetAllAsync();
+            return _mapper.Map<List<EmployeeResponse>>(managers);
         }
 
         /// <inheritdoc />

@@ -9,6 +9,15 @@ namespace RestaurantReservationSystem.API.Services.Interfaces
     public interface IEmployeeService
     {
         /// <summary>
+        /// Retrieves a list of all Managers.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation.
+        /// The task result contains a list of managers employee response DTOs.
+        /// </returns>
+
+        Task<List<EmployeeResponse>> ListManagersAsync();
+
+        /// <summary>
         /// Retrieves a list of all employees.
         /// </summary>
         /// <returns>A task that represents the asynchronous operation. The task result contains a list of employee response DTOs.</returns>

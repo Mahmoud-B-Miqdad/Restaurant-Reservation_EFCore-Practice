@@ -12,7 +12,7 @@ namespace RestaurantReservationSystem.API.Controllers
     /// Provides endpoints to create, retrieve, update, and delete restaurant data.
     /// </summary>
     [ApiController]
-    [Route("api/Restaurants")]
+    [Route("api/restaurants")]
     public class RestaurantsController : ControllerBase
     {
         private readonly IRestaurantService _restaurantService;

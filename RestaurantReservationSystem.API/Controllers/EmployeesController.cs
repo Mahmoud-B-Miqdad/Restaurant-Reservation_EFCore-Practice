@@ -11,7 +11,7 @@ namespace RestaurantReservationSystem.API.Controllers
     /// Controller for managing employee-related operations.
     /// </summary>
     [ApiController]
-    [Route("api/Employees")]
+    [Route("api/employees")]
     public class EmployeesController : ControllerBase
     {
         private readonly IEmployeeService _employeeService;
@@ -19,6 +19,17 @@ namespace RestaurantReservationSystem.API.Controllers
         public EmployeesController(IEmployeeService employeSservice)
         {
             _employeeService = employeSservice;
+        }
+
+        /// <summary>
+        /// Retrieves all managers.
+        /// </summary>
+        /// <returns>List of all managers.</returns>
+        [HttpGet("managers")]
+        public async Task<IActionResult> GetAllManagers()
+        {
+            var managers = await _employeeService.ListManagersAsync();
+            return Ok(ApiResponse<IEnumerable<EmployeeResponse>>.SuccessResponse(managers));
         }
 
         /// <summary>
