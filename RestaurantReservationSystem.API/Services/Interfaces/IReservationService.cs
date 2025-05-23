@@ -1,4 +1,5 @@
-﻿using RestaurantReservationSystem.API.DTOs.Requests;
+﻿using RestaurantReservation.Db.Entities;
+using RestaurantReservationSystem.API.DTOs.Requests;
 using RestaurantReservationSystem.API.DTOs.Responses;
 
 namespace RestaurantReservationSystem.API.Services.Interfaces
@@ -70,5 +71,13 @@ namespace RestaurantReservationSystem.API.Services.Interfaces
         /// <param name="reservationId">The unique identifier of the reservation.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains a list of order response DTOs.</returns>
         Task<IEnumerable<OrderResponse>> GetOrdersAsync(int reservationId);
+
+        /// <summary>
+        /// Retrieves a list of all Reservation handled by a specific Customer.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation.
+        /// The task result contains a list of Reservation response DTOs.
+        /// </returns>
+        Task<IEnumerable<ReservationResponse>> GetReservationsByCustomerAsync(int customerId);
     }
 }

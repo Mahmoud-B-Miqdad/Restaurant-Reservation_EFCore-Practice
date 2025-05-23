@@ -14,4 +14,5 @@ public interface IReservationRepository
     Task<Customer?> GetCustomerByReservationIdAsync(int reservationId);
     Task<Restaurant?> GetRestaurantByReservationIdAsync(int reservationId);
     Task<Table?> GetTableByReservationIdAsync(int reservationId);
+    Task<List<Reservation>> GetReservationsByCustomerAsync(int customerId);
 }

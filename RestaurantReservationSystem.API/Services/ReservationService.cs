@@ -98,5 +98,12 @@ namespace RestaurantReservationSystem.API.Services
             var orders = await _orderRepository.GetOrdersByReservationIdAsync(reservationId);
             return _mapper.Map<IEnumerable<OrderResponse>>(orders);
         }
+
+        /// <inheritdoc />
+        public async Task<IEnumerable<ReservationResponse>> GetReservationsByCustomerAsync(int customerId)
+        {
+            var reservationsByCustomer = await _reservationRepository.GetReservationsByCustomerAsync(customerId);
+            return _mapper.Map<IEnumerable<ReservationResponse>>(reservationsByCustomer);
+        }
     }
 }

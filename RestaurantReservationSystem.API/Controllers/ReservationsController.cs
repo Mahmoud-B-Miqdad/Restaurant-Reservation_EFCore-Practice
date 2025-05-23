@@ -206,5 +206,24 @@ namespace RestaurantReservationSystem.API.Controllers
 
             return Ok(ApiResponse<TableResponse>.SuccessResponse(table));
         }
+
+        /// <summary>
+        /// Retrieves the reservations handled by a specific customer.
+        /// </summary>
+        /// <param name="id">Customer ID</param>
+        /// <returns>reservations handled by a specific customer.</returns>
+        [HttpGet("customer/{id}")]
+        public async Task<IActionResult> GetReservationsByCustomerAsync(int id)
+        {
+            var reservation = await _reservationService.GetByIdAsync(id);
+            if (reservation == null)
+                return NotFound(ApiResponse<ReservationResponse>.FailResponse("Reservation not found"));
+
+            var reservationsByCustomer = await _reservationService.GetReservationsByCustomerAsync(id);
+            if (reservationsByCustomer == null)
+                return NotFound(ApiResponse<TableResponse>.FailResponse("Theres no reservations for this Customer"));
+
+            return Ok(ApiResponse<IEnumerable<ReservationResponse>>.SuccessResponse(reservationsByCustomer));
+        }
     }
 }
