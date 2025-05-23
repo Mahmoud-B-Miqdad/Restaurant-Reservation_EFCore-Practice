@@ -44,7 +44,7 @@ namespace RestaurantReservationSystem.API.Services
         }
 
         /// <inheritdoc />
-        public async Task<MenuItemResponse> CreateAsync(EmployeeRequest request)
+        public async Task<MenuItemResponse> CreateAsync(MenuItemRequest request)
         {
             var menuItem = _mapper.Map<MenuItem>(request);
             await _menuItemRepository.AddAsync(menuItem);
@@ -52,7 +52,7 @@ namespace RestaurantReservationSystem.API.Services
         }
 
         /// <inheritdoc />
-        public async Task<MenuItemResponse?> UpdateAsync(int id, EmployeeRequest request)
+        public async Task<MenuItemResponse?> UpdateAsync(int id, MenuItemRequest request)
         {
             var updatedMenuItem = await _menuItemRepository.GetByIdAsync(id);
             if (updatedMenuItem == null) return null;

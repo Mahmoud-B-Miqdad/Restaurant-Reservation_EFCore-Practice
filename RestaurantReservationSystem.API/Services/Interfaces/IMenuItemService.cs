@@ -26,7 +26,7 @@ namespace RestaurantReservationSystem.API.Services.Interfaces
         /// </summary>
         /// <param name="request">The request DTO containing menuItem details.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        Task<MenuItemResponse> CreateAsync(EmployeeRequest request);
+        Task<MenuItemResponse> CreateAsync(MenuItemRequest request);
 
         /// <summary>
         /// Updates the details of an existing menuItem.
@@ -34,7 +34,7 @@ namespace RestaurantReservationSystem.API.Services.Interfaces
         /// <param name="id">The unique identifier of the menuItem to update.</param>
         /// <param name="request">The request DTO containing updated menuItem information.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        Task<MenuItemResponse?> UpdateAsync(int id, EmployeeRequest request);
+        Task<MenuItemResponse?> UpdateAsync(int id, MenuItemRequest request);
 
         /// <summary>
         /// Deletes an menuItem from the system.

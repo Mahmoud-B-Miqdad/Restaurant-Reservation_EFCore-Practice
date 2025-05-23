@@ -21,9 +21,10 @@ namespace RestaurantReservationSystem.API.Services
         /// </summary>
         /// <param name="repository">The repository responsible for employee data access.</param>
         /// <param name="mapper">The mapper used to convert between entities and DTOs.</param>
-        public EmployeeService(IEmployeeRepository repository, IMapper mapper)
+        public EmployeeService(IEmployeeRepository repository, IMapper mapper, IOrderRepository orderRepository)
         {
             _employeeRepository = repository;
+            _orderRepository = orderRepository;
             _mapper = mapper;
         }
 
