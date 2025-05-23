@@ -50,7 +50,7 @@ namespace RestaurantReservationSystem.API.Services.Interfaces
         /// </summary>
         /// <param name="id">The unique identifier of the employee to delete.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        public Task<bool> DeleteAsync(int id);
+        Task<bool> DeleteAsync(int id);
 
         /// <summary>
         /// Retrieves all orders handled by a specific employee.
