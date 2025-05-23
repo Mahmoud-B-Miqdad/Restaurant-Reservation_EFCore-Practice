@@ -12,5 +12,5 @@ public interface IOrderRepository
     Task<IEnumerable<Order>> GetOrdersByEmployeeIdAsync(int employeeId);
     Task<Employee?> GetEmployeeByOrderIdAsync(int orderId);
     Task<Reservation?> GetReservationByOrderIdAsync(int orderId);
-
+    Task<IEnumerable<Order>> GetOrdersByReservationIdAsync(int reservationId);
 }
