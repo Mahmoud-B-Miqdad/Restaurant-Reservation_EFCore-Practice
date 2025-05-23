@@ -10,4 +10,5 @@ public interface IOrderItemRepository
     Task UpdateAsync(OrderItem orderItem);
     Task DeleteAsync(int id);
     Task<IEnumerable<OrderItem>> GetOrderItemsByOrderIdAsync(int orderId);
+    Task<IEnumerable<OrderItem>> GetOrderItemsByMenuItemIdAsync(int menuItemId);
 }

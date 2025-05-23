@@ -48,7 +48,14 @@ internal class OrderItemRepository : IOrderItemRepository
     public async Task<IEnumerable<OrderItem>> GetOrderItemsByOrderIdAsync(int orderId)
     {
         return await _context.OrderItems
-            .Where(e => e.OrderId == orderId)
+            .Where(o => o.OrderId == orderId)
+            .ToListAsync();
+    }
+
+    public async Task<IEnumerable<OrderItem>> GetOrderItemsByMenuItemIdAsync(int menuItemId)
+    {
+        return await _context.OrderItems
+            .Where(o => o.MenuItem.ItemId == menuItemId)
             .ToListAsync();
     }
 }
