@@ -11,6 +11,7 @@ builder.Services.AddRepositories(builder.Configuration.GetConnectionString("Defa
 builder.Services.AddScoped<IRestaurantService, RestaurantService>();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<ITableService, TableService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
 
 builder.Services.AddControllers()
     .AddNewtonsoftJson();
