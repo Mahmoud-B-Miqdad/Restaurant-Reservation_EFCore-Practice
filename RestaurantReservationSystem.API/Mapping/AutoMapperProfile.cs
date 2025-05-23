@@ -32,6 +32,9 @@ namespace RestaurantReservationSystem.API.Mapping
 
             CreateMap<OrderItem, OrderItemResponse>();
             CreateMap<OrderItemRequest, OrderItem>();
+
+            CreateMap<Customer, CustomerResponse>();
+            CreateMap<CustomerRequest, Customer>();
         }
     }
 }
