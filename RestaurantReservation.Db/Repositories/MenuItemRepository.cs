@@ -25,6 +25,11 @@ namespace RestaurantReservation.Db.Repositories
 
         public async Task<List<MenuItem>> GetAllAsync() => await _context.MenuItems.ToListAsync();
 
+        public async Task<MenuItem> GetByIdAsync(int id)
+        {
+            return await _context.MenuItems.FindAsync(id);
+        }
+
         public async Task AddAsync(MenuItem menuItem)
         {
             _context.MenuItems.Add(menuItem);
@@ -48,6 +53,13 @@ namespace RestaurantReservation.Db.Repositories
 
             _context.MenuItems.Remove(menuItem);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<MenuItem>> GetByRestaurantIdAsync(int restaurantId)
+        {
+            return await _context.MenuItems
+                .Where(e => e.RestaurantId == restaurantId)
+                .ToListAsync();
         }
     }
 }

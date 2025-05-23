@@ -36,7 +36,10 @@ namespace RestaurantReservation.Db.Repositories
 
         public async Task<List<Order>> GetAllAsync() => await _context.Orders.ToListAsync();
 
-
+        public async Task<Order> GetByIdAsync(int id)
+        {
+            return await _context.Orders.FindAsync(id);
+        }
         public async Task AddAsync(Order order)
         {
             _context.Orders.Add(order);
@@ -60,6 +63,13 @@ namespace RestaurantReservation.Db.Repositories
 
             _context.Orders.Remove(order);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<Order>> GetOrdersByEmployeeIdAsync(int employeeId)
+        {
+            return await _context.Orders
+                .Where(o => o.EmployeeId == employeeId)
+                .ToListAsync();
         }
     }
 }

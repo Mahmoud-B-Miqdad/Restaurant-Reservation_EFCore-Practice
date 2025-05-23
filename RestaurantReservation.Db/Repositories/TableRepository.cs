@@ -17,6 +17,10 @@ internal class TableRepository : ITableRepository
         return await _context.Tables.ToListAsync();
     }
 
+    public async Task<Table> GetByIdAsync(int id)
+    {
+        return await _context.Tables.FindAsync(id);
+    }
     public async Task AddAsync(Table table)
     {
         await _context.Tables.AddAsync(table);
@@ -41,5 +45,21 @@ internal class TableRepository : ITableRepository
             _context.Tables.Remove(table);
             await _context.SaveChangesAsync();
         }
+    }
+
+    public async Task<IEnumerable<Table>> GetByRestaurantIdAsync(int restaurantId)
+    {
+        return await _context.Tables
+            .Where(e => e.RestaurantId == restaurantId)
+            .ToListAsync();
+    }
+
+    public async Task<Restaurant?> GetRestaurantByTableIdAsync(int tableId)
+    {
+        var table = await _context.Tables
+            .Include(e => e.Restaurant)
+            .FirstOrDefaultAsync(e => e.TableId == tableId);
+
+        return table?.Restaurant;
     }
 }
