@@ -12,6 +12,7 @@ builder.Services.AddScoped<IRestaurantService, RestaurantService>();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<ITableService, TableService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IReservationService, ReservationService>();
 
 builder.Services.AddControllers()
     .AddNewtonsoftJson();
