@@ -10,4 +10,7 @@ public interface IOrderRepository
     Task UpdateAsync(Order order);
     Task DeleteAsync(int id);
     Task<IEnumerable<Order>> GetOrdersByEmployeeIdAsync(int employeeId);
+    Task<Employee?> GetEmployeeByOrderIdAsync(int orderId);
+    Task<Reservation?> GetReservationByOrderIdAsync(int orderId);
+
 }

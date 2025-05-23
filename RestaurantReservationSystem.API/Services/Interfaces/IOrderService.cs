@@ -26,14 +26,14 @@ namespace RestaurantReservationSystem.API.Services.Interfaces
         /// Creates a new order in the system.
         /// </summary>
         /// <param name="request">The order details provided in <see cref="OrderRequest"/> format.</param>
-        Task<OrderItemResponse?> CreateAsync(OrderRequest request);
+        Task<OrderResponse?> CreateAsync(OrderRequest request);
 
         /// <summary>
         /// Updates an existing order by its ID.
         /// </summary>
         /// <param name="id">The ID of the order to update.</param>
         /// <param name="request">The updated order data.</param>
-        Task<OrderItemResponse?> UpdateAsync(int id, OrderRequest request);
+        Task<OrderResponse?> UpdateAsync(int id, OrderRequest request);
 
         /// <summary>
         /// Deletes an order by its unique identifier.
@@ -56,10 +56,10 @@ namespace RestaurantReservationSystem.API.Services.Interfaces
         Task<EmployeeResponse?> GetEmployeeAsync(int orderId);
 
         /// <summary>
-        /// Retrieves all order items handled by a specific employee.
+        /// Retrieves all order items handled by a specific order.
         /// </summary>
-        /// <param name="employeeId">The ID of the employee.</param>
-        /// <returns>A collection of <see cref="OrderItemResponse"/> linked to the employee.</returns>
+        /// <param name="orderId">The ID of the order.</param>
+        /// <returns>A collection of <see cref="OrderItemResponse"/> linked to the order.</returns>
         Task<IEnumerable<OrderItemResponse>> GetOrderItemsAsync(int orderId);
     }
 }
