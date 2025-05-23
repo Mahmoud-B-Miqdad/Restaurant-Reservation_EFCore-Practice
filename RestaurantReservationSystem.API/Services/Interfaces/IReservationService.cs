@@ -55,14 +55,14 @@ namespace RestaurantReservationSystem.API.Services.Interfaces
         /// </summary>
         /// <param name="reservationId">The unique identifier of the reservation.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains the restaurant response DTO if found; otherwise, null.</returns>
-        Task<ReservationResponse?> GetRestaurantAsync(int reservationId);
+        Task<RestaurantResponse?> GetRestaurantAsync(int reservationId);
 
         /// <summary>
         /// Retrieves the table associated with a specific reservation.
         /// </summary>
         /// <param name="reservationId">The unique identifier of the reservation.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains the table response DTO if found; otherwise, null.</returns>
-        Task<ReservationResponse?> GetTableAsync(int reservationId);
+        Task<TableResponse?> GetTableAsync(int reservationId);
 
         /// <summary>
         /// Retrieves all orders handled by a specific reservation.
