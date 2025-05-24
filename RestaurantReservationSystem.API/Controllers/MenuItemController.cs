@@ -10,7 +10,7 @@ namespace RestaurantReservationSystem.API.Controllers
     /// <summary>
     /// Controller for managing menuItem-related operations.
     /// </summary>
-    [Route("api/menu-item")]
+    [Route("api/menu-items")]
     [ApiController]
     public class MenuItemController : ControllerBase
     {
@@ -97,6 +97,7 @@ namespace RestaurantReservationSystem.API.Controllers
 
             var menuItemToPatch = new MenuItemRequest
             {
+                RestaurantId = existingMenuItem.RestaurantId,
                 Name= existingMenuItem.Name,
                 Description = existingMenuItem.Description,
                 Price = existingMenuItem.Price,
@@ -125,11 +126,18 @@ namespace RestaurantReservationSystem.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(int id)
         {
-            var deletedEmployee = await _menuItemService.DeleteAsync(id);
-            if (!deletedEmployee)
-                return NotFound(ApiResponse<string>.FailResponse("MenuItem not found"));
+            try
+            {
+                var deletedEmployee = await _menuItemService.DeleteAsync(id);
+                if (!deletedEmployee)
+                    return NotFound(ApiResponse<string>.FailResponse("MenuItem not found"));
 
-            return Ok(ApiResponse<string>.SuccessResponse("menuItem deleted successfully"));
+                return Ok(ApiResponse<string>.SuccessResponse("menuItem deleted successfully"));
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ApiResponse<string>.FailResponse(ex.Message));
+            }
         }
 
         /// <summary>
