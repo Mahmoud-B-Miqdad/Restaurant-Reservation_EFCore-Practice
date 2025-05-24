@@ -188,5 +188,13 @@ namespace RestaurantReservationSystem.API.Controllers
 
             return Ok(ApiResponse<RestaurantResponse>.SuccessResponse(restaurant));
         }
+
+        [HttpGet("{id}/average-order-amount")]
+        public async Task<IActionResult> GetAverageOrderAmount(int employeeId)
+        {
+            var average = await _employeeService.GetAverageOrderAmountAsync(employeeId);
+
+            return Ok(ApiResponse<decimal>.SuccessResponse(average));
+        }
     }
 }

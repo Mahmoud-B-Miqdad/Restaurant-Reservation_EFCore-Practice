@@ -65,5 +65,12 @@ namespace RestaurantReservationSystem.API.Services.Interfaces
         /// <param name="employeeId">The unique identifier of the employee.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains the restaurant response DTO if found; otherwise, null.</returns>
         Task<RestaurantResponse?> GetRestaurantAsync(int employeeId);
+
+        /// <summary>
+        /// Retrieves the Average Order Amount associated with a specific employee.
+        /// </summary>
+        /// <param name="employeeId">The unique identifier of the employee.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains the restaurant response DTO if found; otherwise, null.</returns>
+        Task<decimal> GetAverageOrderAmountAsync(int employeeId);
     }
 }

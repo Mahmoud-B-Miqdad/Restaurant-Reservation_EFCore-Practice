@@ -91,5 +91,12 @@ namespace RestaurantReservationSystem.API.Services
             var restaurant = await _employeeRepository.GetRestaurantByEmployeeIdAsync(employeeId);
             return restaurant == null ? null : _mapper.Map<RestaurantResponse>(restaurant);
         }
+
+        /// <inheritdoc />
+        public async Task<decimal> GetAverageOrderAmountAsync(int employeeId)
+        {
+            return await _orderRepository.CalculateAverageOrderAmountAsync(employeeId);
+        }
+
     }
 }

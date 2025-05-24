@@ -13,4 +13,6 @@ public interface IOrderRepository
     Task<Employee?> GetEmployeeByOrderIdAsync(int orderId);
     Task<Reservation?> GetReservationByOrderIdAsync(int orderId);
     Task<IEnumerable<Order>> GetOrdersByReservationIdAsync(int reservationId);
+    Task<List<Order>> ListOrdersAndMenuItemsAsync(int reservationId);
+    Task<decimal> CalculateAverageOrderAmountAsync(int employeeId);
 }
