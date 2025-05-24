@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.JsonPatch;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using RestaurantReservationSystem.API.DTOs.Requests;
 using RestaurantReservationSystem.API.DTOs.Responses;
@@ -7,6 +8,7 @@ using RestaurantReservationSystem.API.Services.Interfaces;
 
 namespace RestaurantReservationSystem.API.Controllers
 {
+    [Authorize]
     /// <summary>
     /// API controller for managing restaurants.
     /// Provides endpoints to create, retrieve, update, and delete restaurant data.

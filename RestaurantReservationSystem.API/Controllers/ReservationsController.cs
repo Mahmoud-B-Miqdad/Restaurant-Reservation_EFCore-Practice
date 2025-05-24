@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.JsonPatch;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using RestaurantReservation.Db.Repositories.Interfaces;
 using RestaurantReservationSystem.API.DTOs.Requests;
@@ -8,6 +9,7 @@ using RestaurantReservationSystem.API.Services.Interfaces;
 
 namespace RestaurantReservationSystem.API.Controllers
 {
+    [Authorize]
     /// <summary>
     /// Controller for managing reservation-related operations.
     /// </summary>
