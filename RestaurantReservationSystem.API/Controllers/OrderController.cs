@@ -12,7 +12,7 @@ namespace RestaurantReservationSystem.API.Controllers
     /// Provides endpoints for CRUD operations, partial updates, and retrieving related entities
     /// like Employee, Reservation, and Order Items.
     /// </summary>
-    [Route("api/order")]
+    [Route("api/orders")]
     [ApiController]
     public class OrdersController : ControllerBase
     {
@@ -126,11 +126,18 @@ namespace RestaurantReservationSystem.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var deletedOrder = await _orderService.DeleteAsync(id);
-            if (!deletedOrder)
-                return NotFound(ApiResponse<string>.FailResponse("Order not found"));
+            try
+            {
+                var deletedOrder = await _orderService.DeleteAsync(id);
+                if (!deletedOrder)
+                    return NotFound(ApiResponse<string>.FailResponse("Order not found"));
 
-            return Ok(ApiResponse<string>.SuccessResponse("Order deleted successfully"));
+                return Ok(ApiResponse<string>.SuccessResponse("Order deleted successfully"));
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ApiResponse<string>.FailResponse(ex.Message));
+            }
         }
 
         /// <summary>
