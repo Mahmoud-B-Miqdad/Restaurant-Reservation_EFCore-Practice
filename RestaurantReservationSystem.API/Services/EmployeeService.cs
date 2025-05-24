@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using RestaurantReservation.Db.Entities;
 using RestaurantReservation.Db.Repositories.Interfaces;
 using RestaurantReservationSystem.API.DTOs.Requests;
@@ -74,8 +75,8 @@ namespace RestaurantReservationSystem.API.Services
             var existing = await _employeeRepository.GetByIdAsync(id);
             if (existing == null) return false;
 
-            await _employeeRepository.DeleteAsync(id);
-            return true;
+                await _employeeRepository.DeleteAsync(id);
+                return true;
         }
 
         /// <inheritdoc />

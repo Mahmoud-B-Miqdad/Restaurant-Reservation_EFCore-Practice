@@ -137,11 +137,19 @@ namespace RestaurantReservationSystem.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(int id)
         {
-            var deletedEmployee = await _employeeService.DeleteAsync(id);
-            if (!deletedEmployee)
-                return NotFound(ApiResponse<string>.FailResponse("Employee not found"));
+            try
+            {
+                var deletedEmployee = await _employeeService.DeleteAsync(id);
+                if (!deletedEmployee)
+                    return NotFound(ApiResponse<string>.FailResponse("Employee not found"));
 
-            return Ok(ApiResponse<string>.SuccessResponse("Employee deleted successfully"));
+                return Ok(ApiResponse<string>.SuccessResponse("Employee deleted successfully"));
+
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ApiResponse<string>.FailResponse(ex.Message));
+            }
         }
 
         /// <summary>
