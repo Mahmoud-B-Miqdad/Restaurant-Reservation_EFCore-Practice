@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.JsonPatch;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using RestaurantReservationSystem.API.DTOs.Requests;
 using RestaurantReservationSystem.API.DTOs.Responses;
@@ -7,6 +8,7 @@ using RestaurantReservationSystem.API.Services.Interfaces;
 
 namespace RestaurantReservationSystem.API.Controllers
 {
+    [Authorize]
     /// <summary>
     /// Controller responsible for handling HTTP requests related to Order operations.
     /// Provides endpoints for CRUD operations, partial updates, and retrieving related entities
