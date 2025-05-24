@@ -7,27 +7,14 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Reflection;
+using RestaurantReservationSystem.API.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var jwtSettingsSection = builder.Configuration.GetSection("JwtSettings");
-var jwtSettings = jwtSettingsSection.Get<JwtSettings>();
+builder.Services.AddApplicationServices(builder.Configuration);
 
-builder.Services.Configure<JwtSettings>(jwtSettingsSection);
+var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>();
 
-builder.Services.AddAutoMapper(typeof(RestaurantReservationSystem.API.Mapping.AutoMapperProfile).Assembly);
-
-builder.Services.AddScoped<IAuthorizationService, AuthorizationService>();
-builder.Services.AddSingleton<IJwtTokenGenerator>(new JwtTokenGenerator(jwtSettings));
-builder.Services.AddRepositories(builder.Configuration.GetConnectionString("DefaultConnection"));
-builder.Services.AddScoped<IRestaurantService, RestaurantService>();
-builder.Services.AddScoped<IEmployeeService, EmployeeService>();
-builder.Services.AddScoped<ITableService, TableService>();
-builder.Services.AddScoped<IOrderService, OrderService>();
-builder.Services.AddScoped<IReservationService, ReservationService>();
-builder.Services.AddScoped<IMenuItemService, MenuItemService>();
-builder.Services.AddScoped<ICustomerService, CustomerService>();
-builder.Services.AddScoped<IOrderItemService, OrderItemService>();
 
 builder.Services.AddAuthentication(options =>
 {
