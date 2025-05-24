@@ -48,7 +48,7 @@ namespace RestaurantReservationSystem.API.Services.Interfaces
         /// </summary>
         /// <param name="orderItemId">The unique identifier of the order.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains the restaurant response DTO if found; otherwise, null.</returns>
-        Task<OrderItemResponse?> GetOrderAsync(int orderItemId);
+        Task<OrderResponse?> GetOrderAsync(int orderItemId);
 
         /// <summary>
         /// Retrieves the restaurant associated with a specific order.
