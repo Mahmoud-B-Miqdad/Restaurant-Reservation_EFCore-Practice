@@ -1,15 +1,17 @@
 using JwtAuthMinimalApi.Configurations;
-using JwtAuthMinimalApi.Services;
-using RestaurantReservationSystem.API.Interfaces;
-using RestaurantReservationSystem.API.Services;
-using RestaurantReservationSystem.API.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Reflection;
 using RestaurantReservationSystem.API.Extensions;
+using RestaurantReservationSystem.API.Logging;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+SerilogConfiguration.ConfigureSerilog(builder.Configuration);
+
+builder.Host.UseSerilog();
 
 builder.Services.AddApplicationServices(builder.Configuration);
 
