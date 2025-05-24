@@ -48,7 +48,13 @@ namespace RestaurantReservation.Db.Repositories
 
         public async Task DeleteAsync(int id)
         {
-            var reservation = await _context.Reservations.FindAsync(id);
+            var reservation = await _context.Reservations
+                 .Include(r => r.Orders)
+                 .FirstOrDefaultAsync(r => r.ReservationId == id);
+
+            if (reservation.Orders.Any())
+                throw new InvalidOperationException("Cannot delete reservation with existing orders.");
+
             if (reservation != null)
             {
                 _context.Reservations.Remove(reservation);

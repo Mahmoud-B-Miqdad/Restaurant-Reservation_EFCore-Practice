@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using RestaurantReservation.Db.Repositories.Interfaces;
 using RestaurantReservationSystem.API.DTOs.Requests;
 using RestaurantReservationSystem.API.DTOs.Responses;
 using RestaurantReservationSystem.API.Responses;
@@ -15,10 +16,12 @@ namespace RestaurantReservationSystem.API.Controllers
     public class ReservationsController : ControllerBase
     {
         private readonly IReservationService _reservationService;
+        private readonly ICustomerRepository _customerRepository;
 
-        public ReservationsController(IReservationService reservationService)
+        public ReservationsController(IReservationService reservationService, ICustomerRepository customerRepository)
         {
             _reservationService = reservationService;
+            _customerRepository = customerRepository;
         }
 
         /// <summary>
@@ -127,11 +130,18 @@ namespace RestaurantReservationSystem.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(int id)
         {
-            var deletedReservation = await _reservationService.DeleteAsync(id);
-            if (!deletedReservation)
-                return NotFound(ApiResponse<string>.FailResponse("Reservation not found"));
+            try
+            {
+                var deletedReservation = await _reservationService.DeleteAsync(id);
+                if (!deletedReservation)
+                    return NotFound(ApiResponse<string>.FailResponse("Reservation not found"));
 
-            return Ok(ApiResponse<string>.SuccessResponse("Reservation deleted successfully"));
+                return Ok(ApiResponse<string>.SuccessResponse("Reservation deleted successfully"));
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ApiResponse<string>.FailResponse(ex.Message));
+            }
         }
 
         /// <summary>
@@ -215,9 +225,9 @@ namespace RestaurantReservationSystem.API.Controllers
         [HttpGet("customer/{id}")]
         public async Task<IActionResult> GetReservationsByCustomerAsync(int id)
         {
-            var reservation = await _reservationService.GetByIdAsync(id);
-            if (reservation == null)
-                return NotFound(ApiResponse<ReservationResponse>.FailResponse("Reservation not found"));
+            var customer = await _customerRepository.GetByIdAsync(id);
+            if (customer == null)
+                return NotFound(ApiResponse<CustomerResponse>.FailResponse("Customer not found"));
 
             var reservationsByCustomer = await _reservationService.GetReservationsByCustomerAsync(id);
             if (reservationsByCustomer == null)
