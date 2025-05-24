@@ -49,6 +49,6 @@ namespace RestaurantReservationSystem.API.Services.Interfaces
         /// </summary>
         /// <param name="customerId">The unique identifier of the customer.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains a list of order response DTOs.</returns>
-        Task<IEnumerable<ReservationResponse>> GetReservationAsync(int customerId);
+        Task<IEnumerable<ReservationResponse>> GetReservationsAsync(int customerId);
     }
 }
