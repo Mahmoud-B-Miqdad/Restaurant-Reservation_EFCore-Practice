@@ -190,9 +190,13 @@ namespace RestaurantReservationSystem.API.Controllers
         }
 
         [HttpGet("{id}/average-order-amount")]
-        public async Task<IActionResult> GetAverageOrderAmount(int employeeId)
+        public async Task<IActionResult> GetAverageOrderAmount(int id)
         {
-            var average = await _employeeService.GetAverageOrderAmountAsync(employeeId);
+            var employee = await _employeeService.GetByIdAsync(id);
+            if (employee == null)
+                return NotFound(ApiResponse<EmployeeResponse>.FailResponse("Employee not found"));
+
+            var average = await _employeeService.GetAverageOrderAmountAsync(id);
 
             return Ok(ApiResponse<decimal>.SuccessResponse(average));
         }

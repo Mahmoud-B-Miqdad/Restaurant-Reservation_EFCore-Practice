@@ -30,7 +30,7 @@
         /// </summary>
         public decimal TotalAmount { get; set; }
 
-        public List<OrderItemResponse> OrderItems { get; set; } = new();
+        public List<OrderItemResponse> OrderItems { get; set; };
     }
 
 }
