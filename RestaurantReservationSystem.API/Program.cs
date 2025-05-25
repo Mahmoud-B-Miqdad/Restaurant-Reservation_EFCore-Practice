@@ -1,6 +1,3 @@
-using RestaurantReservationSystem.API.Interfaces;
-using RestaurantReservationSystem.API.Services;
-using RestaurantReservationSystem.API.Services.Interfaces;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,9 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddAutoMapper(typeof(RestaurantReservationSystem.API.Mapping.AutoMapperProfile).Assembly);
 
 builder.Services.AddRepositories(builder.Configuration.GetConnectionString("DefaultConnection"));
-builder.Services.AddScoped<IRestaurantService, RestaurantService>();
-builder.Services.AddScoped<IEmployeeService, EmployeeService>();
-builder.Services.AddScoped<ITableService, TableService>();
+builder.Services.AddDomainServices();
 
 builder.Services.AddControllers()
     .AddNewtonsoftJson();

@@ -4,7 +4,6 @@ using RestaurantReservation.Db.Repositories.Interfaces;
 using RestaurantReservationSystem.API.DTOs.Requests;
 using RestaurantReservationSystem.API.DTOs.Responses;
 using RestaurantReservationSystem.API.Services.Interfaces;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace RestaurantReservationSystem.API.Services
 {
