@@ -12,7 +12,7 @@ namespace RestaurantReservationSystem.API.Controllers
     /// <summary>
     /// Controller for managing menuItem-related operations.
     /// </summary>
-    [Route("api/menu-item")]
+    [Route("api/menu-items")]
     [ApiController]
     public class MenuItemController : ControllerBase
     {
@@ -99,7 +99,8 @@ namespace RestaurantReservationSystem.API.Controllers
 
             var menuItemToPatch = new MenuItemRequest
             {
-                Name= existingMenuItem.Name,
+                RestaurantId = existingMenuItem.RestaurantId,
+                Name = existingMenuItem.Name,
                 Description = existingMenuItem.Description,
                 Price = existingMenuItem.Price,
             };
