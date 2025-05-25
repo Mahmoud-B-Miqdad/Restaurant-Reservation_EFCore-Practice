@@ -49,4 +49,22 @@ internal class RestaurantRepository : IRestaurantRepository
             await _context.SaveChangesAsync();
         }
     }
+
+    public async Task<Restaurant?> GetRestaurantByEmployeeIdAsync(int employeeId)
+    {
+        var employee = await _context.Employees
+            .Include(e => e.Restaurant)
+            .FirstOrDefaultAsync(e => e.EmployeeId == employeeId);
+
+        return employee?.Restaurant;
+    }
+
+    public async Task<Restaurant?> GetRestaurantByTableIdAsync(int tableId)
+    {
+        var table = await _context.Tables
+            .Include(e => e.Restaurant)
+            .FirstOrDefaultAsync(e => e.TableId == tableId);
+
+        return table?.Restaurant;
+    }
 }

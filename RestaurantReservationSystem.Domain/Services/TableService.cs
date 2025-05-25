@@ -13,6 +13,7 @@ namespace RestaurantReservationSystem.API.Services
     public class TableService : ITableService
     {
         private readonly ITableRepository _tableRepository;
+        IRestaurantRepository _restaurantRepository;
         private readonly IReservationRepository _reservationRepository;
         private readonly IMapper _mapper;
 
@@ -23,11 +24,12 @@ namespace RestaurantReservationSystem.API.Services
         /// <param name="mapper">The AutoMapper instance for mapping entities to DTOs.</param>
         /// <param name="reservationRepository">The repository for reservation data access.</param>
 
-        public TableService(ITableRepository tableRepository, IMapper mapper, IReservationRepository reservationRepository)
+        public TableService(ITableRepository tableRepository, IMapper mapper, IReservationRepository reservationRepository, IRestaurantRepository restaurantRepository)
         {
             _tableRepository = tableRepository;
             _mapper = mapper;
             _reservationRepository = reservationRepository;
+            _restaurantRepository = restaurantRepository;
         }
 
         /// <inheritdoc />
@@ -76,7 +78,7 @@ namespace RestaurantReservationSystem.API.Services
         /// <inheritdoc />
         public async Task<RestaurantResponse?> GetRestaurantAsync(int tableId)
         {
-            var restaurant = await _tableRepository.GetRestaurantByTableIdAsync(tableId);
+            var restaurant = await _restaurantRepository.GetRestaurantByTableIdAsync(tableId);
             return restaurant == null ? null : _mapper.Map<RestaurantResponse>(restaurant);
         }
 

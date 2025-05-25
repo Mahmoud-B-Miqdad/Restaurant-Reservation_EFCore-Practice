@@ -59,14 +59,5 @@ namespace RestaurantReservation.Db.Repositories
                 .Where(e => e.RestaurantId == restaurantId)
                 .ToListAsync();
         }
-
-        public async Task<Restaurant?> GetRestaurantByEmployeeIdAsync(int employeeId)
-        {
-            var employee = await _context.Employees
-                .Include(e => e.Restaurant)
-                .FirstOrDefaultAsync(e => e.EmployeeId == employeeId);
-
-            return employee?.Restaurant;
-        }
     }
 }

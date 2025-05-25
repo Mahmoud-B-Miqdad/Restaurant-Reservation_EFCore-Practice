@@ -10,5 +10,4 @@ public interface ITableRepository
     Task UpdateAsync(Table table);
     Task DeleteAsync(int id);
     Task<IEnumerable<Table>> GetByRestaurantIdAsync(int restaurantId);
-    Task<Restaurant?> GetRestaurantByTableIdAsync(int tableId);
 }
