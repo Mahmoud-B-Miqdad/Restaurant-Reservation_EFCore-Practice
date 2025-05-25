@@ -22,26 +22,27 @@ namespace RestaurantReservationSystem.API.Controllers
         }
 
         /// <summary>
-        /// Retrieves all managers.
+        /// Retrieves all employees or only managers if requested.
         /// </summary>
-        /// <returns>List of all managers.</returns>
-        [HttpGet("managers")]
-        public async Task<IActionResult> GetAllManagers()
-        {
-            var managers = await _employeeService.ListManagersAsync();
-            return Ok(ApiResponse<IEnumerable<EmployeeResponse>>.SuccessResponse(managers));
-        }
-
-        /// <summary>
-        /// Retrieves all employees.
-        /// </summary>
-        /// <returns>List of all employees.</returns>
+        /// <param name="managersOnly">If true, returns only managers.</param>
+        /// <returns>List of employees.</returns>
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] bool managersOnly = false)
         {
-            var employees = await _employeeService.GetAllAsync();
+            IEnumerable<EmployeeResponse> employees;
+
+            if (managersOnly)
+            {
+                employees = await _employeeService.ListManagersAsync();
+            }
+            else
+            {
+                employees = await _employeeService.GetAllAsync();
+            }
+
             return Ok(ApiResponse<IEnumerable<EmployeeResponse>>.SuccessResponse(employees));
         }
+
 
         /// <summary>
         /// Retrieves a specific employee by ID.
