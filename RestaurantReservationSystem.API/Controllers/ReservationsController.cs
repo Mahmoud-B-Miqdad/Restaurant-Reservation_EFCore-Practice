@@ -158,7 +158,7 @@ namespace RestaurantReservationSystem.API.Controllers
             if (reservation == null)
                 return NotFound(ApiResponse<ReservationResponse>.FailResponse("Reservation not found"));
 
-            var orders = await _reservationService.GetOrdersAsync(id);
+            var orders = await _reservationService.GetOrdersAndMenuItemsAsync(id);
             return Ok(ApiResponse<IEnumerable<OrderResponse>>.SuccessResponse(orders));
         }
 

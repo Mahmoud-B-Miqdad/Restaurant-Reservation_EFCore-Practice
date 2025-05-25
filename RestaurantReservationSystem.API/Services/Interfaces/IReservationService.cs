@@ -70,7 +70,7 @@ namespace RestaurantReservationSystem.API.Services.Interfaces
         /// </summary>
         /// <param name="reservationId">The unique identifier of the reservation.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains a list of order response DTOs.</returns>
-        Task<IEnumerable<OrderResponse>> GetOrdersAsync(int reservationId);
+        Task<IEnumerable<OrderResponse>> GetOrdersAndMenuItemsAsync(int reservationId);
 
         /// <summary>
         /// Retrieves a list of all Reservation handled by a specific Customer.
