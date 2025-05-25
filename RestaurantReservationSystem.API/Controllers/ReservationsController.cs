@@ -147,10 +147,11 @@ namespace RestaurantReservationSystem.API.Controllers
         }
 
         /// <summary>
-        /// Retrieves all orders handled by the specified reservation.
+        /// Retrieves all orders associated with the specified reservation,
+        /// including their corresponding menu items.
         /// </summary>
-        /// <param name="id">Reservation ID</param>
-        /// <returns>List of orders assigned to the reservation.</returns>
+        /// <param name="id">The unique identifier of the reservation.</param>
+        /// <returns>A list of orders, each containing order items and related menu item details.</returns>
         [HttpGet("{id}/orders")]
         public async Task<IActionResult> GetOrdersAsync(int id)
         {

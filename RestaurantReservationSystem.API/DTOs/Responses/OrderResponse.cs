@@ -30,7 +30,10 @@
         /// </summary>
         public decimal TotalAmount { get; set; }
 
-        public List<OrderItemResponse> OrderItems { get; set; };
+        /// <summary>
+        /// The list of items included in the order, each linked to a menu item.
+        /// </summary>
+        public List<OrderItemResponse> OrderItems { get; set; }
     }
 
 }
