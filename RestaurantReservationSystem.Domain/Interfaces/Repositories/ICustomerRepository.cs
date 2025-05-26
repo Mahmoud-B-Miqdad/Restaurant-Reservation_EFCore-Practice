@@ -1,12 +1,12 @@
-﻿using RestaurantReservation.Db.Entities;
+﻿using RestaurantReservationSystem.Domain.Models;
 
 namespace RestaurantReservationSystem.Domain.Interfaces.Repositories;
 
 public interface ICustomerRepository
 {
-    Task<List<Customer>> GetAllAsync();
-    Task<Customer> GetByIdAsync(int id);
-    Task AddAsync(Customer customer);
-    Task UpdateAsync(Customer customer);
+    Task<List<CustomerModel>> GetAllAsync();
+    Task<CustomerModel> GetByIdAsync(int id);
+    Task AddAsync(CustomerModel customer);
+    Task UpdateAsync(CustomerModel customer);
     Task DeleteAsync(int id);
 }
