@@ -35,6 +35,8 @@ internal class OrderItemRepository : IOrderItemRepository
         var orderItem = _mapper.Map<OrderItem>(orderItemModel);
         _context.OrderItems.Add(orderItem);
         await _context.SaveChangesAsync();
+
+        orderItemModel.OrderItemId = orderItem.OrderItemId;
     }
 
 

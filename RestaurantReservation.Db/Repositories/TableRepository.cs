@@ -35,6 +35,8 @@ internal class TableRepository : ITableRepository
         var table = _mapper.Map<Table>(model);
         await _context.Tables.AddAsync(table);
         await _context.SaveChangesAsync();
+
+        model.TableId = table.TableId;
     }
 
     public async Task UpdateAsync(TableModel model)

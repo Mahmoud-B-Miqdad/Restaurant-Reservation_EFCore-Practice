@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using RestaurantReservationSystem.API.Interfaces;
 using RestaurantReservationSystem.API.Services;
-using RestaurantReservationSystem.API.Services.Interfaces;
+using RestaurantReservationSystem.Domain.Interfaces.Services;
 public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddDomainServices(this IServiceCollection services)

@@ -17,14 +17,15 @@ namespace RestaurantReservationSystem.API.Services
         private readonly IOrderRepository _orderRepository;
         private readonly IMapper _mapper;
 
-        // <summary>
+        /// <summary>
         /// Initializes a new instance of the <see cref="EmployeeService"/> class.
         /// </summary>
         /// <param name="repository">The repository responsible for employee data access.</param>
         /// <param name="mapper">The mapper used to convert between entities and DTOs.</param>
-        public EmployeeService(IEmployeeRepository repository, IMapper mapper)
+        public EmployeeService(IEmployeeRepository repository, IMapper mapper, IOrderRepository orderRepository)
         {
             _employeeRepository = repository;
+            _orderRepository = orderRepository;
             _mapper = mapper;
         }
 

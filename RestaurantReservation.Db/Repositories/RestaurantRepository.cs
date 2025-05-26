@@ -36,6 +36,8 @@ internal class RestaurantRepository : IRestaurantRepository
         var restaurant = _mapper.Map<Restaurant>(model);
         await _context.Restaurants.AddAsync(restaurant);
         await _context.SaveChangesAsync();
+
+        model.RestaurantId = restaurant.RestaurantId;
     }
 
     public async Task UpdateAsync(RestaurantModel model)

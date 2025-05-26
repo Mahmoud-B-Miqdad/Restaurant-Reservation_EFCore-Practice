@@ -46,6 +46,8 @@ namespace RestaurantReservation.Db.Repositories
             var employee = _mapper.Map<Employee>(model);
             _context.Employees.Add(employee);
             await _context.SaveChangesAsync();
+
+            model.EmployeeId = employee.EmployeeId;
         }
 
         public async Task UpdateAsync(EmployeeModel model)

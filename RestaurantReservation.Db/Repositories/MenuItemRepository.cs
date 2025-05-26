@@ -41,11 +41,13 @@ namespace RestaurantReservation.Db.Repositories
             return _mapper.Map<MenuItemModel>(item);
         }
 
-        public async Task AddAsync(MenuItemModel menuItem)
+        public async Task AddAsync(MenuItemModel model)
         {
-            var entity = _mapper.Map<MenuItem>(menuItem);
-            await _context.MenuItems.AddAsync(entity);
+            var menuItem = _mapper.Map<MenuItem>(model);
+            await _context.MenuItems.AddAsync(menuItem);
             await _context.SaveChangesAsync();
+
+            model.ItemId = menuItem.ItemId;
         }
 
         public async Task UpdateAsync(MenuItemModel menuItem)

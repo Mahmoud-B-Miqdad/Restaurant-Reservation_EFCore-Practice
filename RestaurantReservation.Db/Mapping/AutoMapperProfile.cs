@@ -16,20 +16,20 @@ namespace RestaurantReservationSystem.API.Mapping
             CreateMap<RestaurantModel, RestaurantResponse>();
             CreateMap<RestaurantRequest, RestaurantModel>();
 
-            CreateMap<Employee, EmployeeResponse>();
-            CreateMap<EmployeeRequest, Employee>();
+            CreateMap<EmployeeModel, EmployeeResponse>();
+            CreateMap<EmployeeRequest, EmployeeModel>();
 
-            CreateMap<Table, TableResponse>();
-            CreateMap<TableRequest, Table>();
+            CreateMap<TableModel, TableResponse>();
+            CreateMap<TableRequest, TableModel>();
 
-            CreateMap<MenuItem, MenuItemResponse>();
-            CreateMap<MenuItemRequest, MenuItem>();
+            CreateMap<MenuItemModel, MenuItemResponse>();
+            CreateMap<MenuItemRequest, MenuItemModel>();
 
-            CreateMap<Reservation, ReservationResponse>();
-            CreateMap<ReservationRequest, Reservation>();
+            CreateMap<ReservationModel, ReservationResponse>();
+            CreateMap<ReservationRequest, ReservationModel>();
 
-            CreateMap<Order, OrderResponse>();
-            CreateMap<OrderRequest, Order>();
+            CreateMap<OrderModel, OrderResponse>();
+            CreateMap<OrderRequest, OrderModel>();
 
             CreateMap<Restaurant, RestaurantModel>().ReverseMap();
             CreateMap<Employee, EmployeeModel>().ReverseMap();

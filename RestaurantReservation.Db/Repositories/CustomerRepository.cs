@@ -33,6 +33,8 @@ internal class CustomerRepository : ICustomerRepository
         var customer = _mapper.Map<Customer>(model);
         await _context.Customers.AddAsync(customer);
         await _context.SaveChangesAsync();
+
+        model.CustomerId = customer.CustomerId;
     }
 
     public async Task UpdateAsync(CustomerModel customer)

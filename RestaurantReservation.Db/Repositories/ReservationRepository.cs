@@ -42,6 +42,8 @@ namespace RestaurantReservation.Db.Repositories
             var reservation = _mapper.Map<Reservation>(reservationModel);
             await _context.Reservations.AddAsync(reservation);
             await _context.SaveChangesAsync();
+
+            reservationModel.ReservationId = reservation.ReservationId;
         }
 
         public async Task UpdateAsync(ReservationModel reservationModel)

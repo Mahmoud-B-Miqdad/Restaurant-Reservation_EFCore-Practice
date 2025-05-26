@@ -59,6 +59,8 @@ namespace RestaurantReservation.Db.Repositories
             var order = _mapper.Map<Order>(orderModel);
             _context.Orders.Add(order);
             await _context.SaveChangesAsync();
+
+            orderModel.OrderId = order.OrderId;
         }
 
 
