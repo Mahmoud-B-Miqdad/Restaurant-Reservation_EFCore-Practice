@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using RestaurantReservationSystem.API.DTOs.Requests;
-using RestaurantReservationSystem.API.DTOs.Responses;
-using RestaurantReservationSystem.API.Interfaces;
-using RestaurantReservationSystem.API.Responses;
+using RestaurantReservationSystem.Domain.DTOs.Requests;
+using RestaurantReservationSystem.Domain.DTOs.Responses;
+using RestaurantReservationSystem.Domain.Interfaces.Services;
+using RestaurantReservationSystem.Domain.Responses;
 
 namespace RestaurantReservationSystem.API.Controllers
 {
@@ -15,10 +15,12 @@ namespace RestaurantReservationSystem.API.Controllers
     public class TableController : ControllerBase
     {
         private readonly ITableService _tableService;
+        private readonly IRestaurantService _restaurantService;
 
-        public TableController(ITableService tableService)
+        public TableController(ITableService tableService, IRestaurantService restaurantService)
         {
             _tableService = tableService;
+            _restaurantService = restaurantService;
         }
 
         /// <summary>
@@ -143,7 +145,7 @@ namespace RestaurantReservationSystem.API.Controllers
             if (table == null)
                 return NotFound(ApiResponse<TableResponse>.FailResponse("Table not found"));
 
-            var restaurant = await _tableService.GetRestaurantAsync(id);
+            var restaurant = await _restaurantService.GetRestaurantByTableIdAsync(id);
             if (restaurant == null)
                 return NotFound(ApiResponse<RestaurantResponse>.FailResponse("Restaurant not found"));
 

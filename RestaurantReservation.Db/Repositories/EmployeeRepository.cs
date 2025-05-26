@@ -1,46 +1,62 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 using RestaurantReservation.Db.Constants;
 using RestaurantReservation.Db.Entities;
-using RestaurantReservation.Db.Repositories.Interfaces;
+using RestaurantReservationSystem.Domain.Interfaces.Repositories;
+using RestaurantReservationSystem.Domain.Models;
 
 namespace RestaurantReservation.Db.Repositories
 {
     internal class EmployeeRepository : IEmployeeRepository
     {
         private readonly RestaurantReservationDbContext _context;
+        private readonly IMapper _mapper;
 
-        public EmployeeRepository(RestaurantReservationDbContext context)
+        public EmployeeRepository(RestaurantReservationDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
-        public async Task<List<Employee>> ListManagersAsync()
+        public async Task<List<EmployeeModel>> ListManagersAsync()
+        {
+            var employees = await _context.Employees
+                                              .Where(e => e.Position == EmployeePositions.Manager)
+                                              .ToListAsync();
+
+            return _mapper.Map<List<EmployeeModel>>(employees);
+        }
+
+        public async Task<List<EmployeeModel>> GetAllAsync()
         {
             return await _context.Employees
-                                 .Where(e => e.Position == EmployeePositions.Manager)
-                                 .ToListAsync();
+           .ProjectTo<EmployeeModel>(_mapper.ConfigurationProvider)
+           .ToListAsync();
         }
 
-        public async Task<List<Employee>> GetAllAsync() => await _context.Employees.ToListAsync();
-
-        public async Task<Employee> GetByIdAsync(int id)
+        public async Task<EmployeeModel> GetByIdAsync(int id)
         {
-            return await _context.Employees.FindAsync(id);
+            var employee = await _context.Employees.FindAsync(id);
+            return _mapper.Map<EmployeeModel>(employee);
         }
 
-        public async Task AddAsync(Employee employee)
+        public async Task AddAsync(EmployeeModel model)
         {
+            var employee = _mapper.Map<Employee>(model);
             _context.Employees.Add(employee);
             await _context.SaveChangesAsync();
+
+            model.EmployeeId = employee.EmployeeId;
         }
 
-        public async Task UpdateAsync(Employee employee)
+        public async Task UpdateAsync(EmployeeModel model)
         {
-            var existingEmployee = await _context.Employees.FindAsync(employee.EmployeeId);
+            var existingEmployee = await _context.Employees.FindAsync(model.EmployeeId);
             if (existingEmployee == null)
                 return;
 
-            _context.Entry(existingEmployee).CurrentValues.SetValues(employee);
+            _mapper.Map(model, existingEmployee);
             await _context.SaveChangesAsync();
         }
 
@@ -59,20 +75,12 @@ namespace RestaurantReservation.Db.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Employee>> GetByRestaurantIdAsync(int restaurantId)
+        public async Task<IEnumerable<EmployeeModel>> GetByRestaurantIdAsync(int restaurantId)
         {
             return await _context.Employees
-                .Where(e => e.RestaurantId == restaurantId)
-                .ToListAsync();
-        }
-
-        public async Task<Restaurant?> GetRestaurantByEmployeeIdAsync(int employeeId)
-        {
-            var employee = await _context.Employees
-                .Include(e => e.Restaurant)
-                .FirstOrDefaultAsync(e => e.EmployeeId == employeeId);
-
-            return employee?.Restaurant;
+            .Where(e => e.RestaurantId == restaurantId)
+            .ProjectTo<EmployeeModel>(_mapper.ConfigurationProvider)
+            .ToListAsync();
         }
     }
 }

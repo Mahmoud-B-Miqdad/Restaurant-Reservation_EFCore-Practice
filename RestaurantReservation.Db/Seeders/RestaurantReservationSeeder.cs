@@ -1,4 +1,4 @@
-﻿using RestaurantReservation.Db.Repositories.Interfaces;
+﻿using RestaurantReservationSystem.Domain.Interfaces.Repositories.Reports;
 
 namespace RestaurantReservation.Db.Seeders;
 

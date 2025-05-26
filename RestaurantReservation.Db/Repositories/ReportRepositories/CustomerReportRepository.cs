@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using RestaurantReservationSystem.Domain.Interfaces.Repositories.Reports;
 
 namespace RestaurantReservation.Db.Repositories.ReportRepositories;
 

@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\RestaurantReservation.Db\RestaurantReservation.Db.csproj" />
+    <ProjectReference Include="..\RestaurantReservationSystem.Domain\RestaurantReservationSystem.Domain.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,6 +1,6 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
-using RestaurantReservation.Db.Entities;
+using RestaurantReservationSystem.Domain.Interfaces.Repositories.Reports;
 namespace RestaurantReservation.Db.Repositories.ReportRepositories;
 
 internal class ReservationReportRepository : IReservationReportRepository
