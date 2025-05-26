@@ -1,4 +1,4 @@
-﻿namespace RestaurantReservationSystem.API.DTOs.Requests
+﻿namespace RestaurantReservationSystem.Domain.DTOs.Requests
 {
     /// <summary>
     /// Represents the data required to create or update an employee.

@@ -1,4 +1,4 @@
-﻿namespace RestaurantReservationSystem.API.Responses
+﻿namespace RestaurantReservationSystem.Domain.Responses
 {
     /// <summary>
     /// Represents a standardized API response wrapper.
