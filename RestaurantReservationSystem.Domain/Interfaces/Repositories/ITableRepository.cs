@@ -1,13 +1,13 @@
-﻿using RestaurantReservation.Db.Entities;
+﻿using RestaurantReservationSystem.Domain.Models;
 
 namespace RestaurantReservationSystem.Domain.Interfaces.Repositories;
 
 public interface ITableRepository
 {
-    Task<List<Table>> GetAllAsync();
-    Task<Table> GetByIdAsync(int id);
-    Task AddAsync(Table table);
-    Task UpdateAsync(Table table);
+    Task<List<TableModel>> GetAllAsync();
+    Task<TableModel> GetByIdAsync(int id);
+    Task AddAsync(TableModel table);
+    Task UpdateAsync(TableModel table);
     Task DeleteAsync(int id);
-    Task<IEnumerable<Table>> GetByRestaurantIdAsync(int restaurantId);
+    Task<List<TableModel>> GetByRestaurantIdAsync(int restaurantId);
 }

@@ -3,6 +3,7 @@ using RestaurantReservationSystem.API.DTOs.Requests;
 using RestaurantReservationSystem.API.DTOs.Responses;
 using RestaurantReservationSystem.Domain.Interfaces.Repositories;
 using RestaurantReservationSystem.Domain.Interfaces.Services;
+using RestaurantReservationSystem.Domain.Models;
 
 namespace RestaurantReservationSystem.API.Services
 {
@@ -46,7 +47,7 @@ namespace RestaurantReservationSystem.API.Services
         /// <inheritdoc />
         public async Task<TableResponse> CreateAsync(TableRequest request)
         {
-            var table = _mapper.Map<Table>(request);
+            var table = _mapper.Map<TableModel>(request);
             await _tableRepository.AddAsync(table);
             return _mapper.Map<TableResponse>(table);
         }
