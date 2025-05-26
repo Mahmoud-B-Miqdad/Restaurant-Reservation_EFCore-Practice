@@ -1,4 +1,4 @@
-﻿namespace RestaurantReservation.Db.Repositories.Interfaces
+﻿namespace RestaurantReservationSystem.Domain.Interfaces.Repositories.Reports
 {
         public interface IRestaurantReservationSeeder
         {

@@ -2,6 +2,7 @@
 using RestaurantReservation.Db.Entities;
 using RestaurantReservationSystem.API.DTOs.Requests;
 using RestaurantReservationSystem.API.DTOs.Responses;
+using RestaurantReservationSystem.Domain.Models;
 
 namespace RestaurantReservationSystem.API.Mapping
 {
@@ -12,8 +13,8 @@ namespace RestaurantReservationSystem.API.Mapping
     {
         public AutoMapperProfile()
         {
-            CreateMap<Restaurant, RestaurantResponse>();
-            CreateMap<RestaurantRequest, Restaurant>();
+            CreateMap<RestaurantModel, RestaurantResponse>();
+            CreateMap<RestaurantRequest, RestaurantModel>();
 
             CreateMap<Employee, EmployeeResponse>();
             CreateMap<EmployeeRequest, Employee>();
@@ -30,6 +31,8 @@ namespace RestaurantReservationSystem.API.Mapping
             CreateMap<Order, OrderResponse>();
             CreateMap<OrderRequest, Order>();
 
+            CreateMap<Restaurant, RestaurantModel>().ReverseMap();
+            CreateMap<Employee, EmployeeModel>().ReverseMap();
         }
     }
 }

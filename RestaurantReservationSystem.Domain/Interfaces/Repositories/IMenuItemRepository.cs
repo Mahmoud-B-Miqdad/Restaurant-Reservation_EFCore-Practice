@@ -1,6 +1,6 @@
 ﻿using RestaurantReservation.Db.Entities;
 
-namespace RestaurantReservation.Db.Repositories.Interfaces;
+namespace RestaurantReservationSystem.Domain.Interfaces.Repositories;
 
 public interface IMenuItemRepository
 {

@@ -1,4 +1,4 @@
-﻿namespace RestaurantReservation.Db.Repositories.ReportRepositories;
+﻿namespace RestaurantReservationSystem.Domain.Interfaces.Repositories.Reports;
 
 public interface ICustomerReportRepository
 {
