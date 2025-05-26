@@ -10,4 +10,5 @@ public interface ITableRepository
     Task UpdateAsync(TableModel table);
     Task DeleteAsync(int id);
     Task<List<TableModel>> GetByRestaurantIdAsync(int restaurantId);
+    Task<TableModel?> GetTableByReservationIdAsync(int reservationId);
 }

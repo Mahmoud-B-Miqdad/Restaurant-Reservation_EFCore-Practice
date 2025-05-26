@@ -75,20 +75,6 @@ namespace RestaurantReservationSystem.Domain.Services
         }
 
         /// <inheritdoc />
-        public async Task<List<MenuItemResponse>> GetMenuItemsByRestaurantIdAsync(int restaurantId)
-        {
-            var menuItem = await _menuItemRepository.GetByRestaurantIdAsync(restaurantId);
-            return _mapper.Map<List<MenuItemResponse>>(menuItem);
-        }
-
-        /// <inheritdoc />
-        public async Task<List<ReservationResponse>> GetReservationsByRestaurantIdAsync(int restaurantId)
-        {
-            var reservation = await _reservationRepository.GetByRestaurantIdAsync(restaurantId);
-            return _mapper.Map<List<ReservationResponse>>(reservation);
-        }
-
-        /// <inheritdoc />
         public async Task<RestaurantResponse?> GetRestaurantByEmployeeIdAsync(int employeeId)
         {
             var restaurant = await _restaurantRepository.GetRestaurantByEmployeeIdAsync(employeeId);
@@ -98,6 +84,20 @@ namespace RestaurantReservationSystem.Domain.Services
         public async Task<RestaurantResponse?> GetRestaurantByTableIdAsync(int tableId)
         {
             var restaurant = await _restaurantRepository.GetRestaurantByTableIdAsync(tableId);
+            return restaurant == null ? null : _mapper.Map<RestaurantResponse>(restaurant);
+        }
+
+        /// <inheritdoc />
+        public async Task<RestaurantResponse?> GetRestaurantByMenuItamIdAsync(int menuItemId)
+        {
+            var restaurant = await _restaurantRepository.GetRestaurantByMenuItemIdAsync(menuItemId);
+            return _mapper.Map<RestaurantResponse>(restaurant);
+        }
+
+        /// <inheritdoc />
+        public async Task<RestaurantResponse?> GetRestaurantByReservationIdAsync(int reservationId)
+        {
+            var restaurant = await _restaurantRepository.GetRestaurantByReservationIdAsync(reservationId);
             return restaurant == null ? null : _mapper.Map<RestaurantResponse>(restaurant);
         }
     }

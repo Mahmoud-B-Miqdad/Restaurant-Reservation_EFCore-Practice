@@ -56,4 +56,13 @@ internal class CustomerRepository : ICustomerRepository
             await _context.SaveChangesAsync();
         }
     }
+
+    public async Task<CustomerModel?> GetCustomerByReservationIdAsync(int reservationId)
+    {
+        var reservations = await _context.Reservations
+            .Include(r => r.Customer)
+            .FirstOrDefaultAsync(r => r.ReservationId == reservationId);
+
+        return _mapper.Map<CustomerModel>(reservations?.Customer);
+    }
 }

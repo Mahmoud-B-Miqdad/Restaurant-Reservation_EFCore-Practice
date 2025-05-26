@@ -9,4 +9,5 @@ public interface ICustomerRepository
     Task AddAsync(CustomerModel customer);
     Task UpdateAsync(CustomerModel customer);
     Task DeleteAsync(int id);
+    Task<CustomerModel?> GetCustomerByReservationIdAsync(int reservationId);
 }

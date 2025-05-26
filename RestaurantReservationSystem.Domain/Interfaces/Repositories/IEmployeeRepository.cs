@@ -11,5 +11,6 @@ namespace RestaurantReservationSystem.Domain.Interfaces.Repositories
         Task UpdateAsync(EmployeeModel employee);
         Task DeleteAsync(int id);
         Task<IEnumerable<EmployeeModel>> GetByRestaurantIdAsync(int restaurantId);
+        Task<EmployeeModel?> GetEmployeeByOrderIdAsync(int orderId);
     }
 }

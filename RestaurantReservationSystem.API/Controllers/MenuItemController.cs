@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using RestaurantReservationSystem.API.DTOs.Requests;
-using RestaurantReservationSystem.API.DTOs.Responses;
-using RestaurantReservationSystem.API.Responses;
-using RestaurantReservationSystem.API.Services.Interfaces;
+using RestaurantReservationSystem.Domain.DTOs.Requests;
+using RestaurantReservationSystem.Domain.DTOs.Responses;
+using RestaurantReservationSystem.Domain.Interfaces.Services;
+using RestaurantReservationSystem.Domain.Responses;
 
 namespace RestaurantReservationSystem.API.Controllers
 {
@@ -15,10 +15,12 @@ namespace RestaurantReservationSystem.API.Controllers
     public class MenuItemController : ControllerBase
     {
         private readonly IMenuItemService _menuItemService;
+        private readonly IRestaurantService _restaurantService;
 
-        public MenuItemController(IMenuItemService menuItemService)
+        public MenuItemController(IMenuItemService menuItemService, IRestaurantService restaurantService)
         {
             _menuItemService = menuItemService;
+            _restaurantService = restaurantService;
         }
 
         /// <summary>
@@ -152,7 +154,7 @@ namespace RestaurantReservationSystem.API.Controllers
             if (menuItem == null)
                 return NotFound(ApiResponse<MenuItemResponse>.FailResponse("MenuItem not found"));
 
-            var orders = await _menuItemService.GetOrderItemsAsync(id);
+            var orders = await _menuItemService.GetOrderItemsByMenuItamIdAsync(id);
             return Ok(ApiResponse<IEnumerable<OrderItemResponse>>.SuccessResponse(orders));
         }
 
@@ -168,7 +170,7 @@ namespace RestaurantReservationSystem.API.Controllers
             if (menuItem == null)
                 return NotFound(ApiResponse<MenuItemResponse>.FailResponse("MenuItem not found"));
 
-            var restaurant = await _menuItemService.GetRestaurantAsync(id);
+            var restaurant = await _restaurantService.GetRestaurantByMenuItamIdAsync(id);
             if (restaurant == null)
                 return NotFound(ApiResponse<RestaurantResponse>.FailResponse("Restaurant not found"));
 

@@ -1,7 +1,7 @@
-﻿using RestaurantReservationSystem.API.DTOs.Requests;
-using RestaurantReservationSystem.API.DTOs.Responses;
+﻿using RestaurantReservationSystem.Domain.DTOs.Requests;
+using RestaurantReservationSystem.Domain.DTOs.Responses;
 
-namespace RestaurantReservationSystem.API.Services.Interfaces
+namespace RestaurantReservationSystem.Domain.Interfaces.Services
 {
     /// <summary>
     /// Defines the contract for managing menuItem-related operations.
@@ -48,13 +48,21 @@ namespace RestaurantReservationSystem.API.Services.Interfaces
         /// </summary>
         /// <param name="menuItemId">The unique identifier of the menuItem</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains a list of orderitem response DTOs.</returns>
-        Task<IEnumerable<OrderItemResponse>> GetOrderItemsAsync(int menuItemId);
+        Task<IEnumerable<OrderItemResponse>> GetOrderItemsByMenuItamIdAsync(int menuItemId);
 
         /// <summary>
-        /// Retrieves the restaurant associated with a specific menuItem.
+        /// Retrieves all Ordered Menu Items handled by a specific reservation.
         /// </summary>
-        /// <param name="menuItemId">The unique identifier of the menuItem.</param>
-        /// <returns>A task that represents the asynchronous operation. The task result contains the restaurant response DTO if found; otherwise, null.</returns>
-        Task<RestaurantResponse?> GetRestaurantAsync(int menuItemId);
+        /// <param name="reservationId">The unique identifier of the reservation</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains a list of menuItem response DTOs.</returns>
+        Task<IEnumerable<MenuItemResponse>> GetOrderedMenuItemsAsync(int reservationId);
+
+        /// <summary>
+        /// Retrieves a list of employees who work at the specified restaurant.
+        /// </summary>
+        /// <param name="restaurantId">The ID of the restaurant to get employees for.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains a collection of employee response DTOs.</returns>
+
+        Task<List<MenuItemResponse>> GetMenuItemsByRestaurantIdAsync(int restaurantId);
     }
 }

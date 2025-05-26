@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using RestaurantReservation.Db.Entities;
 using RestaurantReservationSystem.Domain.Interfaces.Repositories;
@@ -99,30 +100,12 @@ namespace RestaurantReservation.Db.Repositories
             return _mapper.Map<IEnumerable<OrderModel>>(orders);
         }
 
-        public async Task<IEnumerable<Order>> GetOrdersByReservationIdAsync(int reservationId)
+        public async Task<IEnumerable<OrderModel>> GetOrdersByReservationIdAsync(int reservationId)
         {
             return await _context.Orders
                 .Where(o => o.ReservationId == reservationId)
+                .ProjectTo<OrderModel>(_mapper.ConfigurationProvider)
                 .ToListAsync();
-        }
-
-        public async Task<Employee?> GetEmployeeByOrderIdAsync(int orderId)
-        {
-            var order = await _context.Orders
-                 .Include(o => o.Employee)
-                .FirstOrDefaultAsync(o => o.OrderId == orderId);
-
-            return order?.Employee;
-        }
-
-
-        public async Task<Reservation?> GetReservationByOrderIdAsync(int orderId)
-        {
-            var order = await _context.Orders
-                 .Include(o => o.Reservation)
-                .FirstOrDefaultAsync(o => o.OrderId == orderId);
-
-            return order?.Reservation;
         }
     }
 }

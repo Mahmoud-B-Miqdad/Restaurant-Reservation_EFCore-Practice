@@ -16,11 +16,13 @@ namespace RestaurantReservationSystem.API.Controllers
     {
         private readonly IEmployeeService _employeeService;
         private readonly IRestaurantService _restaurantService;
+        private readonly IOrderService _orderService;
 
-        public EmployeesController(IEmployeeService employeSservice, IRestaurantService restaurantService)
+        public EmployeesController(IEmployeeService employeSservice, IRestaurantService restaurantService, IOrderService orderService)
         {
             _employeeService = employeSservice;
             _restaurantService = restaurantService;
+            _orderService = orderService;
         }
 
         /// <summary>
@@ -167,7 +169,7 @@ namespace RestaurantReservationSystem.API.Controllers
             if (employee == null)
                 return NotFound(ApiResponse<EmployeeResponse>.FailResponse("Employee not found"));
 
-            var orders = await _employeeService.GetOrdersByEmployeeIdAsync(id);
+            var orders = await _orderService.GetOrdersByEmployeeIdAsync(id);
             return Ok(ApiResponse<IEnumerable<OrderResponse>>.SuccessResponse(orders));
         }
 

@@ -77,4 +77,22 @@ internal class RestaurantRepository : IRestaurantRepository
 
         return _mapper.Map<RestaurantModel>(table?.Restaurant);
     }
+
+    public async Task<RestaurantModel?> GetRestaurantByMenuItemIdAsync(int menuItemId)
+    {
+        var menuItem = await _context.MenuItems
+            .Include(m => m.Restaurant)
+            .FirstOrDefaultAsync(m => m.ItemId == menuItemId);
+
+        return _mapper.Map<RestaurantModel>(menuItem?.Restaurant);
+    }
+
+    public async Task<RestaurantModel?> GetRestaurantByReservationIdAsync(int reservationId)
+    {
+        var reservations = await _context.Reservations
+            .Include(r => r.Restaurant)
+            .FirstOrDefaultAsync(r => r.ReservationId == reservationId);
+
+        return _mapper.Map<RestaurantModel>(reservations?.Restaurant);
+    }
 }

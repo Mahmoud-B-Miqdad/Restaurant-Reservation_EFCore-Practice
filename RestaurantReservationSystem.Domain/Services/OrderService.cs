@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
-using RestaurantReservation.Db.Entities;
-using RestaurantReservation.Db.Repositories.Interfaces;
-using RestaurantReservationSystem.API.DTOs.Requests;
-using RestaurantReservationSystem.API.DTOs.Responses;
-using RestaurantReservationSystem.API.Services.Interfaces;
+using RestaurantReservationSystem.Domain.DTOs.Requests;
+using RestaurantReservationSystem.Domain.DTOs.Responses;
+using RestaurantReservationSystem.Domain.Interfaces.Repositories;
+using RestaurantReservationSystem.Domain.Interfaces.Services;
+using RestaurantReservationSystem.Domain.Models;
 
-namespace RestaurantReservationSystem.API.Services
+namespace RestaurantReservationSystem.Domain.Services
 {
     /// <summary>
     /// Provides business logic for managing orders, including CRUD operations and related data retrieval
@@ -48,7 +48,7 @@ namespace RestaurantReservationSystem.API.Services
         /// <inheritdoc />
         public async Task<OrderResponse?> CreateAsync(OrderRequest request)
         {
-            var order = _mapper.Map<Order>(request);
+            var order = _mapper.Map<OrderModel>(request);
             await _orderRepository.AddAsync(order);
             return _mapper.Map<OrderResponse>(order);
         }
@@ -75,24 +75,24 @@ namespace RestaurantReservationSystem.API.Services
         }
 
         /// <inheritdoc />
-        public async Task<EmployeeResponse?> GetEmployeeAsync(int orderId)
-        {
-            var employee = await _orderRepository.GetEmployeeByOrderIdAsync(orderId);
-            return employee == null ? null : _mapper.Map<EmployeeResponse>(employee);
-        }
-
-        /// <inheritdoc />
-        public async Task<ReservationResponse?> GetReservationAsync(int orderId)
-        {
-            var reservation = await _orderRepository.GetReservationByOrderIdAsync(orderId);
-            return reservation == null ? null : _mapper.Map<ReservationResponse>(reservation);
-        }
-
-        /// <inheritdoc />
         public async Task<IEnumerable<OrderItemResponse>> GetOrderItemsAsync(int orderId)
         {
             var orders = await _orderItemRepository.GetOrderItemsByOrderIdAsync(orderId);
             return _mapper.Map<IEnumerable<OrderItemResponse>>(orders);
+        }
+
+        /// <inheritdoc />
+        public async Task<List<OrderResponse>> GetOrdersByEmployeeIdAsync(int employeeId)
+        {
+            var orders = await _orderRepository.GetOrdersByEmployeeIdAsync(employeeId);
+            return _mapper.Map<List<OrderResponse>>(orders);
+        }
+
+        /// <inheritdoc />
+        public async Task<List<OrderResponse>> GetOrdersByReservationIdAsync(int reservationId)
+        {
+            var orders = await _orderRepository.GetOrdersByReservationIdAsync(reservationId);
+            return _mapper.Map<List<OrderResponse>>(orders);
         }
     }
 }

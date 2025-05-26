@@ -16,11 +16,13 @@ namespace RestaurantReservationSystem.API.Controllers
     {
         private readonly ITableService _tableService;
         private readonly IRestaurantService _restaurantService;
+        private readonly IReservationService _reservationService;
 
-        public TableController(ITableService tableService, IRestaurantService restaurantService)
+        public TableController(ITableService tableService, IRestaurantService restaurantService, IReservationService reservationService)
         {
             _tableService = tableService;
             _restaurantService = restaurantService;
+            _reservationService = reservationService;
         }
 
         /// <summary>
@@ -164,7 +166,7 @@ namespace RestaurantReservationSystem.API.Controllers
             if (table == null)
                 return NotFound(ApiResponse<EmployeeResponse>.FailResponse("Table not found"));
 
-            var reservations = await _tableService.GetReservationsAsync(id);
+            var reservations = await _reservationService.GetReservationsByTableIdAsync(id);
             return Ok(ApiResponse<IEnumerable<ReservationResponse>>.SuccessResponse(reservations));
         }
     }

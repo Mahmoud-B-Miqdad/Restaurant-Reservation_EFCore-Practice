@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
-using RestaurantReservation.Db.Entities;
-using RestaurantReservation.Db.Repositories.Interfaces;
-using RestaurantReservationSystem.API.DTOs.Requests;
-using RestaurantReservationSystem.API.DTOs.Responses;
-using RestaurantReservationSystem.API.Services.Interfaces;
+using RestaurantReservationSystem.Domain.DTOs.Requests;
+using RestaurantReservationSystem.Domain.DTOs.Responses;
+using RestaurantReservationSystem.Domain.Interfaces.Repositories;
+using RestaurantReservationSystem.Domain.Interfaces.Services;
+using RestaurantReservationSystem.Domain.Models;
 
-namespace RestaurantReservationSystem.API.Services
+namespace RestaurantReservationSystem.Domain.Services
 {
     /// <summary>
     /// Provides business logic and service methods for managing menuItem operations.
@@ -46,7 +46,7 @@ namespace RestaurantReservationSystem.API.Services
         /// <inheritdoc />
         public async Task<MenuItemResponse> CreateAsync(MenuItemRequest request)
         {
-            var menuItem = _mapper.Map<MenuItem>(request);
+            var menuItem = _mapper.Map<MenuItemModel>(request);
             await _menuItemRepository.AddAsync(menuItem);
             return _mapper.Map<MenuItemResponse>(menuItem);
         }
@@ -73,18 +73,24 @@ namespace RestaurantReservationSystem.API.Services
         }
 
         /// <inheritdoc />
-        public async Task<IEnumerable<OrderItemResponse>> GetOrderItemsAsync(int menuItemId)
+        public async Task<IEnumerable<OrderItemResponse>> GetOrderItemsByMenuItamIdAsync(int menuItemId)
         {
             var orderItems = await _orderItemRepository.GetOrderItemsByMenuItemIdAsync(menuItemId);
             return _mapper.Map<IEnumerable<OrderItemResponse>>(orderItems);
         }
 
         /// <inheritdoc />
-        public async Task<RestaurantResponse?> GetRestaurantAsync(int menuItemId)
+        public async Task<IEnumerable<MenuItemResponse>> GetOrderedMenuItemsAsync(int reservationId)
         {
-            var restaurant = await _menuItemRepository.GetRestaurantByMenuItemIdAsync(menuItemId);
-            return _mapper.Map<RestaurantResponse>(restaurant);
+            var orderedMenuItems = await _menuItemRepository.ListOrderedMenuItemsAsync(reservationId);
+            return _mapper.Map<IEnumerable<MenuItemResponse>>(orderedMenuItems);
         }
 
+        /// <inheritdoc />
+        public async Task<List<MenuItemResponse>> GetMenuItemsByRestaurantIdAsync(int restaurantId)
+        {
+            var menuItem = await _menuItemRepository.GetMenuItemsByRestaurantIdAsync(restaurantId);
+            return _mapper.Map<List<MenuItemResponse>>(menuItem);
+        }
     }
 }

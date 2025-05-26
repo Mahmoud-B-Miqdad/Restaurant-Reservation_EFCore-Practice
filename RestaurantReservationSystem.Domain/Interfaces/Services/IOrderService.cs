@@ -1,8 +1,7 @@
-﻿using RestaurantReservation.Db.Entities;
-using RestaurantReservationSystem.API.DTOs.Requests;
-using RestaurantReservationSystem.API.DTOs.Responses;
+﻿using RestaurantReservationSystem.Domain.DTOs.Requests;
+using RestaurantReservationSystem.Domain.DTOs.Responses;
 
-namespace RestaurantReservationSystem.API.Services.Interfaces
+namespace RestaurantReservationSystem.Domain.Interfaces.Services
 {
     /// <summary>
     /// Defines the contract for order-related operations within the Restaurant Reservation System.
@@ -42,24 +41,24 @@ namespace RestaurantReservationSystem.API.Services.Interfaces
         Task<bool> DeleteAsync(int id);
 
         /// <summary>
-        /// Retrieves the reservation associated with a given order.
-        /// </summary>
-        /// <param name="orderId">The ID of the order.</param>
-        /// <returns>The associated <see cref="ReservationResponse"/> if found; otherwise, null.</returns>
-        Task<ReservationResponse?> GetReservationAsync(int orderId);
-
-        /// <summary>
-        /// Retrieves the employee who processed a given order.
-        /// </summary>
-        /// <param name="orderId">The ID of the order.</param>
-        /// <returns>The associated <see cref="EmployeeResponse"/> if found; otherwise, null.</returns>
-        Task<EmployeeResponse?> GetEmployeeAsync(int orderId);
-
-        /// <summary>
         /// Retrieves all order items handled by a specific order.
         /// </summary>
         /// <param name="orderId">The ID of the order.</param>
         /// <returns>A collection of <see cref="OrderItemResponse"/> linked to the order.</returns>
         Task<IEnumerable<OrderItemResponse>> GetOrderItemsAsync(int orderId);
+
+        /// <summary>
+        /// Retrieves all orders handled by a specific employee.
+        /// </summary>
+        /// <param name="employeeId">The unique identifier of the employee.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains a list of order response DTOs.</returns>
+        Task<List<OrderResponse>> GetOrdersByEmployeeIdAsync(int employeeId);
+
+        /// <summary>
+        /// Retrieves all orders handled by a specific reservation.
+        /// </summary>
+        /// <param name="reservationId">The unique identifier of the reservation.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains a list of order response DTOs.</returns>
+        Task<List<OrderResponse>> GetOrdersByReservationIdAsync(int reservationId);
     }
 }

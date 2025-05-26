@@ -18,12 +18,17 @@ namespace RestaurantReservationSystem.API.Controllers
         private readonly IRestaurantService _restaurantService;
         private readonly ITableService _tableService;
         private readonly IEmployeeService _employeeService;
+        private readonly IMenuItemService _menuItemService;
+        private readonly IReservationService _reservationService;
 
-        public RestaurantsController(IRestaurantService restaurantService, ITableService tableService, IEmployeeService employeeService)
-        {
+        public RestaurantsController(IRestaurantService restaurantService, ITableService tableService, 
+            IEmployeeService employeeService, IMenuItemService menuItemService, IReservationService reservationService)
+        {                                                                                                                                
             _restaurantService = restaurantService;
             _tableService = tableService;
             _employeeService = employeeService;
+            _menuItemService = menuItemService;
+            _restaurantService = restaurantService;
         }
 
         /// <summary>
@@ -198,7 +203,7 @@ namespace RestaurantReservationSystem.API.Controllers
             if (restaurant == null)
                 return NotFound(ApiResponse<RestaurantResponse>.FailResponse("Restaurant not found"));
 
-            var menuItems = await _restaurantService.GetMenuItemsByRestaurantIdAsync(id);
+            var menuItems = await _menuItemService.GetMenuItemsByRestaurantIdAsync(id);
             return Ok(ApiResponse<IEnumerable<MenuItemResponse>>.SuccessResponse(menuItems));
         }
 
@@ -217,7 +222,7 @@ namespace RestaurantReservationSystem.API.Controllers
             if (restaurant == null)
                 return NotFound(ApiResponse<RestaurantResponse>.FailResponse("Restaurant not found"));
 
-            var reservations = await _restaurantService.GetReservationsByRestaurantIdAsync(id);
+            var reservations = await _reservationService.GetReservationsByRestaurantIdAsync(id);
             return Ok(ApiResponse<IEnumerable<ReservationResponse>>.SuccessResponse(reservations));
         }
     }

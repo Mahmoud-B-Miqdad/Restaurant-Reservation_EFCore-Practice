@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using RestaurantReservation.Db.Entities;
 using RestaurantReservationSystem.Domain.Interfaces.Repositories;
@@ -60,17 +61,19 @@ internal class OrderItemRepository : IOrderItemRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task<IEnumerable<OrderItem>> GetOrderItemsByOrderIdAsync(int orderId)
+    public async Task<List<OrderItemModel>> GetOrderItemsByOrderIdAsync(int orderId)
     {
         return await _context.OrderItems
             .Where(o => o.OrderId == orderId)
+            .ProjectTo<OrderItemModel>(_mapper.ConfigurationProvider)
             .ToListAsync();
     }
 
-    public async Task<IEnumerable<OrderItem>> GetOrderItemsByMenuItemIdAsync(int menuItemId)
+    public async Task<List<OrderItemModel>> GetOrderItemsByMenuItemIdAsync(int menuItemId)
     {
         return await _context.OrderItems
             .Where(o => o.MenuItem.ItemId == menuItemId)
+            .ProjectTo<OrderItemModel>(_mapper.ConfigurationProvider)
             .ToListAsync();
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace RestaurantReservationSystem.API.DTOs.Responses
+﻿namespace RestaurantReservationSystem.Domain.DTOs.Responses
 {
     public class OrderItemResponse
     {

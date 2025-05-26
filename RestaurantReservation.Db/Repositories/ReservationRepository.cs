@@ -71,7 +71,7 @@ namespace RestaurantReservation.Db.Repositories
             }
         }
 
-        public async Task<IEnumerable<ReservationModel>> GetByRestaurantIdAsync(int restaurantId)
+        public async Task<IEnumerable<ReservationModel>> GetReservationsByRestaurantIdAsync(int restaurantId)
         {
             var reservations = await _context.Reservations
                                              .Where(r => r.RestaurantId == restaurantId)
@@ -88,31 +88,13 @@ namespace RestaurantReservation.Db.Repositories
             return _mapper.Map<List<ReservationModel>>(reservations);
         }
 
-        public async Task<Customer?> GetCustomerByReservationIdAsync(int reservationId)
+        public async Task<ReservationModel?> GetReservationByOrderIdAsync(int orderId)
         {
-            var reservations = await _context.Reservations
-                .Include(r => r.Customer)
-                .FirstOrDefaultAsync(r => r.ReservationId == reservationId);
+            var order = await _context.Orders
+                 .Include(o => o.Reservation)
+                .FirstOrDefaultAsync(o => o.OrderId == orderId);
 
-            return reservations?.Customer;
-        }
-
-        public async Task<Restaurant?> GetRestaurantByReservationIdAsync(int reservationId)
-        {
-            var reservations = await _context.Reservations
-                .Include(r => r.Restaurant)
-                .FirstOrDefaultAsync(r => r.ReservationId == reservationId);
-
-            return reservations?.Restaurant;
-        }
-
-        public async Task<Table?> GetTableByReservationIdAsync(int reservationId)
-        {
-            var reservations = await _context.Reservations
-                .Include(r => r.Table)
-                .FirstOrDefaultAsync(r => r.ReservationId == reservationId);
-
-            return reservations?.Table;
+            return _mapper.Map<ReservationModel>(order?.Reservation);
         }
     }
 }

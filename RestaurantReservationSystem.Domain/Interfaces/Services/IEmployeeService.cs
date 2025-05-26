@@ -52,22 +52,13 @@ namespace RestaurantReservationSystem.Domain.Interfaces.Services
         /// <returns>A task that represents the asynchronous operation.</returns>
         Task<bool> DeleteAsync(int id);
 
-        /// <summary>
-        /// Retrieves all orders handled by a specific employee.
-        /// </summary>
-        /// <param name="employeeId">The unique identifier of the employee.</param>
-        /// <returns>A task that represents the asynchronous operation. The task result contains a list of order response DTOs.</returns>
-        Task<List<OrderResponse>> GetOrdersByEmployeeIdAsync(int employeeId);
-
         Task<List<EmployeeResponse>> GetEmployeesByRestaurantIdAsync(int restaurantId);
 
         /// <summary>
-        /// Retrieves a collection of tables associated with a specific restaurant.
+        /// Retrieves the employee who processed a given order.
         /// </summary>
-        /// <param name="restaurantId">The unique identifier of the restaurant.</param>
-        /// <returns>
-        /// A task representing the asynchronous operation. The task result contains
-        /// an enumerable collection of <see cref="TableResponse"/> objects representing the tables.
-        /// </returns>
+        /// <param name="orderId">The ID of the order.</param>
+        /// <returns>The associated <see cref="EmployeeResponse"/> if found; otherwise, null.</returns>
+        Task<EmployeeResponse?> GetEmployeeByOrderIdAsync(int orderId);
     }
 }

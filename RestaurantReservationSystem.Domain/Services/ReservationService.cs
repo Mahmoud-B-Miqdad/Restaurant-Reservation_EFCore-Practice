@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
-using RestaurantReservation.Db.Entities;
-using RestaurantReservation.Db.Repositories.Interfaces;
-using RestaurantReservationSystem.API.DTOs.Requests;
-using RestaurantReservationSystem.API.DTOs.Responses;
-using RestaurantReservationSystem.API.Services.Interfaces;
+using RestaurantReservationSystem.Domain.DTOs.Requests;
+using RestaurantReservationSystem.Domain.DTOs.Responses;
+using RestaurantReservationSystem.Domain.Interfaces.Repositories;
+using RestaurantReservationSystem.Domain.Interfaces.Services;
+using RestaurantReservationSystem.Domain.Models;
 
-namespace RestaurantReservationSystem.API.Services
+namespace RestaurantReservationSystem.Domain.Services
 {
     /// <summary>
     /// Provides business logic and service methods for managing reservation operations.
@@ -15,6 +15,7 @@ namespace RestaurantReservationSystem.API.Services
         private readonly IReservationRepository _reservationRepository;
         private readonly IOrderRepository _orderRepository;
         private readonly IMenuItemRepository _menuItemRepository;
+        private readonly ICustomerRepository _customerRepository;
         private readonly IMapper _mapper;
 
         /// <summary>
@@ -22,12 +23,14 @@ namespace RestaurantReservationSystem.API.Services
         /// </summary>
         /// <param name="repository">The repository responsible for reservation data access.</param>
         /// <param name="mapper">The mapper used to convert between entities and DTOs.</param>
-        public ReservationService(IReservationRepository repository, IMapper mapper, IOrderRepository orderRepository, IMenuItemRepository menuItemRepository)
+        public ReservationService(IReservationRepository repository, IMapper mapper, IOrderRepository orderRepository,
+            IMenuItemRepository menuItemRepository, ICustomerRepository customerRepository)
         {
             _reservationRepository = repository;
             _orderRepository = orderRepository;
             _mapper = mapper;
             _menuItemRepository = menuItemRepository;
+            _customerRepository = customerRepository;
         }
 
         /// <inheritdoc />
@@ -47,7 +50,7 @@ namespace RestaurantReservationSystem.API.Services
         /// <inheritdoc />
         public async Task<ReservationResponse> CreateAsync(ReservationRequest request)
         {
-            var reservation = _mapper.Map<Reservation>(request);
+            var reservation = _mapper.Map<ReservationModel>(request);
             await _reservationRepository.AddAsync(reservation);
             return _mapper.Map<ReservationResponse>(reservation);
         }
@@ -76,43 +79,37 @@ namespace RestaurantReservationSystem.API.Services
         /// <inheritdoc />
         public async Task<CustomerResponse?> GetCustomerAsync(int reservationId)
         {
-            var customer = await _reservationRepository.GetCustomerByReservationIdAsync(reservationId);
+            var customer = await _customerRepository.GetCustomerByReservationIdAsync(reservationId);
             return customer == null ? null : _mapper.Map<CustomerResponse>(customer);
         }
 
         /// <inheritdoc />
-        public async Task<RestaurantResponse?> GetRestaurantAsync(int reservationId)
-        {
-            var restaurant = await _reservationRepository.GetRestaurantByReservationIdAsync(reservationId);
-            return restaurant == null ? null : _mapper.Map<RestaurantResponse>(restaurant);
-        }
-
-        /// <inheritdoc />
-        public async Task<TableResponse?> GetTableAsync(int reservationId)
-        {
-            var table = await _reservationRepository.GetTableByReservationIdAsync(reservationId);
-            return table == null ? null : _mapper.Map<TableResponse>(table);
-        }
-
-        /// <inheritdoc />
-        public async Task<IEnumerable<OrderResponse>> GetOrdersAsync(int reservationId)
-        {
-            var orders = await _orderRepository.GetOrdersByReservationIdAsync(reservationId);
-            return _mapper.Map<IEnumerable<OrderResponse>>(orders);
-        }
-
-        /// <inheritdoc />
-        public async Task<IEnumerable<ReservationResponse>> GetReservationsByCustomerAsync(int customerId)
+        public async Task<List<ReservationResponse>> GetReservationsByCustomerAsync(int customerId)
         {
             var reservationsByCustomer = await _reservationRepository.GetReservationsByCustomerAsync(customerId);
-            return _mapper.Map<IEnumerable<ReservationResponse>>(reservationsByCustomer);
+            return _mapper.Map<List<ReservationResponse>>(reservationsByCustomer);
         }
 
         /// <inheritdoc />
-        public async Task<IEnumerable<MenuItemResponse>> GetOrderedMenuItemsAsync(int reservationId)
+        public async Task<ReservationResponse?> GetReservationByOrderIdAsync(int orderId)
         {
-            var orderedMenuItems = await _menuItemRepository.ListOrderedMenuItemsAsync(reservationId);
-            return _mapper.Map<IEnumerable<MenuItemResponse>>(orderedMenuItems);
+            var reservation = await _reservationRepository.GetReservationByOrderIdAsync(orderId);
+            return reservation == null ? null : _mapper.Map<ReservationResponse>(reservation);
+        }
+
+
+        /// <inheritdoc />
+        public async Task<List<ReservationResponse>> GetReservationsByRestaurantIdAsync(int restaurantId)
+        {
+            var reservation = await _reservationRepository.GetReservationsByRestaurantIdAsync(restaurantId);
+            return _mapper.Map<List<ReservationResponse>>(reservation);
+        }
+
+        /// <inheritdoc />
+        public async Task<List<ReservationResponse>> GetReservationsByTableIdAsync(int tableId)
+        {
+            var orders = await _reservationRepository.GetReservationsByTableIdAsync(tableId);
+            return _mapper.Map<List<ReservationResponse>>(orders);
         }
     }
 }

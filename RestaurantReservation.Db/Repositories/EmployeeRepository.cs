@@ -82,5 +82,14 @@ namespace RestaurantReservation.Db.Repositories
             .ProjectTo<EmployeeModel>(_mapper.ConfigurationProvider)
             .ToListAsync();
         }
+
+        public async Task<EmployeeModel?> GetEmployeeByOrderIdAsync(int orderId)
+        {
+            var order = await _context.Orders
+                 .Include(o => o.Employee)
+                .FirstOrDefaultAsync(o => o.OrderId == orderId);
+
+            return _mapper.Map<EmployeeModel>(order?.Employee);
+        }
     }
 }

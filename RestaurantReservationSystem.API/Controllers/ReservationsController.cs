@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using RestaurantReservation.Db.Repositories.Interfaces;
-using RestaurantReservationSystem.API.DTOs.Requests;
-using RestaurantReservationSystem.API.DTOs.Responses;
-using RestaurantReservationSystem.API.Responses;
-using RestaurantReservationSystem.API.Services.Interfaces;
+using RestaurantReservationSystem.Domain.DTOs.Requests;
+using RestaurantReservationSystem.Domain.DTOs.Responses;
+using RestaurantReservationSystem.Domain.Interfaces.Repositories;
+using RestaurantReservationSystem.Domain.Interfaces.Services;
+using RestaurantReservationSystem.Domain.Responses;
+using RestaurantReservationSystem.Domain.Services;
 
 namespace RestaurantReservationSystem.API.Controllers
 {
@@ -17,11 +18,20 @@ namespace RestaurantReservationSystem.API.Controllers
     {
         private readonly IReservationService _reservationService;
         private readonly ICustomerRepository _customerRepository;
+        private readonly IOrderService _ordersService;
+        private readonly IRestaurantService _restaurantService;
+        private readonly ITableService _tableService;
+        private readonly IMenuItemService _menuItemService;
 
-        public ReservationsController(IReservationService reservationService, ICustomerRepository customerRepository)
+        public ReservationsController(IReservationService reservationService, ICustomerRepository customerRepository
+            , IOrderService ordersService, IRestaurantService restaurantService, ITableService tableService, IMenuItemService menuItemService)
         {
             _reservationService = reservationService;
             _customerRepository = customerRepository;
+            _ordersService = ordersService;
+            _restaurantService = restaurantService;
+            _tableService = tableService;
+            _menuItemService = menuItemService;
         }
 
         /// <summary>
@@ -156,7 +166,7 @@ namespace RestaurantReservationSystem.API.Controllers
             if (reservation == null)
                 return NotFound(ApiResponse<ReservationResponse>.FailResponse("Reservation not found"));
 
-            var orders = await _reservationService.GetOrdersAsync(id);
+            var orders = await _ordersService.GetOrdersByReservationIdAsync(id);
             return Ok(ApiResponse<IEnumerable<OrderResponse>>.SuccessResponse(orders));
         }
 
@@ -191,7 +201,7 @@ namespace RestaurantReservationSystem.API.Controllers
             if (reservation == null)
                 return NotFound(ApiResponse<ReservationResponse>.FailResponse("Reservation not found"));
 
-            var restaurant = await _reservationService.GetRestaurantAsync(id);
+            var restaurant = await _restaurantService.GetRestaurantByReservationIdAsync(id);
             if (restaurant == null)
                 return NotFound(ApiResponse<RestaurantResponse>.FailResponse("Restaurant not found"));
 
@@ -210,7 +220,7 @@ namespace RestaurantReservationSystem.API.Controllers
             if (reservation == null)
                 return NotFound(ApiResponse<ReservationResponse>.FailResponse("Reservation not found"));
 
-            var table = await _reservationService.GetTableAsync(id);
+            var table = await _tableService.GetTableByReservationIdAsync(id);
             if (table == null)
                 return NotFound(ApiResponse<TableResponse>.FailResponse("Table not found"));
 
@@ -248,7 +258,7 @@ namespace RestaurantReservationSystem.API.Controllers
             if (menuItems == null)
                 return NotFound(ApiResponse<MenuItemResponse>.FailResponse("MenuItem not found"));
 
-            var orderedMenuItems = await _reservationService.GetOrderedMenuItemsAsync(id);
+            var orderedMenuItems = await _menuItemService.GetOrderedMenuItemsAsync(id);
             return Ok(ApiResponse<IEnumerable<MenuItemResponse>>.SuccessResponse(orderedMenuItems));
         }
     }

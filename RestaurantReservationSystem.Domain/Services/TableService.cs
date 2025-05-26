@@ -74,17 +74,17 @@ namespace RestaurantReservationSystem.Domain.Services
         }
 
         /// <inheritdoc />
-        public async Task<List<ReservationResponse>> GetReservationsAsync(int tableId)
-        {
-            var orders = await _reservationRepository.GetReservationsByTableIdAsync(tableId);
-            return _mapper.Map<List<ReservationResponse>>(orders);
-        }
-
-        /// <inheritdoc />
         public async Task<List<TableResponse>> GetTablesByRestaurantIdAsync(int restaurantId)
         {
             var tables = await _tableRepository.GetByRestaurantIdAsync(restaurantId);
             return _mapper.Map<List<TableResponse>>(tables);
+        }
+
+        /// <inheritdoc />
+        public async Task<TableResponse?> GetTableByReservationIdAsync(int reservationId)
+        {
+            var table = await _tableRepository.GetTableByReservationIdAsync(reservationId);
+            return table == null ? null : _mapper.Map<TableResponse>(table);
         }
     }
 }

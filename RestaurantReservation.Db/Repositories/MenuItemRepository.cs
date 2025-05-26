@@ -75,22 +75,13 @@ namespace RestaurantReservation.Db.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<MenuItemModel>> GetByRestaurantIdAsync(int restaurantId)
+        public async Task<IEnumerable<MenuItemModel>> GetMenuItemsByRestaurantIdAsync(int restaurantId)
         {
             var items = await _context.MenuItems
                 .Where(e => e.RestaurantId == restaurantId)
                 .ToListAsync();
 
             return _mapper.Map<List<MenuItemModel>>(items);
-        }
-
-        public async Task<Restaurant?> GetRestaurantByMenuItemIdAsync(int menuItemId)
-        {
-            var menuItem = await _context.MenuItems
-                .Include(m => m.Restaurant)
-                .FirstOrDefaultAsync(m => m.ItemId == menuItemId);
-
-            return menuItem?.Restaurant;
         }
     }
 }

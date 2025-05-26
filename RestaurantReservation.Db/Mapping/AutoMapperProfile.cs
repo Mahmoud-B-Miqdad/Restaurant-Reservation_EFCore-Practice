@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using RestaurantReservation.Db.Entities;
+using RestaurantReservationSystem.API.DTOs.Requests;
 using RestaurantReservationSystem.Domain.DTOs.Requests;
 using RestaurantReservationSystem.Domain.DTOs.Responses;
 using RestaurantReservationSystem.Domain.Models;
@@ -30,6 +31,12 @@ namespace RestaurantReservationSystem.API.Mapping
 
             CreateMap<OrderModel, OrderResponse>();
             CreateMap<OrderRequest, OrderModel>();
+
+            CreateMap<OrderItemModel, OrderItemResponse>();
+            CreateMap<OrderItemRequest, OrderItemModel>();
+
+            CreateMap<CustomerModel, CustomerResponse>();
+            CreateMap<CustomerRequest, CustomerModel>();
 
             CreateMap<Restaurant, RestaurantModel>().ReverseMap();
             CreateMap<Employee, EmployeeModel>().ReverseMap();
