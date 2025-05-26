@@ -75,7 +75,7 @@ namespace RestaurantReservation.Db.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<EmployeeModel>> GetByRestaurantIdAsync(int restaurantId)
+        public async Task<List<EmployeeModel>> GetByRestaurantIdAsync(int restaurantId)
         {
             return await _context.Employees
             .Where(e => e.RestaurantId == restaurantId)

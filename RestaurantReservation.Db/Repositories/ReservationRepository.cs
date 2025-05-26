@@ -71,7 +71,7 @@ namespace RestaurantReservation.Db.Repositories
             }
         }
 
-        public async Task<IEnumerable<ReservationModel>> GetReservationsByRestaurantIdAsync(int restaurantId)
+        public async Task<List<ReservationModel>> GetReservationsByRestaurantIdAsync(int restaurantId)
         {
             var reservations = await _context.Reservations
                                              .Where(r => r.RestaurantId == restaurantId)
@@ -80,7 +80,7 @@ namespace RestaurantReservation.Db.Repositories
         }
 
 
-        public async Task<IEnumerable<ReservationModel>> GetReservationsByTableIdAsync(int tableId)
+        public async Task<List<ReservationModel>> GetReservationsByTableIdAsync(int tableId)
         {
             var reservations = await _context.Reservations
                                              .Where(r => r.TableId == tableId)

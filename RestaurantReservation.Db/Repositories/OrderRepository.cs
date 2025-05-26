@@ -91,16 +91,16 @@ namespace RestaurantReservation.Db.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<OrderModel>> GetOrdersByEmployeeIdAsync(int employeeId)
+        public async Task<List<OrderModel>> GetOrdersByEmployeeIdAsync(int employeeId)
         {
             var orders = await _context.Orders
                 .Where(o => o.EmployeeId == employeeId)
                 .ToListAsync();
 
-            return _mapper.Map<IEnumerable<OrderModel>>(orders);
+            return _mapper.Map<List<OrderModel>>(orders);
         }
 
-        public async Task<IEnumerable<OrderModel>> GetOrdersByReservationIdAsync(int reservationId)
+        public async Task<List<OrderModel>> GetOrdersByReservationIdAsync(int reservationId)
         {
             return await _context.Orders
                 .Where(o => o.ReservationId == reservationId)

@@ -39,7 +39,7 @@ namespace RestaurantReservationSystem.API.Controllers
         public async Task<IActionResult> GetAllAsync()
         {
             var restaurants = await _restaurantService.GetAllAsync();
-            return Ok(ApiResponse<IEnumerable<RestaurantResponse>>.SuccessResponse(restaurants));
+            return Ok(ApiResponse<List<RestaurantResponse>>.SuccessResponse(restaurants));
         }
 
         /// <summary>
@@ -165,7 +165,7 @@ namespace RestaurantReservationSystem.API.Controllers
                 return NotFound(ApiResponse<RestaurantResponse>.FailResponse("Restaurant not found"));
 
             var employees = await _employeeService.GetEmployeesByRestaurantIdAsync(id);
-            return Ok(ApiResponse<IEnumerable<EmployeeResponse>>.SuccessResponse(employees));
+            return Ok(ApiResponse<List<EmployeeResponse>>.SuccessResponse(employees));
         }
 
 
@@ -185,7 +185,7 @@ namespace RestaurantReservationSystem.API.Controllers
                 return NotFound(ApiResponse<RestaurantResponse>.FailResponse("Restaurant not found"));
 
             var tables = await _tableService.GetTablesByRestaurantIdAsync(id);
-            return Ok(ApiResponse<IEnumerable<TableResponse>>.SuccessResponse(tables));
+            return Ok(ApiResponse<List<TableResponse>>.SuccessResponse(tables));
         }
 
         /// <summary>
@@ -204,7 +204,7 @@ namespace RestaurantReservationSystem.API.Controllers
                 return NotFound(ApiResponse<RestaurantResponse>.FailResponse("Restaurant not found"));
 
             var menuItems = await _menuItemService.GetMenuItemsByRestaurantIdAsync(id);
-            return Ok(ApiResponse<IEnumerable<MenuItemResponse>>.SuccessResponse(menuItems));
+            return Ok(ApiResponse<List<MenuItemResponse>>.SuccessResponse(menuItems));
         }
 
         /// <summary>
@@ -223,7 +223,7 @@ namespace RestaurantReservationSystem.API.Controllers
                 return NotFound(ApiResponse<RestaurantResponse>.FailResponse("Restaurant not found"));
 
             var reservations = await _reservationService.GetReservationsByRestaurantIdAsync(id);
-            return Ok(ApiResponse<IEnumerable<ReservationResponse>>.SuccessResponse(reservations));
+            return Ok(ApiResponse<List<ReservationResponse>>.SuccessResponse(reservations));
         }
     }
 }

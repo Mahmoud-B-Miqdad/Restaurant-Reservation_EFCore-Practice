@@ -75,10 +75,10 @@ namespace RestaurantReservationSystem.Domain.Services
         }
 
         /// <inheritdoc />
-        public async Task<IEnumerable<OrderItemResponse>> GetOrderItemsAsync(int orderId)
+        public async Task<List<OrderItemResponse>> GetOrderItemsAsync(int orderId)
         {
             var orders = await _orderItemRepository.GetOrderItemsByOrderIdAsync(orderId);
-            return _mapper.Map<IEnumerable<OrderItemResponse>>(orders);
+            return _mapper.Map<List<OrderItemResponse>>(orders);
         }
 
         /// <inheritdoc />

@@ -33,7 +33,7 @@ namespace RestaurantReservationSystem.API.Controllers
         public async Task<IActionResult> GetAllAsync()
         {
             var tables = await _tableService.GetAllAsync();
-            return Ok(ApiResponse<IEnumerable<TableResponse>>.SuccessResponse(tables));
+            return Ok(ApiResponse<List<TableResponse>>.SuccessResponse(tables));
         }
 
         /// <summary>
@@ -167,7 +167,7 @@ namespace RestaurantReservationSystem.API.Controllers
                 return NotFound(ApiResponse<EmployeeResponse>.FailResponse("Table not found"));
 
             var reservations = await _reservationService.GetReservationsByTableIdAsync(id);
-            return Ok(ApiResponse<IEnumerable<ReservationResponse>>.SuccessResponse(reservations));
+            return Ok(ApiResponse<List<ReservationResponse>>.SuccessResponse(reservations));
         }
     }
 }

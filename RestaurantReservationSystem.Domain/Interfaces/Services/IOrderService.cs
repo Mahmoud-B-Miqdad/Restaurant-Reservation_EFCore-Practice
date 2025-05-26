@@ -45,7 +45,7 @@ namespace RestaurantReservationSystem.Domain.Interfaces.Services
         /// </summary>
         /// <param name="orderId">The ID of the order.</param>
         /// <returns>A collection of <see cref="OrderItemResponse"/> linked to the order.</returns>
-        Task<IEnumerable<OrderItemResponse>> GetOrderItemsAsync(int orderId);
+        Task<List<OrderItemResponse>> GetOrderItemsAsync(int orderId);
 
         /// <summary>
         /// Retrieves all orders handled by a specific employee.

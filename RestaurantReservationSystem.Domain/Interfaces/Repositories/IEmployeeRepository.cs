@@ -10,7 +10,7 @@ namespace RestaurantReservationSystem.Domain.Interfaces.Repositories
         Task AddAsync(EmployeeModel employee);
         Task UpdateAsync(EmployeeModel employee);
         Task DeleteAsync(int id);
-        Task<IEnumerable<EmployeeModel>> GetByRestaurantIdAsync(int restaurantId);
+        Task<List<EmployeeModel>> GetByRestaurantIdAsync(int restaurantId);
         Task<EmployeeModel?> GetEmployeeByOrderIdAsync(int orderId);
     }
 }

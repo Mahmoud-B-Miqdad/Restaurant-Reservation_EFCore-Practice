@@ -73,17 +73,17 @@ namespace RestaurantReservationSystem.Domain.Services
         }
 
         /// <inheritdoc />
-        public async Task<IEnumerable<OrderItemResponse>> GetOrderItemsByMenuItamIdAsync(int menuItemId)
+        public async Task<List<OrderItemResponse>> GetOrderItemsByMenuItamIdAsync(int menuItemId)
         {
             var orderItems = await _orderItemRepository.GetOrderItemsByMenuItemIdAsync(menuItemId);
-            return _mapper.Map<IEnumerable<OrderItemResponse>>(orderItems);
+            return _mapper.Map<List<OrderItemResponse>>(orderItems);
         }
 
         /// <inheritdoc />
-        public async Task<IEnumerable<MenuItemResponse>> GetOrderedMenuItemsAsync(int reservationId)
+        public async Task<List<MenuItemResponse>> GetOrderedMenuItemsAsync(int reservationId)
         {
             var orderedMenuItems = await _menuItemRepository.ListOrderedMenuItemsAsync(reservationId);
-            return _mapper.Map<IEnumerable<MenuItemResponse>>(orderedMenuItems);
+            return _mapper.Map<List<MenuItemResponse>>(orderedMenuItems);
         }
 
         /// <inheritdoc />

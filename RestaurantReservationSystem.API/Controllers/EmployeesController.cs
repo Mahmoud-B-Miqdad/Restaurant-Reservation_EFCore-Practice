@@ -33,7 +33,7 @@ namespace RestaurantReservationSystem.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] bool managersOnly = false)
         {
-            IEnumerable<EmployeeResponse> employees;
+            List<EmployeeResponse> employees;
 
             if (managersOnly)
             {
@@ -170,7 +170,7 @@ namespace RestaurantReservationSystem.API.Controllers
                 return NotFound(ApiResponse<EmployeeResponse>.FailResponse("Employee not found"));
 
             var orders = await _orderService.GetOrdersByEmployeeIdAsync(id);
-            return Ok(ApiResponse<IEnumerable<OrderResponse>>.SuccessResponse(orders));
+            return Ok(ApiResponse<List<OrderResponse>>.SuccessResponse(orders));
         }
 
         /// <summary>

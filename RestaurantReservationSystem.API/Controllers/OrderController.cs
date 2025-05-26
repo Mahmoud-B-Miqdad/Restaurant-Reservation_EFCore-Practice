@@ -38,7 +38,7 @@ namespace RestaurantReservationSystem.API.Controllers
         public async Task<ActionResult<List<OrderResponse>>> GetAllAsync()
         {
             var orders = await _orderService.GetAllAsync();
-            return Ok(ApiResponse<IEnumerable<OrderResponse>>.SuccessResponse(orders));
+            return Ok(ApiResponse<List<OrderResponse>>.SuccessResponse(orders));
         }
 
         /// <summary>
@@ -179,14 +179,14 @@ namespace RestaurantReservationSystem.API.Controllers
         /// </summary>
         /// <param name="id">The ID of the order.</param>
         [HttpGet("{id}/items")]
-        public async Task<ActionResult<IEnumerable<OrderItemResponse>>> GetOrderItems(int id)
+        public async Task<ActionResult<List<OrderItemResponse>>> GetOrderItems(int id)
         {
             var order = await _orderService.GetByIdAsync(id);
             if (order == null)
                 return NotFound(ApiResponse<OrderResponse>.FailResponse("Order not found"));
 
             var items = await _orderService.GetOrderItemsAsync(id);
-            return Ok(ApiResponse<IEnumerable<OrderItemResponse>>.SuccessResponse(items));
+            return Ok(ApiResponse<List<OrderItemResponse>>.SuccessResponse(items));
         }
     }
 }

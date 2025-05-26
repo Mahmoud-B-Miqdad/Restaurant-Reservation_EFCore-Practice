@@ -48,14 +48,14 @@ namespace RestaurantReservationSystem.Domain.Interfaces.Services
         /// </summary>
         /// <param name="menuItemId">The unique identifier of the menuItem</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains a list of orderitem response DTOs.</returns>
-        Task<IEnumerable<OrderItemResponse>> GetOrderItemsByMenuItamIdAsync(int menuItemId);
+        Task<List<OrderItemResponse>> GetOrderItemsByMenuItamIdAsync(int menuItemId);
 
         /// <summary>
         /// Retrieves all Ordered Menu Items handled by a specific reservation.
         /// </summary>
         /// <param name="reservationId">The unique identifier of the reservation</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains a list of menuItem response DTOs.</returns>
-        Task<IEnumerable<MenuItemResponse>> GetOrderedMenuItemsAsync(int reservationId);
+        Task<List<MenuItemResponse>> GetOrderedMenuItemsAsync(int reservationId);
 
         /// <summary>
         /// Retrieves a list of employees who work at the specified restaurant.

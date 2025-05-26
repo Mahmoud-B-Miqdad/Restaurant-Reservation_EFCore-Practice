@@ -167,7 +167,7 @@ namespace RestaurantReservationSystem.API.Controllers
                 return NotFound(ApiResponse<ReservationResponse>.FailResponse("Reservation not found"));
 
             var orders = await _ordersService.GetOrdersByReservationIdAsync(id);
-            return Ok(ApiResponse<IEnumerable<OrderResponse>>.SuccessResponse(orders));
+            return Ok(ApiResponse<List<OrderResponse>>.SuccessResponse(orders));
         }
 
         /// <summary>
@@ -243,7 +243,7 @@ namespace RestaurantReservationSystem.API.Controllers
             if (reservationsByCustomer == null)
                 return NotFound(ApiResponse<TableResponse>.FailResponse("Theres no reservations for this Customer"));
 
-            return Ok(ApiResponse<IEnumerable<ReservationResponse>>.SuccessResponse(reservationsByCustomer));
+            return Ok(ApiResponse<List<ReservationResponse>>.SuccessResponse(reservationsByCustomer));
         }
 
         /// <summary>
@@ -259,7 +259,7 @@ namespace RestaurantReservationSystem.API.Controllers
                 return NotFound(ApiResponse<MenuItemResponse>.FailResponse("MenuItem not found"));
 
             var orderedMenuItems = await _menuItemService.GetOrderedMenuItemsAsync(id);
-            return Ok(ApiResponse<IEnumerable<MenuItemResponse>>.SuccessResponse(orderedMenuItems));
+            return Ok(ApiResponse<List<MenuItemResponse>>.SuccessResponse(orderedMenuItems));
         }
     }
 }
