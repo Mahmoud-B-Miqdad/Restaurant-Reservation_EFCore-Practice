@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using RestaurantReservationSystem.API.DTOs.Requests;
 using RestaurantReservationSystem.API.DTOs.Responses;
 using RestaurantReservationSystem.API.Responses;
-using RestaurantReservationSystem.API.Services.Interfaces;
+using RestaurantReservationSystem.Domain.Interfaces.Services;
 
 namespace RestaurantReservationSystem.API.Controllers
 {
@@ -15,10 +15,12 @@ namespace RestaurantReservationSystem.API.Controllers
     public class EmployeesController : ControllerBase
     {
         private readonly IEmployeeService _employeeService;
+        private readonly IRestaurantService _restaurantService;
 
-        public EmployeesController(IEmployeeService employeSservice)
+        public EmployeesController(IEmployeeService employeSservice, IRestaurantService restaurantService)
         {
             _employeeService = employeSservice;
+            _restaurantService = restaurantService;
         }
 
         /// <summary>
@@ -157,7 +159,7 @@ namespace RestaurantReservationSystem.API.Controllers
             if (employee == null)
                 return NotFound(ApiResponse<EmployeeResponse>.FailResponse("Employee not found"));
 
-            var orders = await _employeeService.GetOrdersAsync(id);
+            var orders = await _employeeService.GetOrdersByEmployeeIdAsync(id);
             return Ok(ApiResponse<IEnumerable<OrderResponse>>.SuccessResponse(orders));
         }
 
@@ -173,7 +175,7 @@ namespace RestaurantReservationSystem.API.Controllers
             if (employee == null)
                 return NotFound(ApiResponse<EmployeeResponse>.FailResponse("Employee not found"));
 
-            var restaurant = await _employeeService.GetRestaurantAsync(id);
+            var restaurant = await _restaurantService.GetRestaurantByEmployeeIdAsync(id);
             if (restaurant == null)
                 return NotFound(ApiResponse<RestaurantResponse>.FailResponse("Restaurant not found"));
 

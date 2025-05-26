@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using RestaurantReservationSystem.API.DTOs.Requests;
 using RestaurantReservationSystem.API.DTOs.Responses;
 using RestaurantReservationSystem.API.Responses;
-using RestaurantReservationSystem.API.Services.Interfaces;
+using RestaurantReservationSystem.Domain.Interfaces.Services;
 
 namespace RestaurantReservationSystem.API.Controllers
 {
@@ -16,10 +16,14 @@ namespace RestaurantReservationSystem.API.Controllers
     public class RestaurantsController : ControllerBase
     {
         private readonly IRestaurantService _restaurantService;
+        private readonly ITableService _tableService;
+        private readonly IEmployeeService _employeeService;
 
-        public RestaurantsController(IRestaurantService restaurantService)
+        public RestaurantsController(IRestaurantService restaurantService, ITableService tableService, IEmployeeService employeeService)
         {
             _restaurantService = restaurantService;
+            _tableService = tableService;
+            _employeeService = employeeService;
         }
 
         /// <summary>
@@ -155,7 +159,7 @@ namespace RestaurantReservationSystem.API.Controllers
             if (restaurant == null)
                 return NotFound(ApiResponse<RestaurantResponse>.FailResponse("Restaurant not found"));
 
-            var employees = await _restaurantService.GetEmployeesAsync(id);
+            var employees = await _employeeService.GetEmployeesByRestaurantIdAsync(id);
             return Ok(ApiResponse<IEnumerable<EmployeeResponse>>.SuccessResponse(employees));
         }
 
@@ -175,7 +179,7 @@ namespace RestaurantReservationSystem.API.Controllers
             if (restaurant == null)
                 return NotFound(ApiResponse<RestaurantResponse>.FailResponse("Restaurant not found"));
 
-            var tables = await _restaurantService.GetTablesAsync(id);
+            var tables = await _tableService.GetTablesByRestaurantIdAsync(id);
             return Ok(ApiResponse<IEnumerable<TableResponse>>.SuccessResponse(tables));
         }
 
@@ -194,7 +198,7 @@ namespace RestaurantReservationSystem.API.Controllers
             if (restaurant == null)
                 return NotFound(ApiResponse<RestaurantResponse>.FailResponse("Restaurant not found"));
 
-            var menuItems = await _restaurantService.GetMenuItemsAsync(id);
+            var menuItems = await _restaurantService.GetMenuItemsByRestaurantIdAsync(id);
             return Ok(ApiResponse<IEnumerable<MenuItemResponse>>.SuccessResponse(menuItems));
         }
 
@@ -213,7 +217,7 @@ namespace RestaurantReservationSystem.API.Controllers
             if (restaurant == null)
                 return NotFound(ApiResponse<RestaurantResponse>.FailResponse("Restaurant not found"));
 
-            var reservations = await _restaurantService.GetReservationsAsync(id);
+            var reservations = await _restaurantService.GetReservationsByRestaurantIdAsync(id);
             return Ok(ApiResponse<IEnumerable<ReservationResponse>>.SuccessResponse(reservations));
         }
     }
