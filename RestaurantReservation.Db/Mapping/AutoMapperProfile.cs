@@ -34,6 +34,7 @@ namespace RestaurantReservationSystem.API.Mapping
             CreateMap<Restaurant, RestaurantModel>().ReverseMap();
             CreateMap<Employee, EmployeeModel>().ReverseMap();
             CreateMap<Customer, CustomerModel>().ReverseMap();
+            CreateMap<MenuItem, MenuItemModel>().ReverseMap();
 
         }
     }
