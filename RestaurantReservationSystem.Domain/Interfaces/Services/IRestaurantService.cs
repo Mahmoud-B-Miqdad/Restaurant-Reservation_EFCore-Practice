@@ -48,27 +48,8 @@ namespace RestaurantReservationSystem.Domain.Interfaces.Services
         /// </summary>
         /// <param name="restaurantId">The ID of the restaurant to get employees for.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains a collection of employee response DTOs.</returns>
-        Task<List<EmployeeResponse>> GetEmployeesAsync(int restaurantId);
 
-        /// <summary>
-        /// Retrieves a collection of tables associated with a specific restaurant.
-        /// </summary>
-        /// <param name="restaurantId">The unique identifier of the restaurant.</param>
-        /// <returns>
-        /// A task representing the asynchronous operation. The task result contains
-        /// an enumerable collection of <see cref="TableResponse"/> objects representing the tables.
-        /// </returns>
-        Task<List<TableResponse>> GetTablesAsync(int restaurantId);
-
-        /// <summary>
-        /// Retrieves all menu items available at a specific restaurant.
-        /// </summary>
-        /// <param name="restaurantId">The unique identifier of the restaurant whose menu items are to be retrieved.</param>
-        /// <returns>
-        /// A task that represents the asynchronous operation. The task result contains a collection
-        /// of <see cref="MenuItemResponse"/> representing the menu items of the specified restaurant.
-        /// </returns>
-        Task<List<MenuItemResponse>> GetMenuItemsAsync(int restaurantId);
+        Task<List<MenuItemResponse>> GetMenuItemsByRestaurantIdAsync(int restaurantId);
 
         /// <summary>
         /// Retrieves all reservations made for a specific restaurant.
@@ -78,7 +59,23 @@ namespace RestaurantReservationSystem.Domain.Interfaces.Services
         /// A task that represents the asynchronous operation. The task result contains a collection of 
         /// <see cref="ReservationResponse"/> objects representing the reservations for the specified restaurant.
         /// </returns>
-        Task<List<ReservationResponse>> GetReservationsAsync(int restaurantId);
+        Task<List<ReservationResponse>> GetReservationsByRestaurantIdAsync(int restaurantId);
 
+        /// <summary>
+        /// Retrieves the restaurant associated with a specific employee.
+        /// </summary>
+        /// <param name="employeeId">The unique identifier of the employee.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains the restaurant response DTO if found; otherwise, null.</returns>
+        Task<RestaurantResponse?> GetRestaurantByEmployeeIdAsync(int employeeId);
+
+        Task<RestaurantResponse?> GetRestaurantByTableIdAsync(int tableId);
+
+        /// <summary>
+        /// Retrieves all reservations handled by a specific table.
+        /// </summary>
+        /// <param name="tableId">The unique identifier of the table.</param>
+        /// <returns>A task that represents the asynchronous operation.
+        /// The task result contains a list of reservation response DTOs.
+        /// </returns>
     }
 }

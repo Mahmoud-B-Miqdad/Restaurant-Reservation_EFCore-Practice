@@ -58,15 +58,18 @@ namespace RestaurantReservationSystem.Domain.Interfaces.Services
         /// <returns>A task that represents the asynchronous operation.
         /// The task result contains the restaurant response DTO if found; otherwise, null.
         /// </returns>
-        Task<RestaurantResponse?> GetRestaurantAsync(int tableId);
+
+        Task<List<ReservationResponse>> GetReservationsAsync(int tableId);
+
+        Task<List<TableResponse>> GetTablesByRestaurantIdAsync(int restaurantId);
 
         /// <summary>
-        /// Retrieves all reservations handled by a specific table.
+        /// Retrieves all menu items available at a specific restaurant.
         /// </summary>
-        /// <param name="tableId">The unique identifier of the table.</param>
-        /// <returns>A task that represents the asynchronous operation.
-        /// The task result contains a list of reservation response DTOs.
+        /// <param name="restaurantId">The unique identifier of the restaurant whose menu items are to be retrieved.</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation. The task result contains a collection
+        /// of <see cref="MenuItemResponse"/> representing the menu items of the specified restaurant.
         /// </returns>
-        Task<List<ReservationResponse>> GetReservationsAsync(int tableId);
     }
 }
