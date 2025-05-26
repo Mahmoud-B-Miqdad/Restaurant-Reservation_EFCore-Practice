@@ -14,7 +14,7 @@ namespace RestaurantReservationSystem.Domain.Interfaces.Services
         /// <returns>A task that represents the asynchronous operation. 
         /// The task result contains a list of table response DTOs.
         /// </returns>
-        Task<IEnumerable<TableResponse>> GetAllAsync();
+        Task<List<TableResponse>> GetAllAsync();
 
         /// <summary>
         /// Retrieves a specific table by its unique identifier.
@@ -67,6 +67,6 @@ namespace RestaurantReservationSystem.Domain.Interfaces.Services
         /// <returns>A task that represents the asynchronous operation.
         /// The task result contains a list of reservation response DTOs.
         /// </returns>
-        Task<IEnumerable<ReservationResponse>> GetReservationsAsync(int tableId);
+        Task<List<ReservationResponse>> GetReservationsAsync(int tableId);
     }
 }

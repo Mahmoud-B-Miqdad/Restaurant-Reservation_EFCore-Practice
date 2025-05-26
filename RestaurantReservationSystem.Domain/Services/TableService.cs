@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
-using RestaurantReservation.Db.Entities;
-using RestaurantReservation.Db.Repositories.Interfaces;
 using RestaurantReservationSystem.API.DTOs.Requests;
 using RestaurantReservationSystem.API.DTOs.Responses;
 using RestaurantReservationSystem.API.Interfaces;
+using RestaurantReservationSystem.Domain.Interfaces.Repositories;
 
 namespace RestaurantReservationSystem.API.Services
 {
@@ -13,7 +12,7 @@ namespace RestaurantReservationSystem.API.Services
     public class TableService : ITableService
     {
         private readonly ITableRepository _tableRepository;
-        IRestaurantRepository _restaurantRepository;
+        private readonly IRestaurantRepository _restaurantRepository;
         private readonly IReservationRepository _reservationRepository;
         private readonly IMapper _mapper;
 
@@ -83,10 +82,10 @@ namespace RestaurantReservationSystem.API.Services
         }
 
         /// <inheritdoc />
-        public async Task<IEnumerable<ReservationResponse>> GetReservationsAsync(int tableId)
+        public async Task<List<ReservationResponse>> GetReservationsAsync(int tableId)
         {
             var orders = await _reservationRepository.GetReservationsByTableIdAsync(tableId);
-            return _mapper.Map<IEnumerable<ReservationResponse>>(orders);
+            return _mapper.Map<List<ReservationResponse>>(orders);
         }
 
     }

@@ -12,7 +12,7 @@ namespace RestaurantReservationSystem.Domain.Interfaces.Services
         /// Retrieves all restaurants.
         /// </summary>
         /// <returns>A collection of restaurant response DTOs.</returns>
-        Task<IEnumerable<RestaurantResponse>> GetAllAsync();
+        Task<List<RestaurantResponse>> GetAllAsync();
 
         /// <summary>
         /// Retrieves a restaurant by its ID.
@@ -48,7 +48,7 @@ namespace RestaurantReservationSystem.Domain.Interfaces.Services
         /// </summary>
         /// <param name="restaurantId">The ID of the restaurant to get employees for.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains a collection of employee response DTOs.</returns>
-        Task<IEnumerable<EmployeeResponse>> GetEmployeesAsync(int restaurantId);
+        Task<List<EmployeeResponse>> GetEmployeesAsync(int restaurantId);
 
         /// <summary>
         /// Retrieves a collection of tables associated with a specific restaurant.
@@ -58,7 +58,7 @@ namespace RestaurantReservationSystem.Domain.Interfaces.Services
         /// A task representing the asynchronous operation. The task result contains
         /// an enumerable collection of <see cref="TableResponse"/> objects representing the tables.
         /// </returns>
-        Task<IEnumerable<TableResponse>> GetTablesAsync(int restaurantId);
+        Task<List<TableResponse>> GetTablesAsync(int restaurantId);
 
         /// <summary>
         /// Retrieves all menu items available at a specific restaurant.
@@ -68,7 +68,7 @@ namespace RestaurantReservationSystem.Domain.Interfaces.Services
         /// A task that represents the asynchronous operation. The task result contains a collection
         /// of <see cref="MenuItemResponse"/> representing the menu items of the specified restaurant.
         /// </returns>
-        Task<IEnumerable<MenuItemResponse>> GetMenuItemsAsync(int restaurantId);
+        Task<List<MenuItemResponse>> GetMenuItemsAsync(int restaurantId);
 
         /// <summary>
         /// Retrieves all reservations made for a specific restaurant.
@@ -78,7 +78,7 @@ namespace RestaurantReservationSystem.Domain.Interfaces.Services
         /// A task that represents the asynchronous operation. The task result contains a collection of 
         /// <see cref="ReservationResponse"/> objects representing the reservations for the specified restaurant.
         /// </returns>
-        Task<IEnumerable<ReservationResponse>> GetReservationsAsync(int restaurantId);
+        Task<List<ReservationResponse>> GetReservationsAsync(int restaurantId);
 
     }
 }

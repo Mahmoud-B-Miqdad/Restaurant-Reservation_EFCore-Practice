@@ -57,7 +57,7 @@ namespace RestaurantReservationSystem.Domain.Interfaces.Services
         /// </summary>
         /// <param name="employeeId">The unique identifier of the employee.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains a list of order response DTOs.</returns>
-        Task<IEnumerable<OrderResponse>> GetOrdersAsync(int employeeId);
+        Task<List<OrderResponse>> GetOrdersAsync(int employeeId);
 
         /// <summary>
         /// Retrieves the restaurant associated with a specific employee.

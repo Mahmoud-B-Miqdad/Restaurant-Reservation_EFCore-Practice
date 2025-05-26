@@ -4,6 +4,7 @@ using RestaurantReservation.Db.Repositories.Interfaces;
 using RestaurantReservationSystem.API.DTOs.Requests;
 using RestaurantReservationSystem.API.DTOs.Responses;
 using RestaurantReservationSystem.API.Services.Interfaces;
+using RestaurantReservationSystem.Domain.Interfaces.Repositories;
 
 namespace RestaurantReservationSystem.API.Services
 {
@@ -80,10 +81,10 @@ namespace RestaurantReservationSystem.API.Services
         }
 
         /// <inheritdoc />
-        public async Task<IEnumerable<OrderResponse>> GetOrdersAsync(int employeeId)
+        public async Task<List<OrderResponse>> GetOrdersAsync(int employeeId)
         {
             var orders = await _orderRepository.GetOrdersByEmployeeIdAsync(employeeId);
-            return _mapper.Map<IEnumerable<OrderResponse>>(orders);
+            return _mapper.Map<List<OrderResponse>>(orders);
         }
 
         /// <inheritdoc />

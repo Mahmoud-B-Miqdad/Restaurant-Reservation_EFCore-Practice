@@ -4,6 +4,7 @@ using RestaurantReservation.Db.Repositories.Interfaces;
 using RestaurantReservationSystem.API.DTOs.Requests;
 using RestaurantReservationSystem.API.DTOs.Responses;
 using RestaurantReservationSystem.API.Services.Interfaces;
+using RestaurantReservationSystem.Domain.Interfaces.Repositories;
 
 namespace RestaurantReservationSystem.API.Services
 {
@@ -36,7 +37,7 @@ namespace RestaurantReservationSystem.API.Services
         }
 
         /// <inheritdoc />
-        public async Task<IEnumerable<RestaurantResponse>> GetAllAsync()
+        public async Task<List<RestaurantResponse>> GetAllAsync()
         {
             var restaurants = await _restaurantRepository.GetAllAsync();
             return _mapper.Map<IEnumerable<RestaurantResponse>>(restaurants);
@@ -79,31 +80,31 @@ namespace RestaurantReservationSystem.API.Services
         }
 
         /// <inheritdoc />
-        public async Task<IEnumerable<EmployeeResponse>> GetEmployeesAsync(int restaurantId)
+        public async Task<List<EmployeeResponse>> GetEmployeesAsync(int restaurantId)
         {
             var employees = await _employeeRepository.GetByRestaurantIdAsync(restaurantId);
-            return _mapper.Map<IEnumerable<EmployeeResponse>>(employees);
+            return _mapper.Map<List<EmployeeResponse>>(employees);
         }
 
         /// <inheritdoc />
-        public async Task<IEnumerable<TableResponse>> GetTablesAsync(int restaurantId)
+        public async Task<List<TableResponse>> GetTablesAsync(int restaurantId)
         {
             var tables = await _tableRepository.GetByRestaurantIdAsync(restaurantId);
-            return _mapper.Map<IEnumerable<TableResponse>>(tables);
+            return _mapper.Map<List<TableResponse>>(tables);
         }
 
         /// <inheritdoc />
-        public async Task<IEnumerable<MenuItemResponse>> GetMenuItemsAsync(int restaurantId)
+        public async Task<List<MenuItemResponse>> GetMenuItemsAsync(int restaurantId)
         {
             var menuItem = await _menuItemRepository.GetByRestaurantIdAsync(restaurantId);
-            return _mapper.Map<IEnumerable<MenuItemResponse>>(menuItem);
+            return _mapper.Map<List<MenuItemResponse>>(menuItem);
         }
 
         /// <inheritdoc />
-        public async Task<IEnumerable<ReservationResponse>> GetReservationsAsync(int restaurantId)
+        public async Task<List<ReservationResponse>> GetReservationsAsync(int restaurantId)
         {
             var reservation = await _reservationRepository.GetByRestaurantIdAsync(restaurantId);
-            return _mapper.Map<IEnumerable<ReservationResponse>>(reservation);
+            return _mapper.Map<List<ReservationResponse>>(reservation);
         }
     }
 }
