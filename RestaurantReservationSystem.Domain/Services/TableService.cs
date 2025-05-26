@@ -5,7 +5,7 @@ using RestaurantReservationSystem.Domain.Interfaces.Repositories;
 using RestaurantReservationSystem.Domain.Interfaces.Services;
 using RestaurantReservationSystem.Domain.Models;
 
-namespace RestaurantReservationSystem.API.Services
+namespace RestaurantReservationSystem.Domain.Services
 {
     /// <summary>
     /// Provides business logic and data manipulation for table-related operations.
