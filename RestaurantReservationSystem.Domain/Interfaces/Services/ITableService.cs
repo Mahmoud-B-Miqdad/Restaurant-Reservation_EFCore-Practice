@@ -1,5 +1,5 @@
-﻿using RestaurantReservationSystem.API.DTOs.Requests;
-using RestaurantReservationSystem.API.DTOs.Responses;
+﻿using RestaurantReservationSystem.Domain.DTOs.Requests;
+using RestaurantReservationSystem.Domain.DTOs.Responses;
 
 namespace RestaurantReservationSystem.Domain.Interfaces.Services
 {

@@ -1,4 +1,4 @@
-﻿namespace RestaurantReservationSystem.API.DTOs.Responses
+﻿namespace RestaurantReservationSystem.Domain.DTOs.Responses
 {
     /// <summary>
     /// Represents the response data returned for a table in a restaurant.
