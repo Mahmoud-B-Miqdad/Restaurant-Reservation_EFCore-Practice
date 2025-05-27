@@ -24,7 +24,7 @@ namespace RestaurantReservationSystem.API.Controllers
         public OrderItemsController(IOrderItemService orderItemService, IOrderService orderService, IMenuItemService menuItemService)
         {
             _orderItemService = orderItemService;
-            orderService = orderService;
+            _orderService = orderService;
             _menuItemService = menuItemService;
         }
 

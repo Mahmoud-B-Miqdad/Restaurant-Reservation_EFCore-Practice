@@ -29,5 +29,6 @@
         /// The details of the menu item associated with this order item.
         /// </summary>
         public MenuItemResponse MenuItem { get; set; }
+
     }
 }

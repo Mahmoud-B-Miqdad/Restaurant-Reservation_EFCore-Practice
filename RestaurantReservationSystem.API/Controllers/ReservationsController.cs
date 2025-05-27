@@ -163,13 +163,13 @@ namespace RestaurantReservationSystem.API.Controllers
         /// <param name="id">The unique identifier of the reservation.</param>
         /// <returns>A list of orders, each containing order items and related menu item details.</returns>
         [HttpGet("{id}/orders")]
-        public async Task<IActionResult> GetOrdersAsync(int id)
+        public async Task<IActionResult> GetOrdersAndMenuItemsAsync(int id)
         {
             var reservation = await _reservationService.GetByIdAsync(id);
             if (reservation == null)
                 return NotFound(ApiResponse<ReservationResponse>.FailResponse("Reservation not found"));
 
-            var orders = await _ordersService.GetOrdersByReservationIdAsync(id);
+            var orders = await _ordersService.GetOrdersAndMenuItemsAsync(id);
             return Ok(ApiResponse<List<OrderResponse>>.SuccessResponse(orders));
         }
 

@@ -27,11 +27,12 @@ namespace RestaurantReservationSystem.API.Controllers
         /// Initializes a new instance of the <see cref="OrdersController"/> class.
         /// </summary>
         /// <param name="orderService">Service used to manage orders.</param>
-        public OrdersController(IOrderService orderService, IEmployeeService employeeService, IReservationService reservationService)
+        public OrdersController(IOrderService orderService, IEmployeeService employeeService, IReservationService reservationService, IOrderItemService orderItemService)
         {
             _orderService = orderService;
             _employeeService = employeeService;
             _reservationService = reservationService;
+            _orderItemService = orderItemService;
         }
 
         /// <summary>

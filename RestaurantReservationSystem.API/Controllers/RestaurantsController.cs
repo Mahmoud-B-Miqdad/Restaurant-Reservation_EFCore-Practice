@@ -30,7 +30,7 @@ namespace RestaurantReservationSystem.API.Controllers
             _tableService = tableService;
             _employeeService = employeeService;
             _menuItemService = menuItemService;
-            _restaurantService = restaurantService;
+            _reservationService = reservationService;
         }
 
         /// <summary>
