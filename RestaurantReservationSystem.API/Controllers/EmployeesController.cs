@@ -56,7 +56,7 @@ namespace RestaurantReservationSystem.API.Controllers
         {
             var employee = await _employeeService.GetByIdAsync(id);
             if (employee == null)
-                return NotFound(ApiResponse<EmployeeResponse>.FailResponse("Employee not found"));
+                return NotFound(ApiResponse<string>.FailResponse("Employee not found"));
 
             return Ok(ApiResponse<EmployeeResponse>.SuccessResponse(employee));
         }
@@ -157,10 +157,10 @@ namespace RestaurantReservationSystem.API.Controllers
         {
             var employee = await _employeeService.GetByIdAsync(id);
             if (employee == null)
-                return NotFound(ApiResponse<EmployeeResponse>.FailResponse("Employee not found"));
+                return NotFound(ApiResponse<string>.FailResponse("Employee not found"));
 
             var orders = await _employeeService.GetOrdersByEmployeeIdAsync(id);
-            return Ok(ApiResponse<IEnumerable<OrderResponse>>.SuccessResponse(orders));
+            return Ok(ApiResponse<List<OrderResponse>>.SuccessResponse(orders));
         }
 
         /// <summary>
@@ -173,11 +173,11 @@ namespace RestaurantReservationSystem.API.Controllers
         {
             var employee = await _employeeService.GetByIdAsync(id);
             if (employee == null)
-                return NotFound(ApiResponse<EmployeeResponse>.FailResponse("Employee not found"));
+                return NotFound(ApiResponse<string>.FailResponse("Employee not found"));
 
             var restaurant = await _restaurantService.GetRestaurantByEmployeeIdAsync(id);
             if (restaurant == null)
-                return NotFound(ApiResponse<RestaurantResponse>.FailResponse("Restaurant not found"));
+                return NotFound(ApiResponse<string>.FailResponse("Restaurant not found"));
 
             return Ok(ApiResponse<RestaurantResponse>.SuccessResponse(restaurant));
         }
