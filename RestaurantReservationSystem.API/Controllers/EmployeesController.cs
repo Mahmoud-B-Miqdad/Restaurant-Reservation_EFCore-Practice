@@ -46,7 +46,7 @@ namespace RestaurantReservationSystem.API.Controllers
                 employees = await _employeeService.GetAllAsync();
             }
 
-            return Ok(ApiResponse<IEnumerable<EmployeeResponse>>.SuccessResponse(employees));
+            return Ok(ApiResponse<List<EmployeeResponse>>.SuccessResponse(employees));
         }
 
 

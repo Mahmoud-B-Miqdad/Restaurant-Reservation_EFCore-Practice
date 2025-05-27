@@ -6,7 +6,6 @@ using RestaurantReservationSystem.Domain.DTOs.Responses;
 using RestaurantReservationSystem.Domain.Interfaces.Repositories;
 using RestaurantReservationSystem.Domain.Interfaces.Services;
 using RestaurantReservationSystem.Domain.Responses;
-using RestaurantReservationSystem.Domain.Services;
 
 namespace RestaurantReservationSystem.API.Controllers
 {
@@ -19,18 +18,19 @@ namespace RestaurantReservationSystem.API.Controllers
     public class ReservationsController : ControllerBase
     {
         private readonly IReservationService _reservationService;
-        private readonly ICustomerRepository _customerRepository;
+        private readonly ICustomerService _customerService;
         private readonly IOrderService _ordersService;
         private readonly IRestaurantService _restaurantService;
         private readonly ITableService _tableService;
         private readonly IMenuItemService _menuItemService;
 
         public ReservationsController(IReservationService reservationService, ICustomerRepository customerRepository
-            , IOrderService ordersService, IRestaurantService restaurantService, ITableService tableService, IMenuItemService menuItemService)
+            , IOrderService ordersService, IRestaurantService restaurantService,
+            ITableService tableService, IMenuItemService menuItemService, ICustomerService customerService)
         {
             _reservationService = reservationService;
-            _customerRepository = customerRepository;
             _ordersService = ordersService;
+            _customerService = customerService;
             _restaurantService = restaurantService;
             _tableService = tableService;
             _menuItemService = menuItemService;
@@ -44,7 +44,7 @@ namespace RestaurantReservationSystem.API.Controllers
         public async Task<IActionResult> GetAllAsync()
         {
             var reservations = await _reservationService.GetAllAsync();
-            return Ok(ApiResponse<IEnumerable<ReservationResponse>>.SuccessResponse(reservations));
+            return Ok(ApiResponse<List<ReservationResponse>>.SuccessResponse(reservations));
         }
 
         /// <summary>
@@ -185,7 +185,7 @@ namespace RestaurantReservationSystem.API.Controllers
             if (employee == null)
                 return NotFound(ApiResponse<ReservationResponse>.FailResponse("Reservation not found"));
 
-            var customer = await _reservationService.GetCustomerAsync(id);
+            var customer = await _customerService.GetCustomerByReservationIdAsync(id);
             if (customer == null)
                 return NotFound(ApiResponse<CustomerResponse>.FailResponse("Customer not found"));
 
@@ -238,11 +238,11 @@ namespace RestaurantReservationSystem.API.Controllers
         [HttpGet("customer/{id}")]
         public async Task<IActionResult> GetReservationsByCustomerAsync(int id)
         {
-            var customer = await _customerRepository.GetByIdAsync(id);
+            var customer = await _customerService.GetByIdAsync(id);
             if (customer == null)
                 return NotFound(ApiResponse<CustomerResponse>.FailResponse("Customer not found"));
 
-            var reservationsByCustomer = await _reservationService.GetReservationsByCustomerAsync(id);
+            var reservationsByCustomer = await _reservationService.GetReservationsByCustomerIdAsync(id);
             if (reservationsByCustomer == null)
                 return NotFound(ApiResponse<TableResponse>.FailResponse("Theres no reservations for this Customer"));
 

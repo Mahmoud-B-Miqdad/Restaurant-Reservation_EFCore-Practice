@@ -1,7 +1,7 @@
 ﻿using RestaurantReservationSystem.API.DTOs.Requests;
-using RestaurantReservationSystem.API.DTOs.Responses;
+using RestaurantReservationSystem.Domain.DTOs.Responses;
 
-namespace RestaurantReservationSystem.API.Services.Interfaces
+namespace RestaurantReservationSystem.Domain.Interfaces.Services
 {
     /// <summary>
     /// Defines the contract for managing orderItem-related operations.
@@ -44,17 +44,17 @@ namespace RestaurantReservationSystem.API.Services.Interfaces
         Task<bool> DeleteAsync(int id);
 
         /// <summary>
-        /// Retrieves the restaurant associated with a specific order.
+        /// Retrieves all orderItems handled by a specific orderItems.
         /// </summary>
-        /// <param name="orderItemId">The unique identifier of the order.</param>
-        /// <returns>A task that represents the asynchronous operation. The task result contains the restaurant response DTO if found; otherwise, null.</returns>
-        Task<OrderResponse?> GetOrderAsync(int orderItemId);
+        /// <param name="menuItemId">The unique identifier of the menuItem</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains a list of orderitem response DTOs.</returns>
+        Task<List<OrderItemResponse>> GetOrderItemsByMenuItamIdAsync(int menuItemId);
 
         /// <summary>
-        /// Retrieves the restaurant associated with a specific order.
+        /// Retrieves all order items handled by a specific order.
         /// </summary>
-        /// <param name="orderItemId">The unique identifier of the order.</param>
-        /// <returns>A task that represents the asynchronous operation. The task result contains the restaurant response DTO if found; otherwise, null.</returns>
-        Task<MenuItemResponse?> GetMenuItemAsync(int orderItemId);
+        /// <param name="orderId">The ID of the order.</param>
+        /// <returns>A collection of <see cref="OrderItemResponse"/> linked to the order.</returns>
+        Task<List<OrderItemResponse>> GetOrderItemsByOrderIdAsync(int orderId);
     }
 }

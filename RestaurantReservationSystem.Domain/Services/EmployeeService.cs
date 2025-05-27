@@ -95,7 +95,7 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<decimal> GetAverageOrderAmountAsync(int employeeId)
         {
-            return await _orderRepository.CalculateAverageOrderAmountAsync(employeeId);
+            return await _employeeRepository.CalculateAverageOrderAmountAsync(employeeId);
         }
 
     }

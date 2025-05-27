@@ -28,6 +28,18 @@ namespace RestaurantReservation.Db.Repositories
             return _mapper.Map<List<EmployeeModel>>(employees);
         }
 
+        public async Task<decimal> CalculateAverageOrderAmountAsync(int employeeId)
+        {
+            var employeeOrders = await _context.Orders
+                .Where(o => o.EmployeeId == employeeId)
+                .ToListAsync();
+
+            if (!employeeOrders.Any())
+                return 0;
+
+            return employeeOrders.Average(o => o.TotalAmount);
+        }
+
         public async Task<List<EmployeeModel>> GetAllAsync()
         {
             return await _context.Employees

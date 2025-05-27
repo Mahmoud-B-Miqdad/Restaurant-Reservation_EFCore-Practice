@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using RestaurantReservationSystem.API.DTOs.Requests;
-using RestaurantReservationSystem.API.DTOs.Responses;
-using RestaurantReservationSystem.API.Responses;
-using RestaurantReservationSystem.API.Services.Interfaces;
+using RestaurantReservationSystem.Domain.DTOs.Responses;
+using RestaurantReservationSystem.Domain.Interfaces.Services;
+using RestaurantReservationSystem.Domain.Responses;
 
 namespace RestaurantReservationSystem.API.Controllers
 {
@@ -17,9 +17,11 @@ namespace RestaurantReservationSystem.API.Controllers
     public class CustomersController : ControllerBase
     {
         private readonly ICustomerService _customerService;
-        public CustomersController(ICustomerService customerService)
+        private readonly IReservationService _reservationService;
+        public CustomersController(ICustomerService customerService, IReservationService reservationService)
         {
             _customerService = customerService;
+            _reservationService = reservationService;
         }
 
         /// <summary>
@@ -30,7 +32,7 @@ namespace RestaurantReservationSystem.API.Controllers
         public async Task<IActionResult> GetAllAsync()
         {
             var customer = await _customerService.GetAllAsync();
-            return Ok(ApiResponse<IEnumerable<CustomerResponse>>.SuccessResponse(customer));
+            return Ok(ApiResponse<List<CustomerResponse>>.SuccessResponse(customer));
         }
 
         /// <summary>
@@ -154,8 +156,8 @@ namespace RestaurantReservationSystem.API.Controllers
             if (customer == null)
                 return NotFound(ApiResponse<EmployeeResponse>.FailResponse("Customer not found"));
 
-            var reservations = await _customerService.GetReservationsAsync(id);
-            return Ok(ApiResponse<IEnumerable<ReservationResponse>>.SuccessResponse(reservations));
+            var reservations = await _reservationService.GetReservationsByCustomerIdAsync(id);
+            return Ok(ApiResponse<List<ReservationResponse>>.SuccessResponse(reservations));
         }
     }
 }

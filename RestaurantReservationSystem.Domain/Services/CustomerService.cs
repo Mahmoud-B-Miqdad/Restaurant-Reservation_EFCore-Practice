@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
-using RestaurantReservation.Db.Entities;
-using RestaurantReservation.Db.Repositories.Interfaces;
 using RestaurantReservationSystem.API.DTOs.Requests;
-using RestaurantReservationSystem.API.DTOs.Responses;
-using RestaurantReservationSystem.API.Services.Interfaces;
+using RestaurantReservationSystem.Domain.DTOs.Responses;
+using RestaurantReservationSystem.Domain.Interfaces.Repositories;
+using RestaurantReservationSystem.Domain.Interfaces.Services;
+using RestaurantReservationSystem.Domain.Models;
 
-namespace RestaurantReservationSystem.API.Services
+namespace RestaurantReservationSystem.Domain.Services
 {
     /// <summary>
     /// Provides business logic and service methods for managing customer operations.
@@ -45,7 +45,7 @@ namespace RestaurantReservationSystem.API.Services
         /// <inheritdoc />
         public async Task<CustomerResponse> CreateAsync(CustomerRequest request)
         {
-            var customer = _mapper.Map<Customer>(request);
+            var customer = _mapper.Map<CustomerModel>(request);
             await _customerRepository.AddAsync(customer);
             return _mapper.Map<CustomerResponse>(customer);
         }
@@ -72,10 +72,10 @@ namespace RestaurantReservationSystem.API.Services
         }
 
         /// <inheritdoc />
-        public async Task<IEnumerable<ReservationResponse>> GetReservationsAsync(int customerId)
+        public async Task<CustomerResponse?> GetCustomerByReservationIdAsync(int reservationId)
         {
-            var reservations = await _reservationRepository.GetReservationsByCustomerAsync(customerId);
-            return _mapper.Map<IEnumerable<ReservationResponse>>(reservations);
+            var customer = await _customerRepository.GetCustomerByReservationIdAsync(reservationId);
+            return customer == null ? null : _mapper.Map<CustomerResponse>(customer);
         }
     }
 }

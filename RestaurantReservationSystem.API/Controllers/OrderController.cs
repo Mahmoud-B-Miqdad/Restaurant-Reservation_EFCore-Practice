@@ -21,6 +21,7 @@ namespace RestaurantReservationSystem.API.Controllers
         private readonly IOrderService _orderService;
         private readonly IEmployeeService _employeeService;
         private readonly IReservationService _reservationService;
+        private readonly IOrderItemService _orderItemService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OrdersController"/> class.
@@ -187,7 +188,7 @@ namespace RestaurantReservationSystem.API.Controllers
             if (order == null)
                 return NotFound(ApiResponse<OrderResponse>.FailResponse("Order not found"));
 
-            var items = await _orderService.GetOrderItemsAsync(id);
+            var items = await _orderItemService.GetOrderItemsByOrderIdAsync(id);
             return Ok(ApiResponse<List<OrderItemResponse>>.SuccessResponse(items));
         }
     }

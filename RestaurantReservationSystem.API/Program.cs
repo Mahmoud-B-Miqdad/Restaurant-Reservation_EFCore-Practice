@@ -1,4 +1,3 @@
-using JwtAuthMinimalApi.Configurations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -6,6 +5,7 @@ using System.Reflection;
 using RestaurantReservationSystem.API.Extensions;
 using RestaurantReservationSystem.API.Logging;
 using Serilog;
+using RestaurantReservationSystem.Domain.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,9 +40,6 @@ builder.Services.AddAuthentication(options =>
         ClockSkew = TimeSpan.Zero
     };
 });
-
-builder.Services.AddRepositories(builder.Configuration.GetConnectionString("DefaultConnection"));
-builder.Services.AddDomainServices();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>

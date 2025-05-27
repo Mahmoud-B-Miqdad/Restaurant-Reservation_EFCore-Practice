@@ -2,9 +2,10 @@
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using RestaurantReservationSystem.API.DTOs.Requests;
-using RestaurantReservationSystem.API.DTOs.Responses;
-using RestaurantReservationSystem.API.Responses;
-using RestaurantReservationSystem.API.Services.Interfaces;
+using RestaurantReservationSystem.Domain.DTOs.Responses;
+using RestaurantReservationSystem.Domain.Interfaces.Services;
+using RestaurantReservationSystem.Domain.Responses;
+
 
 namespace RestaurantReservationSystem.API.Controllers
 {
@@ -17,10 +18,14 @@ namespace RestaurantReservationSystem.API.Controllers
     public class OrderItemsController : ControllerBase
     {
         private readonly IOrderItemService _orderItemService;
+        private readonly IOrderService _orderService;
+        private readonly IMenuItemService _menuItemService;
 
-        public OrderItemsController(IOrderItemService orderItemService)
+        public OrderItemsController(IOrderItemService orderItemService, IOrderService orderService, IMenuItemService menuItemService)
         {
             _orderItemService = orderItemService;
+            orderService = orderService;
+            _menuItemService = menuItemService;
         }
 
         /// <summary>
@@ -31,7 +36,7 @@ namespace RestaurantReservationSystem.API.Controllers
         public async Task<IActionResult> GetAllAsync()
         {
             var orderItems = await _orderItemService.GetAllAsync();
-            return Ok(ApiResponse<IEnumerable<OrderItemResponse>>.SuccessResponse(orderItems));
+            return Ok(ApiResponse<List<OrderItemResponse>>.SuccessResponse(orderItems));
         }
 
         /// <summary>
@@ -154,7 +159,7 @@ namespace RestaurantReservationSystem.API.Controllers
             if (orderItem == null)
                 return NotFound(ApiResponse<OrderItemResponse>.FailResponse("OrderItem not found"));
 
-            var order = await _orderItemService.GetOrderAsync(id);
+            var order = await _orderService.GetOrderByOrderItemIdAsync(id);
             if (order == null)
                 return NotFound(ApiResponse<OrderResponse>.FailResponse("Order not found"));
 
@@ -173,7 +178,7 @@ namespace RestaurantReservationSystem.API.Controllers
             if (orderItem == null)
                 return NotFound(ApiResponse<OrderItemResponse>.FailResponse("OrderItem not found"));
 
-            var menuItem = await _orderItemService.GetMenuItemAsync(id);
+            var menuItem = await _menuItemService.GetMenuItemByOrderItemIdAsync(id);
             if (menuItem == null)
                 return NotFound(ApiResponse<MenuItemResponse>.FailResponse("MenuItem not found"));
 

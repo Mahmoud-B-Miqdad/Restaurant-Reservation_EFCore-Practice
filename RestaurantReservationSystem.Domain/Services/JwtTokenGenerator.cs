@@ -1,8 +1,9 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+﻿using Microsoft.IdentityModel.Tokens;
+using RestaurantReservationSystem.Domain.Configurations;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using JwtAuthMinimalApi.Configurations;
-using Microsoft.IdentityModel.Tokens;
+
 
 namespace JwtAuthMinimalApi.Services
 {

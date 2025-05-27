@@ -1,5 +1,5 @@
 ﻿
-namespace JwtAuthMinimalApi.Configurations;
+namespace RestaurantReservationSystem.Domain.Configurations;
 
 /// <summary>
 /// Represents the configuration settings required for JWT token generation and validation.

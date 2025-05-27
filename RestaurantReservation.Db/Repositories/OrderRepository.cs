@@ -29,19 +29,6 @@ namespace RestaurantReservation.Db.Repositories
             return _mapper.Map<List<OrderModel>>(orders);
         }
 
-
-        public async Task<decimal> CalculateAverageOrderAmountAsync(int employeeId)
-        {
-            var employeeOrders = await _context.Orders
-                .Where(o => o.EmployeeId == employeeId)
-                .ToListAsync();
-
-            if (!employeeOrders.Any())
-                return 0;
-
-            return employeeOrders.Average(o => o.TotalAmount);
-        }
-
         public async Task<List<OrderModel>> GetAllAsync()
         {
             var orders = await _context.Orders.ToListAsync();
@@ -106,6 +93,15 @@ namespace RestaurantReservation.Db.Repositories
                 .Where(o => o.ReservationId == reservationId)
                 .ProjectTo<OrderModel>(_mapper.ConfigurationProvider)
                 .ToListAsync();
+        }
+
+        public async Task<OrderModel?> GetOrderByOrderItemIdAsync(int orderItemId)
+        {
+            var menuItem = await _context.OrderItems
+                .Include(o => o.Order)
+                .FirstOrDefaultAsync(e => e.OrderItemId == orderItemId);
+
+            return _mapper.Map<OrderModel>(menuItem?.Order);
         }
     }
 }

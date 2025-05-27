@@ -77,22 +77,3 @@ internal class OrderItemRepository : IOrderItemRepository
             .ToListAsync();
     }
 }
-
-    public async Task<MenuItem?> GetMenuItemByOrderItemIdAsync(int orderItemId)
-    {
-        var menuItem = await _context.OrderItems
-            .Include(o => o.MenuItem)
-            .FirstOrDefaultAsync(e => e.OrderItemId == orderItemId);
-
-        return menuItem?.MenuItem;
-    }
-
-    public async Task<Order?> GetOrderByOrderItemIdAsync(int orderItemId)
-    {
-        var menuItem = await _context.OrderItems
-            .Include(o => o.Order)
-            .FirstOrDefaultAsync(e => e.OrderItemId == orderItemId);
-
-        return menuItem?.Order;
-    }
-}

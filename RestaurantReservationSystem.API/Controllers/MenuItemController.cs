@@ -18,11 +18,13 @@ namespace RestaurantReservationSystem.API.Controllers
     {
         private readonly IMenuItemService _menuItemService;
         private readonly IRestaurantService _restaurantService;
+        private readonly IOrderItemService _orderItemService;
 
-        public MenuItemController(IMenuItemService menuItemService, IRestaurantService restaurantService)
+        public MenuItemController(IMenuItemService menuItemService, IRestaurantService restaurantService, IOrderItemService orderItemService)
         {
             _menuItemService = menuItemService;
             _restaurantService = restaurantService;
+            _orderItemService = orderItemService;
         }
 
         /// <summary>
@@ -156,7 +158,7 @@ namespace RestaurantReservationSystem.API.Controllers
             if (menuItem == null)
                 return NotFound(ApiResponse<MenuItemResponse>.FailResponse("MenuItem not found"));
 
-            var orders = await _menuItemService.GetOrderItemsByMenuItamIdAsync(id);
+            var orders = await _orderItemService.GetOrderItemsByMenuItamIdAsync(id);
             return Ok(ApiResponse<List<OrderItemResponse>>.SuccessResponse(orders));
         }
 

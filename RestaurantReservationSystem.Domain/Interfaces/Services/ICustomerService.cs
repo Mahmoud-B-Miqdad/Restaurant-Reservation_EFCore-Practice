@@ -1,7 +1,7 @@
 ﻿using RestaurantReservationSystem.API.DTOs.Requests;
-using RestaurantReservationSystem.API.DTOs.Responses;
+using RestaurantReservationSystem.Domain.DTOs.Responses;
 
-namespace RestaurantReservationSystem.API.Services.Interfaces
+namespace RestaurantReservationSystem.Domain.Interfaces.Services
 {
     /// <summary>
     /// Defines the contract for managing customer-related operations.
@@ -45,10 +45,10 @@ namespace RestaurantReservationSystem.API.Services.Interfaces
         Task<bool> DeleteAsync(int id);
 
         /// <summary>
-        /// Retrieves all reservation handled by a specific customer.
+        /// Retrieves the customer associated with a specific reservation.
         /// </summary>
-        /// <param name="customerId">The unique identifier of the customer.</param>
-        /// <returns>A task that represents the asynchronous operation. The task result contains a list of order response DTOs.</returns>
-        Task<IEnumerable<ReservationResponse>> GetReservationsAsync(int customerId);
+        /// <param name="reservationId">The unique identifier of the reservation.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains the customer response DTO if found; otherwise, null.</returns>
+        Task<CustomerResponse?> GetCustomerByReservationIdAsync(int reservationId);
     }
 }

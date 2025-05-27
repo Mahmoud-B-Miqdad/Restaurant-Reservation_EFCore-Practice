@@ -1,9 +1,11 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using JwtAuthMinimalApi.Services;
+using Microsoft.Extensions.DependencyInjection;
+using RestaurantReservationSystem.Domain.Configurations;
 using RestaurantReservationSystem.Domain.Interfaces.Services;
 using RestaurantReservationSystem.Domain.Services;
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddDomainServices(this IServiceCollection services)
+    public static IServiceCollection AddDomainServices(this IServiceCollection services, JwtSettings jwtSettings)
     {
         services.AddScoped<IRestaurantService, RestaurantService>();
         services.AddScoped<IEmployeeService, EmployeeService>();
@@ -11,6 +13,11 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IMenuItemService, MenuItemService>();
         services.AddScoped<IReservationService, ReservationService>();
         services.AddScoped<IOrderService, OrderService>();
+        services.AddScoped<ICustomerService, CustomerService>();
+        services.AddScoped<IOrderItemService, OrderItemService>();
+
+        services.AddScoped<IAuthorizationService, AuthorizationService>();
+        services.AddSingleton<IJwtTokenGenerator>(new JwtTokenGenerator(jwtSettings));
 
         return services;
     }

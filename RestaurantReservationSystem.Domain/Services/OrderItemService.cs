@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
-using RestaurantReservation.Db.Entities;
-using RestaurantReservation.Db.Repositories.Interfaces;
 using RestaurantReservationSystem.API.DTOs.Requests;
-using RestaurantReservationSystem.API.DTOs.Responses;
-using RestaurantReservationSystem.API.Services.Interfaces;
+using RestaurantReservationSystem.Domain.DTOs.Responses;
+using RestaurantReservationSystem.Domain.Interfaces.Repositories;
+using RestaurantReservationSystem.Domain.Interfaces.Services;
+using RestaurantReservationSystem.Domain.Models;
 
-namespace RestaurantReservationSystem.API.Services
+namespace RestaurantReservationSystem.Domain.Services
 {
     /// <summary>
     /// Provides business logic and service methods for managing orderItem operations.
@@ -43,7 +43,7 @@ namespace RestaurantReservationSystem.API.Services
         /// <inheritdoc />
         public async Task<OrderItemResponse> CreateAsync(OrderItemRequest request)
         {
-            var orderItem = _mapper.Map<OrderItem>(request);
+            var orderItem = _mapper.Map<OrderItemModel>(request);
             await _orderItemRepository.AddAsync(orderItem);
             return _mapper.Map<OrderItemResponse>(orderItem);
         }
@@ -70,17 +70,17 @@ namespace RestaurantReservationSystem.API.Services
         }
 
         /// <inheritdoc />
-        public async Task<MenuItemResponse?> GetMenuItemAsync(int orderItemId)
+        public async Task<List<OrderItemResponse>> GetOrderItemsByMenuItamIdAsync(int menuItemId)
         {
-            var MenuItem = await _orderItemRepository.GetMenuItemByOrderItemIdAsync(orderItemId);
-            return MenuItem == null ? null : _mapper.Map<MenuItemResponse>(MenuItem);
+            var orderItems = await _orderItemRepository.GetOrderItemsByMenuItemIdAsync(menuItemId);
+            return _mapper.Map<List<OrderItemResponse>>(orderItems);
         }
 
         /// <inheritdoc />
-        public async Task<OrderResponse?> GetOrderAsync(int orderItemId)
+        public async Task<List<OrderItemResponse>> GetOrderItemsByOrderIdAsync(int orderId)
         {
-            var order = await _orderItemRepository.GetOrderByOrderItemIdAsync(orderItemId);
-            return order == null ? null : _mapper.Map<OrderResponse>(order);
+            var orders = await _orderItemRepository.GetOrderItemsByOrderIdAsync(orderId);
+            return _mapper.Map<List<OrderItemResponse>>(orders);
         }
     }
 }

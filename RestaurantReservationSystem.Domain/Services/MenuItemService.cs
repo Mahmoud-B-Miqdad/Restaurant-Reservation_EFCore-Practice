@@ -73,13 +73,6 @@ namespace RestaurantReservationSystem.Domain.Services
         }
 
         /// <inheritdoc />
-        public async Task<List<OrderItemResponse>> GetOrderItemsByMenuItamIdAsync(int menuItemId)
-        {
-            var orderItems = await _orderItemRepository.GetOrderItemsByMenuItemIdAsync(menuItemId);
-            return _mapper.Map<List<OrderItemResponse>>(orderItems);
-        }
-
-        /// <inheritdoc />
         public async Task<List<MenuItemResponse>> GetOrderedMenuItemsAsync(int reservationId)
         {
             var orderedMenuItems = await _menuItemRepository.ListOrderedMenuItemsAsync(reservationId);
@@ -91,6 +84,13 @@ namespace RestaurantReservationSystem.Domain.Services
         {
             var menuItem = await _menuItemRepository.GetMenuItemsByRestaurantIdAsync(restaurantId);
             return _mapper.Map<List<MenuItemResponse>>(menuItem);
+        }
+
+        /// <inheritdoc />
+        public async Task<MenuItemResponse?> GetMenuItemByOrderItemIdAsync(int orderItemId)
+        {
+            var MenuItem = await _menuItemRepository.GetMenuItemByOrderItemIdAsync(orderItemId);
+            return MenuItem == null ? null : _mapper.Map<MenuItemResponse>(MenuItem);
         }
     }
 }

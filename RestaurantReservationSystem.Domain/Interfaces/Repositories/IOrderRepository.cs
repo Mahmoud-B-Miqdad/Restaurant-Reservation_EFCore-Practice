@@ -11,4 +11,6 @@ public interface IOrderRepository
     Task DeleteAsync(int id);
     Task<List<OrderModel>> GetOrdersByEmployeeIdAsync(int employeeId);
     Task<List<OrderModel>> GetOrdersByReservationIdAsync(int reservationId);
+    Task<OrderModel?> GetOrderByOrderItemIdAsync(int orderItemId);
+    Task<List<OrderModel>> ListOrdersAndMenuItemsAsync(int reservationId);
 }
