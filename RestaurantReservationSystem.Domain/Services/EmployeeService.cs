@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using RestaurantReservationSystem.Domain.DTOs.Requests;
 using RestaurantReservationSystem.Domain.DTOs.Responses;
+using RestaurantReservationSystem.Domain.Exceptions;
 using RestaurantReservationSystem.Domain.Interfaces.Repositories;
 using RestaurantReservationSystem.Domain.Interfaces.Services;
 using RestaurantReservationSystem.Domain.Models;
@@ -45,8 +46,11 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<EmployeeResponse?> GetByIdAsync(int id)
         {
-            var employee = await _employeeRepository.GetByIdAsync(id);
-            return employee == null ? null : _mapper.Map<EmployeeResponse>(employee);
+
+            var employee = await _employeeRepository.GetByIdAsync(id)
+                              ?? throw new NotFoundException($"Employee with ID {id} not found");
+            return _mapper.Map<EmployeeResponse>(employee);
+
         }
 
         /// <inheritdoc />
@@ -60,8 +64,8 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<EmployeeResponse?> UpdateAsync(int id, EmployeeRequest request)
         {
-            var updatedEmployee = await _employeeRepository.GetByIdAsync(id);
-            if (updatedEmployee == null) return null;
+            var updatedEmployee = await _employeeRepository.GetByIdAsync(id)
+                             ?? throw new NotFoundException($"Employee with ID {id} not found");
 
             _mapper.Map(request, updatedEmployee);
             await _employeeRepository.UpdateAsync(updatedEmployee);
@@ -71,8 +75,8 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<bool> DeleteAsync(int id)
         {
-            var existing = await _employeeRepository.GetByIdAsync(id);
-            if (existing == null) return false;
+            var existing = await _employeeRepository.GetByIdAsync(id)
+                                      ?? throw new NotFoundException($"Employee with ID {id} not found");
 
             await _employeeRepository.DeleteAsync(id);
             return true;
@@ -81,6 +85,9 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<List<OrderResponse>> GetOrdersByEmployeeIdAsync(int employeeId)
         {
+            _ = await _employeeRepository.GetByIdAsync(employeeId)
+                ?? throw new NotFoundException($"Employee with ID {employeeId} not found");
+
             var orders = await _orderRepository.GetOrdersByEmployeeIdAsync(employeeId);
             return _mapper.Map<List<OrderResponse>>(orders);
         }
