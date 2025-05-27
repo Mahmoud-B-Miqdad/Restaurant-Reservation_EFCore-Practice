@@ -4,7 +4,7 @@ using RestaurantReservation.Db;
 using RestaurantReservation.Db.Repositories;
 using RestaurantReservation.Db.Repositories.ReportRepositories;
 using RestaurantReservation.Db.Seeders;
-using RestaurantReservationSystem.API.Mapping;
+using RestaurantReservationSystem.Db.Mapping;
 using RestaurantReservationSystem.Domain.Interfaces.Repositories;
 using RestaurantReservationSystem.Domain.Interfaces.Repositories.Reports;
 
