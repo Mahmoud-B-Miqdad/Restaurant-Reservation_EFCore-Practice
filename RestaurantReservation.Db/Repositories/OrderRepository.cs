@@ -82,13 +82,19 @@ namespace RestaurantReservation.Db.Repositories
                 .Include(o => o.OrderItems)
                 .FirstOrDefaultAsync(o => o.OrderId == id);
 
-            if (order.OrderItems.Any())
-                throw new InvalidOperationException("Cannot delete order with existing order items.");
-
             if (order is null) return;
 
             _context.Orders.Remove(order);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<OrderModel?> GetOrderByIdWithOrderItemsAsync(int id)
+        {
+            var items = await _context.Orders
+                .Include(o => o.OrderItems)
+                .FirstOrDefaultAsync(o => o.OrderId == id);
+
+            return _mapper.Map<OrderModel>(items);
         }
 
         public async Task<List<OrderModel>> GetOrdersByEmployeeIdAsync(int employeeId)

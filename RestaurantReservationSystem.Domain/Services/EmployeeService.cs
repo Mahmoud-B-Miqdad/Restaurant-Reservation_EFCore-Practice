@@ -71,10 +71,13 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<bool> DeleteAsync(int id)
         {
-            var existing = await _employeeRepository.GetByIdAsync(id);
+            var existing = await _employeeRepository.GetByIdWithOrdersAsync(id);
             if (existing == null) return false;
 
-                await _employeeRepository.DeleteAsync(id);
+            if (existing.Orders.Any())
+                throw new InvalidOperationException("Cannot delete employee with existing orders.");
+
+            await _employeeRepository.DeleteAsync(id);
                 return true;
         }
 

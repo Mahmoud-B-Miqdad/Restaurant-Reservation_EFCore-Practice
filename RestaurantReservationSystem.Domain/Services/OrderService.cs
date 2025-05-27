@@ -67,8 +67,11 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<bool> DeleteAsync(int id)
         {
-            var existing = await _orderRepository.GetByIdAsync(id);
+            var existing = await _orderRepository.GetOrderByIdWithOrderItemsAsync(id);
             if (existing == null) return false;
+
+            if (existing.OrderItems.Any())
+                throw new InvalidOperationException("Cannot delete order with existing order items.");
 
             await _orderRepository.DeleteAsync(id);
             return true;

@@ -13,4 +13,5 @@ public interface IReservationRepository
     Task<List<ReservationModel>> GetReservationsByTableIdAsync(int tableId);
     Task<ReservationModel?> GetReservationByOrderIdAsync(int orderId);
     Task<List<ReservationModel>> GetReservationsByCustomerAsync(int customerId);
+    Task<ReservationModel?> GetReservationByIdWithOrdersAsync(int id);
 }

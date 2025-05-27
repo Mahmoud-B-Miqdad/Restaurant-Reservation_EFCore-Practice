@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using RestaurantReservation.Db.Entities;
-using RestaurantReservationSystem.API.DTOs.Requests;
 using RestaurantReservationSystem.Domain.DTOs.Requests;
 using RestaurantReservationSystem.Domain.DTOs.Responses;
 using RestaurantReservationSystem.Domain.Models;
