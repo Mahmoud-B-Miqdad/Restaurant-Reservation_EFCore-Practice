@@ -62,13 +62,10 @@ namespace RestaurantReservationSystem.API.Controllers
             if (createdRestaurant == null)
                 return BadRequest(ApiResponse<string>.FailResponse("Failed to create restaurant"));
 
-            CreatedAtAction(
+            return CreatedAtAction(
                 nameof(GetByIdAsync),
                 new { id = createdRestaurant.RestaurantId },
-                createdRestaurant);
-
-            return Ok(ApiResponse<RestaurantResponse>.SuccessResponse(createdRestaurant));
-
+                ApiResponse<RestaurantResponse>.SuccessResponse(createdRestaurant));
         }
 
         /// <summary>

@@ -1,3 +1,4 @@
+using RestaurantReservationSystem.API.Middlewares;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,6 +22,8 @@ var app = builder.Build();
 
 app.UseSwagger(); 
 app.UseSwaggerUI();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.MapControllers();
 

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using RestaurantReservationSystem.Domain.DTOs.Requests;
 using RestaurantReservationSystem.Domain.DTOs.Responses;
+using RestaurantReservationSystem.Domain.Exceptions;
 using RestaurantReservationSystem.Domain.Interfaces.Repositories;
 using RestaurantReservationSystem.Domain.Interfaces.Services;
 using RestaurantReservationSystem.Domain.Models;
@@ -40,7 +41,8 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<TableResponse?> GetByIdAsync(int id)
         {
-            var table = await _tableRepository.GetByIdAsync(id);
+            var table = await _tableRepository.GetByIdAsync(id)
+                              ?? throw new NotFoundException($"Table with ID {id} not found");
             return table == null ? null : _mapper.Map<TableResponse>(table);
         }
 
@@ -55,8 +57,8 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<TableResponse?> UpdateAsync(int id, TableRequest request)
         {
-            var updatedTable = await _tableRepository.GetByIdAsync(id);
-            if (updatedTable == null) return null;
+            var updatedTable = await _tableRepository.GetByIdAsync(id)
+                           ?? throw new NotFoundException($"Table with ID {id} not found");
 
             _mapper.Map(request, updatedTable);
             await _tableRepository.UpdateAsync(updatedTable);
@@ -66,8 +68,8 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<bool> DeleteAsync(int id)
         {
-            var existingTable = await _tableRepository.GetByIdAsync(id);
-            if (existingTable == null) return false;
+            var existing = await _tableRepository.GetByIdAsync(id)
+                           ?? throw new NotFoundException($"Table with ID {id} not found");
 
             await _tableRepository.DeleteAsync(id);
             return true;
@@ -76,6 +78,9 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<List<ReservationResponse>> GetReservationsAsync(int tableId)
         {
+            _ = await _tableRepository.GetByIdAsync(tableId)
+                ?? throw new NotFoundException($"Table with ID {tableId} not found");
+
             var orders = await _reservationRepository.GetReservationsByTableIdAsync(tableId);
             return _mapper.Map<List<ReservationResponse>>(orders);
         }
