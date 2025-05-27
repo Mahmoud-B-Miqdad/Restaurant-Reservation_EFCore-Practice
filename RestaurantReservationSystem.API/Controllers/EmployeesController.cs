@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using RestaurantReservationSystem.API.DTOs.Requests;
-using RestaurantReservationSystem.API.DTOs.Responses;
-using RestaurantReservationSystem.API.Responses;
-using RestaurantReservationSystem.API.Services.Interfaces;
+using RestaurantReservationSystem.Domain.DTOs.Requests;
+using RestaurantReservationSystem.Domain.DTOs.Responses;
+using RestaurantReservationSystem.Domain.Interfaces.Services;
+using RestaurantReservationSystem.Domain.Responses;
 
 namespace RestaurantReservationSystem.API.Controllers
 {
@@ -17,33 +17,38 @@ namespace RestaurantReservationSystem.API.Controllers
     public class EmployeesController : ControllerBase
     {
         private readonly IEmployeeService _employeeService;
+        private readonly IRestaurantService _restaurantService;
+        private readonly IOrderService _orderService;
 
-        public EmployeesController(IEmployeeService employeSservice)
+        public EmployeesController(IEmployeeService employeSservice, IRestaurantService restaurantService, IOrderService orderService)
         {
             _employeeService = employeSservice;
+            _restaurantService = restaurantService;
+            _orderService = orderService;
         }
 
         /// <summary>
-        /// Retrieves all managers.
+        /// Retrieves all employees or only managers if requested.
         /// </summary>
-        /// <returns>List of all managers.</returns>
-        [HttpGet("managers")]
-        public async Task<IActionResult> GetAllManagersAsync()
-        {
-            var managers = await _employeeService.ListManagersAsync();
-            return Ok(ApiResponse<IEnumerable<EmployeeResponse>>.SuccessResponse(managers));
-        }
-
-        /// <summary>
-        /// Retrieves all employees.
-        /// </summary>
-        /// <returns>List of all employees.</returns>
+        /// <param name="managersOnly">If true, returns only managers.</param>
+        /// <returns>List of employees.</returns>
         [HttpGet]
-        public async Task<IActionResult> GetAllAsync()
+        public async Task<IActionResult> GetAll([FromQuery] bool managersOnly = false)
         {
-            var employees = await _employeeService.GetAllAsync();
+            List<EmployeeResponse> employees;
+
+            if (managersOnly)
+            {
+                employees = await _employeeService.ListManagersAsync();
+            }
+            else
+            {
+                employees = await _employeeService.GetAllAsync();
+            }
+
             return Ok(ApiResponse<IEnumerable<EmployeeResponse>>.SuccessResponse(employees));
         }
+
 
         /// <summary>
         /// Retrieves a specific employee by ID.
@@ -166,8 +171,8 @@ namespace RestaurantReservationSystem.API.Controllers
             if (employee == null)
                 return NotFound(ApiResponse<EmployeeResponse>.FailResponse("Employee not found"));
 
-            var orders = await _employeeService.GetOrdersAsync(id);
-            return Ok(ApiResponse<IEnumerable<OrderResponse>>.SuccessResponse(orders));
+            var orders = await _orderService.GetOrdersByEmployeeIdAsync(id);
+            return Ok(ApiResponse<List<OrderResponse>>.SuccessResponse(orders));
         }
 
         /// <summary>
@@ -182,7 +187,7 @@ namespace RestaurantReservationSystem.API.Controllers
             if (employee == null)
                 return NotFound(ApiResponse<EmployeeResponse>.FailResponse("Employee not found"));
 
-            var restaurant = await _employeeService.GetRestaurantAsync(id);
+            var restaurant = await _restaurantService.GetRestaurantByEmployeeIdAsync(id);
             if (restaurant == null)
                 return NotFound(ApiResponse<RestaurantResponse>.FailResponse("Restaurant not found"));
 

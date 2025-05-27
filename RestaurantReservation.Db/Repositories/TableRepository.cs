@@ -1,41 +1,53 @@
 ﻿using RestaurantReservation.Db;
 using RestaurantReservation.Db.Entities;
 using Microsoft.EntityFrameworkCore;
-using RestaurantReservation.Db.Repositories.Interfaces;
+using RestaurantReservationSystem.Domain.Interfaces.Repositories;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using RestaurantReservationSystem.Domain.Models;
 
 internal class TableRepository : ITableRepository
 {
     private readonly RestaurantReservationDbContext _context;
+    private readonly IMapper _mapper;
 
-    public TableRepository(RestaurantReservationDbContext context)
+    public TableRepository(RestaurantReservationDbContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
 
-    public async Task<List<Table>> GetAllAsync()
+    public async Task<List<TableModel>> GetAllAsync()
     {
-        return await _context.Tables.ToListAsync();
+        return await _context.Tables
+            .ProjectTo<TableModel>(_mapper.ConfigurationProvider)
+            .ToListAsync();
     }
 
-    public async Task<Table> GetByIdAsync(int id)
+    public async Task<TableModel> GetByIdAsync(int id)
     {
-        return await _context.Tables.FindAsync(id);
+        var table = await _context.Tables.FindAsync(id);
+        return _mapper.Map<TableModel>(table);
     }
-    public async Task AddAsync(Table table)
+
+    public async Task AddAsync(TableModel model)
     {
+        var table = _mapper.Map<Table>(model);
         await _context.Tables.AddAsync(table);
         await _context.SaveChangesAsync();
+
+        model.TableId = table.TableId;
     }
 
-    public async Task UpdateAsync(Table table)
+    public async Task UpdateAsync(TableModel model)
     {
-        var existingTable = await _context.Tables.FindAsync(table.TableId);
-        if (existingTable == null)
-            return;
+        var table = await _context.Tables.FindAsync(model.TableId);
+        if (table == null) return;
 
-        _context.Entry(existingTable).CurrentValues.SetValues(table);
+        _mapper.Map(model, table);
         await _context.SaveChangesAsync();
     }
+
 
     public async Task DeleteAsync(int id)
     {
@@ -47,19 +59,20 @@ internal class TableRepository : ITableRepository
         }
     }
 
-    public async Task<IEnumerable<Table>> GetByRestaurantIdAsync(int restaurantId)
+    public async Task<List<TableModel>> GetByRestaurantIdAsync(int restaurantId)
     {
         return await _context.Tables
             .Where(e => e.RestaurantId == restaurantId)
+            .ProjectTo<TableModel>(_mapper.ConfigurationProvider)
             .ToListAsync();
     }
 
-    public async Task<Restaurant?> GetRestaurantByTableIdAsync(int tableId)
+    public async Task<TableModel?> GetTableByReservationIdAsync(int reservationId)
     {
-        var table = await _context.Tables
-            .Include(e => e.Restaurant)
-            .FirstOrDefaultAsync(e => e.TableId == tableId);
+        var reservations = await _context.Reservations
+            .Include(r => r.Table)
+            .FirstOrDefaultAsync(r => r.ReservationId == reservationId);
 
-        return table?.Restaurant;
+        return _mapper.Map<TableModel>(reservations?.Table);
     }
 }

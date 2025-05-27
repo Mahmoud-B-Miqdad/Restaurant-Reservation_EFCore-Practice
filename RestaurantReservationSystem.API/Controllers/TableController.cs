@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using RestaurantReservationSystem.API.DTOs.Requests;
-using RestaurantReservationSystem.API.DTOs.Responses;
-using RestaurantReservationSystem.API.Interfaces;
-using RestaurantReservationSystem.API.Responses;
+using RestaurantReservationSystem.Domain.DTOs.Requests;
+using RestaurantReservationSystem.Domain.DTOs.Responses;
+using RestaurantReservationSystem.Domain.Interfaces.Services;
+using RestaurantReservationSystem.Domain.Responses;
 
 namespace RestaurantReservationSystem.API.Controllers
 {
@@ -17,10 +17,14 @@ namespace RestaurantReservationSystem.API.Controllers
     public class TableController : ControllerBase
     {
         private readonly ITableService _tableService;
+        private readonly IRestaurantService _restaurantService;
+        private readonly IReservationService _reservationService;
 
-        public TableController(ITableService tableService)
+        public TableController(ITableService tableService, IRestaurantService restaurantService, IReservationService reservationService)
         {
             _tableService = tableService;
+            _restaurantService = restaurantService;
+            _reservationService = reservationService;
         }
 
         /// <summary>
@@ -31,7 +35,7 @@ namespace RestaurantReservationSystem.API.Controllers
         public async Task<IActionResult> GetAllAsync()
         {
             var tables = await _tableService.GetAllAsync();
-            return Ok(ApiResponse<IEnumerable<TableResponse>>.SuccessResponse(tables));
+            return Ok(ApiResponse<List<TableResponse>>.SuccessResponse(tables));
         }
 
         /// <summary>
@@ -145,7 +149,7 @@ namespace RestaurantReservationSystem.API.Controllers
             if (table == null)
                 return NotFound(ApiResponse<TableResponse>.FailResponse("Table not found"));
 
-            var restaurant = await _tableService.GetRestaurantAsync(id);
+            var restaurant = await _restaurantService.GetRestaurantByTableIdAsync(id);
             if (restaurant == null)
                 return NotFound(ApiResponse<RestaurantResponse>.FailResponse("Restaurant not found"));
 
@@ -164,8 +168,8 @@ namespace RestaurantReservationSystem.API.Controllers
             if (table == null)
                 return NotFound(ApiResponse<EmployeeResponse>.FailResponse("Table not found"));
 
-            var reservations = await _tableService.GetReservationsAsync(id);
-            return Ok(ApiResponse<IEnumerable<ReservationResponse>>.SuccessResponse(reservations));
+            var reservations = await _reservationService.GetReservationsByTableIdAsync(id);
+            return Ok(ApiResponse<List<ReservationResponse>>.SuccessResponse(reservations));
         }
     }
 }

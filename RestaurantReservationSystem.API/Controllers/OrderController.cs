@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using RestaurantReservationSystem.API.DTOs.Requests;
-using RestaurantReservationSystem.API.DTOs.Responses;
-using RestaurantReservationSystem.API.Responses;
-using RestaurantReservationSystem.API.Services.Interfaces;
+using RestaurantReservationSystem.Domain.DTOs.Requests;
+using RestaurantReservationSystem.Domain.DTOs.Responses;
+using RestaurantReservationSystem.Domain.Interfaces.Services;
+using RestaurantReservationSystem.Domain.Responses;
 
 namespace RestaurantReservationSystem.API.Controllers
 {
@@ -19,14 +19,18 @@ namespace RestaurantReservationSystem.API.Controllers
     public class OrdersController : ControllerBase
     {
         private readonly IOrderService _orderService;
+        private readonly IEmployeeService _employeeService;
+        private readonly IReservationService _reservationService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OrdersController"/> class.
         /// </summary>
         /// <param name="orderService">Service used to manage orders.</param>
-        public OrdersController(IOrderService orderService)
+        public OrdersController(IOrderService orderService, IEmployeeService employeeService, IReservationService reservationService)
         {
             _orderService = orderService;
+            _employeeService = employeeService;
+            _reservationService = reservationService;
         }
 
         /// <summary>
@@ -36,7 +40,7 @@ namespace RestaurantReservationSystem.API.Controllers
         public async Task<ActionResult<List<OrderResponse>>> GetAllAsync()
         {
             var orders = await _orderService.GetAllAsync();
-            return Ok(ApiResponse<IEnumerable<OrderResponse>>.SuccessResponse(orders));
+            return Ok(ApiResponse<List<OrderResponse>>.SuccessResponse(orders));
         }
 
         /// <summary>
@@ -153,7 +157,7 @@ namespace RestaurantReservationSystem.API.Controllers
             if (order == null)
                 return NotFound(ApiResponse<OrderResponse>.FailResponse("Order not found"));
 
-            var employee = await _orderService.GetEmployeeAsync(id);
+            var employee = await _employeeService.GetEmployeeByOrderIdAsync(id);
             return Ok(ApiResponse<EmployeeResponse>.SuccessResponse(employee));
         }
 
@@ -168,7 +172,7 @@ namespace RestaurantReservationSystem.API.Controllers
             if (order == null)
                 return NotFound(ApiResponse<OrderResponse>.FailResponse("Order not found"));
 
-            var reservation = await _orderService.GetReservationAsync(id);
+            var reservation = await _reservationService.GetReservationByOrderIdAsync(id);
             return Ok(ApiResponse<ReservationResponse>.SuccessResponse(reservation));
         }
 
@@ -177,14 +181,14 @@ namespace RestaurantReservationSystem.API.Controllers
         /// </summary>
         /// <param name="id">The ID of the order.</param>
         [HttpGet("{id}/items")]
-        public async Task<ActionResult<IEnumerable<OrderItemResponse>>> GetOrderItems(int id)
+        public async Task<ActionResult<List<OrderItemResponse>>> GetOrderItems(int id)
         {
             var order = await _orderService.GetByIdAsync(id);
             if (order == null)
                 return NotFound(ApiResponse<OrderResponse>.FailResponse("Order not found"));
 
             var items = await _orderService.GetOrderItemsAsync(id);
-            return Ok(ApiResponse<IEnumerable<OrderItemResponse>>.SuccessResponse(items));
+            return Ok(ApiResponse<List<OrderItemResponse>>.SuccessResponse(items));
         }
     }
 }

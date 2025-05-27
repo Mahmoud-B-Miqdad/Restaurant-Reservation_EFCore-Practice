@@ -1,74 +1,87 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using RestaurantReservation.Db.Entities;
-using RestaurantReservation.Db.Repositories.Interfaces;
+using RestaurantReservationSystem.Domain.Interfaces.Repositories;
+using RestaurantReservationSystem.Domain.Models;
 
 namespace RestaurantReservation.Db.Repositories
 {
     internal class MenuItemRepository : IMenuItemRepository
     {
         private readonly RestaurantReservationDbContext _context;
+        private readonly IMapper _mapper;
 
-        public MenuItemRepository(RestaurantReservationDbContext context)
+        public MenuItemRepository(RestaurantReservationDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
-        public async Task<List<MenuItem>> ListOrderedMenuItemsAsync(int reservationId)
+        public async Task<List<MenuItemModel>> ListOrderedMenuItemsAsync(int reservationId)
         {
-            return await _context.OrderItems
+            var orderedItems = await _context.OrderItems
                 .Where(oi => oi.Order.ReservationId == reservationId)
                 .Include(oi => oi.MenuItem)
                 .Select(oi => oi.MenuItem)
                 .Distinct()
                 .ToListAsync();
+
+            return _mapper.Map<List<MenuItemModel>>(orderedItems);
         }
 
-        public async Task<List<MenuItem>> GetAllAsync() => await _context.MenuItems.ToListAsync();
-
-        public async Task<MenuItem> GetByIdAsync(int id)
+        public async Task<List<MenuItemModel>> GetAllAsync()
         {
-            return await _context.MenuItems.FindAsync(id);
+            var items = await _context.MenuItems.ToListAsync();
+            return _mapper.Map<List<MenuItemModel>>(items);
         }
 
-        public async Task AddAsync(MenuItem menuItem)
+        public async Task<MenuItemModel> GetByIdAsync(int id)
         {
-            _context.MenuItems.Add(menuItem);
+            var item = await _context.MenuItems.FindAsync(id);
+            return _mapper.Map<MenuItemModel>(item);
+        }
+
+        public async Task AddAsync(MenuItemModel model)
+        {
+            var menuItem = _mapper.Map<MenuItem>(model);
+            await _context.MenuItems.AddAsync(menuItem);
             await _context.SaveChangesAsync();
+
+            model.ItemId = menuItem.ItemId;
         }
 
-        public async Task UpdateAsync(MenuItem menuItem)
+        public async Task UpdateAsync(MenuItemModel menuItem)
         {
-            var existingMenuItem = await _context.MenuItems.FindAsync(menuItem.ItemId);
-            if (existingMenuItem == null)
+            var existingItem = await _context.MenuItems.FindAsync(menuItem.ItemId);
+            if (existingItem == null)
                 return;
 
-            _context.Entry(existingMenuItem).CurrentValues.SetValues(menuItem);
+            _mapper.Map(menuItem, existingItem);
             await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(int id)
         {
-            var menuItem = await _context.MenuItems.FindAsync(id);
+            var menuItem = await _context.MenuItems
+                .Include(m => m.OrderItems)
+                .FirstOrDefaultAsync(m => m.ItemId == id);
+
+            if (menuItem.OrderItems.Any())
+                throw new InvalidOperationException("Cannot delete menu item with existing order items.");
+
             if (menuItem is null) return;
 
             _context.MenuItems.Remove(menuItem);
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<MenuItem>> GetByRestaurantIdAsync(int restaurantId)
+        public async Task<List<MenuItemModel>> GetMenuItemsByRestaurantIdAsync(int restaurantId)
         {
-            return await _context.MenuItems
+            var items = await _context.MenuItems
                 .Where(e => e.RestaurantId == restaurantId)
                 .ToListAsync();
-        }
 
-        public async Task<Restaurant?> GetRestaurantByMenuItemIdAsync(int menuItemId)
-        {
-            var menuItem = await _context.MenuItems
-                .Include(m => m.Restaurant)
-                .FirstOrDefaultAsync(m => m.ItemId == menuItemId);
-
-            return menuItem?.Restaurant;
+            return _mapper.Map<List<MenuItemModel>>(items);
         }
     }
 }

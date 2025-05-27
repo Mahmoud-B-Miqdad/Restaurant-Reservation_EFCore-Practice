@@ -41,6 +41,8 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+builder.Services.AddRepositories(builder.Configuration.GetConnectionString("DefaultConnection"));
+builder.Services.AddDomainServices();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
