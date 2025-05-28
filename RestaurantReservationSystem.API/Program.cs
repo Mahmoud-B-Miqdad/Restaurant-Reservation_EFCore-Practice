@@ -1,8 +1,9 @@
+using RestaurantReservationSystem.API.Middlewares;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddAutoMapper(typeof(RestaurantReservationSystem.API.Mapping.AutoMapperProfile).Assembly);
+builder.Services.AddAutoMapper(typeof(RestaurantReservationSystem.Db.Mapping.AutoMapperProfile).Assembly);
 
 builder.Services.AddRepositories(builder.Configuration.GetConnectionString("DefaultConnection"));
 builder.Services.AddDomainServices();
@@ -21,6 +22,8 @@ var app = builder.Build();
 
 app.UseSwagger(); 
 app.UseSwaggerUI();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.MapControllers();
 

@@ -45,8 +45,6 @@ namespace RestaurantReservationSystem.API.Controllers
         public async Task<IActionResult> GetByIdAsync(int id)
         {
             var table = await _tableService.GetByIdAsync(id);
-            if (table == null)
-                return NotFound(ApiResponse<TableResponse>.FailResponse("Table not found"));
 
             return Ok(ApiResponse<TableResponse>.SuccessResponse(table));
         }
@@ -60,11 +58,10 @@ namespace RestaurantReservationSystem.API.Controllers
         public async Task<IActionResult> CreateAsync([FromBody] TableRequest request)
         {
             var createdTable = await _tableService.CreateAsync(request);
-            CreatedAtAction(
+            return CreatedAtAction(
                 nameof(GetByIdAsync),
                 new { id = createdTable.TableId },
-                createdTable);
-            return Ok(ApiResponse<TableResponse>.SuccessResponse(createdTable));
+                ApiResponse<TableResponse>.SuccessResponse(createdTable));
         }
 
         /// <summary>
@@ -77,8 +74,6 @@ namespace RestaurantReservationSystem.API.Controllers
         public async Task<IActionResult> UpdateAsync(int id, [FromBody] TableRequest request)
         {
             var updatedTable = await _tableService.UpdateAsync(id, request);
-            if (updatedTable == null)
-                return NotFound(ApiResponse<string>.FailResponse("Table not found"));
 
             return Ok(ApiResponse<TableResponse>.SuccessResponse(updatedTable));
         }
@@ -96,8 +91,6 @@ namespace RestaurantReservationSystem.API.Controllers
                 return BadRequest(ApiResponse<string>.FailResponse("Patch document cannot be null"));
 
             var existingTable = await _tableService.GetByIdAsync(id);
-            if (existingTable == null)
-                return NotFound(ApiResponse<string>.FailResponse("Table not found"));
 
             var tableToPatch = new TableRequest
             {
@@ -129,9 +122,6 @@ namespace RestaurantReservationSystem.API.Controllers
         public async Task<IActionResult> DeleteAsync(int id)
         {
             var deletedTable = await _tableService.DeleteAsync(id);
-            if (!deletedTable)
-                return NotFound(ApiResponse<string>.FailResponse("Table not found"));
-
             return Ok(ApiResponse<string>.SuccessResponse("Table deleted successfully"));
         }
 
@@ -143,14 +133,7 @@ namespace RestaurantReservationSystem.API.Controllers
         [HttpGet("{id}/restaurant")]
         public async Task<IActionResult> GetRestaurantAsync(int id)
         {
-            var table = await _tableService.GetByIdAsync(id);
-            if (table == null)
-                return NotFound(ApiResponse<TableResponse>.FailResponse("Table not found"));
-
             var restaurant = await _restaurantService.GetRestaurantByTableIdAsync(id);
-            if (restaurant == null)
-                return NotFound(ApiResponse<RestaurantResponse>.FailResponse("Restaurant not found"));
-
             return Ok(ApiResponse<RestaurantResponse>.SuccessResponse(restaurant));
         }
 
@@ -162,11 +145,7 @@ namespace RestaurantReservationSystem.API.Controllers
         [HttpGet("{id}/reservations")]
         public async Task<IActionResult> GetReservationsAsync(int id)
         {
-            var table = await _tableService.GetByIdAsync(id);
-            if (table == null)
-                return NotFound(ApiResponse<EmployeeResponse>.FailResponse("Table not found"));
-
-            var reservations = await _reservationService.GetReservationsByTableIdAsync(id);
+            var reservations = await _tableService.GetReservationsAsync(id);
             return Ok(ApiResponse<List<ReservationResponse>>.SuccessResponse(reservations));
         }
     }
