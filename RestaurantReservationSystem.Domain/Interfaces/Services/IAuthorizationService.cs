@@ -1,4 +1,6 @@
-﻿namespace RestaurantReservationSystem.Domain.Interfaces.Services
+﻿using RestaurantReservationSystem.Domain.DTOs.Responses;
+
+namespace RestaurantReservationSystem.Domain.Interfaces.Services
 {
     /// <summary>
     /// Defines methods for user authorization and token generation.
@@ -14,6 +16,6 @@
         /// A tuple containing a success flag and a JWT token string if authentication succeeds;
         /// otherwise, the token will be null.
         /// </returns>
-        (bool Success, string? Token) Login(string username, string password);
+        LoginResponse Login(string username, string password);
     }
 }

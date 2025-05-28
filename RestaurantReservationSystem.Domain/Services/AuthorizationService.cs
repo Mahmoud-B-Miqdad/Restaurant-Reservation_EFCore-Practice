@@ -1,4 +1,5 @@
-﻿using RestaurantReservationSystem.Domain.Interfaces.Services;
+﻿using RestaurantReservationSystem.Domain.DTOs.Responses;
+using RestaurantReservationSystem.Domain.Interfaces.Services;
 
 namespace RestaurantReservationSystem.Domain.Services
 {
@@ -34,16 +35,15 @@ namespace RestaurantReservationSystem.Domain.Services
         }
 
         /// <inheritdoc />
-        public (bool Success, string? Token) Login(string username, string password)
+        public LoginResponse Login(string username, string password)
         {
             if (ValidateCredentials(username, password))
             {
                 var token = _jwtTokenGenerator.GenerateToken(username);
-                return (true, token);
+                return new LoginResponse { Success = true, Token = token };
             }
 
-            return (false, null);
+            return new LoginResponse { Success = false, Token = null };
         }
     }
-
 }
