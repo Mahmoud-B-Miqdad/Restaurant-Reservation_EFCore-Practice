@@ -1,5 +1,4 @@
-﻿using JwtAuthMinimalApi.Services;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using RestaurantReservationSystem.Domain.Configurations;
 using RestaurantReservationSystem.Domain.Interfaces.Services;
 using RestaurantReservationSystem.Domain.Services;

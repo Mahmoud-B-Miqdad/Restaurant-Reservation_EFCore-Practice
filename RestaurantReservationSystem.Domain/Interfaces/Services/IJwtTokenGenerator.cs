@@ -1,6 +1,5 @@
-﻿using System.Security.Claims;
-
-namespace JwtAuthMinimalApi.Services
+﻿
+namespace RestaurantReservationSystem.Domain.Interfaces.Services
 {
     /// <summary>
     /// Defines methods to generate and validate JSON Web Tokens (JWT).

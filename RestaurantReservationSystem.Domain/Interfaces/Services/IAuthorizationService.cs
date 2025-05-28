@@ -1,4 +1,4 @@
-﻿namespace JwtAuthMinimalApi.Services
+﻿namespace RestaurantReservationSystem.Domain.Interfaces.Services
 {
     /// <summary>
     /// Defines methods for user authorization and token generation.

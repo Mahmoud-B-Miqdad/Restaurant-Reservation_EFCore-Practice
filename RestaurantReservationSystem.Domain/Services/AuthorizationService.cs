@@ -1,4 +1,6 @@
-﻿namespace JwtAuthMinimalApi.Services
+﻿using RestaurantReservationSystem.Domain.Interfaces.Services;
+
+namespace RestaurantReservationSystem.Domain.Services
 {
     /// <summary>
     /// Provides implementation of <see cref="IAuthorizationService"/> for user authentication

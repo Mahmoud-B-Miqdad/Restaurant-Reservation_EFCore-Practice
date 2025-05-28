@@ -1,4 +1,4 @@
-﻿namespace JwtAuthMinimalApi.Models
+﻿namespace RestaurantReservationSystem.Domain.Models
 {
     /// <summary>
     /// Represents the login request payload sent by the client.

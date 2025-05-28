@@ -1,11 +1,12 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using RestaurantReservationSystem.Domain.Configurations;
+using RestaurantReservationSystem.Domain.Interfaces.Services;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
 
-namespace JwtAuthMinimalApi.Services
+namespace RestaurantReservationSystem.Domain.Services
 {
     /// <summary>
     /// Responsible for generating and validating JWT tokens.

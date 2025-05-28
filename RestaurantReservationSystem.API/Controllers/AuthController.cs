@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using JwtAuthMinimalApi.Services;
-using JwtAuthMinimalApi.Models;
+using RestaurantReservationSystem.Domain.Models;
+using RestaurantReservationSystem.Domain.Interfaces.Services;
 
 namespace JwtAuthMinimalApi.Controllers
 {
