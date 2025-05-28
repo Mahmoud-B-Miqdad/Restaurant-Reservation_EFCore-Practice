@@ -145,7 +145,7 @@ namespace RestaurantReservationSystem.API.Controllers
         [HttpGet("{id}/reservations")]
         public async Task<IActionResult> GetReservationsAsync(int id)
         {
-            var reservations = await _tableService.GetReservationsAsync(id);
+            var reservations = await _reservationService.GetReservationsByTableIdAsync(id);
             return Ok(ApiResponse<List<ReservationResponse>>.SuccessResponse(reservations));
         }
     }

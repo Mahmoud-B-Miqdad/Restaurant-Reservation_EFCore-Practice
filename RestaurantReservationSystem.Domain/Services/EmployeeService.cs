@@ -104,6 +104,10 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<EmployeeResponse?> GetEmployeeByOrderIdAsync(int orderId)
         {
+            var order = await _orderRepository.GetByIdAsync(orderId);
+            if (order == null)
+                throw new NotFoundException($"Order with ID {orderId} not found");
+
             var employee = await _employeeRepository.GetEmployeeByOrderIdAsync(orderId);
             return employee == null ? null : _mapper.Map<EmployeeResponse>(employee);
         }

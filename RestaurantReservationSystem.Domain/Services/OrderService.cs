@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using RestaurantReservationSystem.Domain.DTOs.Requests;
 using RestaurantReservationSystem.Domain.DTOs.Responses;
+using RestaurantReservationSystem.Domain.Exceptions;
 using RestaurantReservationSystem.Domain.Interfaces.Repositories;
 using RestaurantReservationSystem.Domain.Interfaces.Services;
 using RestaurantReservationSystem.Domain.Models;
@@ -15,6 +16,8 @@ namespace RestaurantReservationSystem.Domain.Services
     {
         private readonly IOrderRepository _orderRepository;
         private readonly IOrderItemRepository _orderItemRepository;
+        private readonly IEmployeeRepository _employeeRepository;
+        private readonly IReservationRepository _reservationRepository;
         private readonly IMapper _mapper;
 
         /// <summary>
@@ -24,11 +27,24 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <param name="mapper">AutoMapper instance for mapping between entities and DTOs.</param>
         /// <param name="orderItemRepository">Repository for accessing order item data.</param>
 
-        public OrderService(IOrderRepository orderRepository, IMapper mapper, IOrderItemRepository orderItemRepository)
+        public OrderService(IOrderRepository orderRepository, IMapper mapper, IOrderItemRepository orderItemRepository,
+            IEmployeeRepository employeeRepository, IReservationRepository reservationRepository)
         {
             _orderRepository = orderRepository;
             _orderItemRepository = orderItemRepository;
             _mapper = mapper;
+            _employeeRepository = employeeRepository;
+            _reservationRepository = reservationRepository;
+        }
+
+        private async Task<OrderModel> EnsureOrderExistsAsync(int orderId)
+
+        {
+            var order = await _orderRepository.GetByIdAsync(orderId);
+            if (order == null)
+                throw new NotFoundException($"Order with ID {orderId} not found");
+
+            return order;
         }
 
         /// <inheritdoc />
@@ -41,7 +57,7 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<OrderResponse?> GetByIdAsync(int id)
         {
-            var order = await _orderRepository.GetByIdAsync(id);
+            var order = await EnsureOrderExistsAsync(id);
             return order == null ? null : _mapper.Map<OrderResponse>(order);
         }
 
@@ -56,8 +72,7 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<OrderResponse?> UpdateAsync(int id, OrderRequest request)
         {
-            var updatedOrder = await _orderRepository.GetByIdAsync(id);
-            if (updatedOrder == null) return null;
+            var updatedOrder = await EnsureOrderExistsAsync(id);
 
             _mapper.Map(request, updatedOrder);
             await _orderRepository.UpdateAsync(updatedOrder);
@@ -67,10 +82,11 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<bool> DeleteAsync(int id)
         {
-            var existing = await _orderRepository.GetOrderByIdWithOrderItemsAsync(id);
-            if (existing == null) return false;
+            await EnsureOrderExistsAsync(id);
+            var existingOrder = await _orderRepository.GetOrderByIdWithOrderItemsAsync(id);
+            if (existingOrder == null) return false;
 
-            if (existing.OrderItems.Any())
+            if (existingOrder.OrderItems.Any())
                 throw new InvalidOperationException("Cannot delete order with existing order items.");
 
             await _orderRepository.DeleteAsync(id);
@@ -80,6 +96,7 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<List<OrderItemResponse>> GetOrderItemsAsync(int orderId)
         {
+            var order = await EnsureOrderExistsAsync(orderId);
             var orders = await _orderItemRepository.GetOrderItemsByOrderIdAsync(orderId);
             return _mapper.Map<List<OrderItemResponse>>(orders);
         }
@@ -87,6 +104,10 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<List<OrderResponse>> GetOrdersByEmployeeIdAsync(int employeeId)
         {
+            var employee = await _employeeRepository.GetByIdAsync(employeeId);
+            if (employee == null)
+                throw new NotFoundException($"Employee with ID {employeeId} not found");
+
             var orders = await _orderRepository.GetOrdersByEmployeeIdAsync(employeeId);
             return _mapper.Map<List<OrderResponse>>(orders);
         }
@@ -94,6 +115,10 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<List<OrderResponse>> GetOrdersByReservationIdAsync(int reservationId)
         {
+            var reservation = await _reservationRepository.GetByIdAsync(reservationId);
+            if (reservation == null)
+                throw new NotFoundException($"Reservation with ID {reservationId} not found");
+
             var orders = await _orderRepository.GetOrdersByReservationIdAsync(reservationId);
             return _mapper.Map<List<OrderResponse>>(orders);
         }

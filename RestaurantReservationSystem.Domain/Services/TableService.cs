@@ -97,6 +97,10 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<TableResponse?> GetTableByReservationIdAsync(int reservationId)
         {
+            var reservation = await _reservationRepository.GetByIdAsync(reservationId);
+            if (reservation == null)
+                throw new NotFoundException($"Reservation with ID {reservationId} not found");
+
             var table = await _tableRepository.GetTableByReservationIdAsync(reservationId);
             return table == null ? null : _mapper.Map<TableResponse>(table);
         }

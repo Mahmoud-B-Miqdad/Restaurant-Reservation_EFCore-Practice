@@ -49,9 +49,6 @@ namespace RestaurantReservationSystem.API.Controllers
         public async Task<ActionResult<OrderResponse>> GetByIdAsync(int id)
         {
             var order = await _orderService.GetByIdAsync(id);
-            if (order == null)
-                return NotFound(ApiResponse<OrderResponse>.FailResponse("Order not found"));
-
             return Ok(ApiResponse<OrderResponse>.SuccessResponse(order));
         }
 
@@ -82,8 +79,6 @@ namespace RestaurantReservationSystem.API.Controllers
                 return BadRequest(ApiResponse<string>.FailResponse("Patch document cannot be null"));
 
             var existingOrder = await _orderService.GetByIdAsync(id);
-            if (existingOrder == null)
-                return NotFound(ApiResponse<string>.FailResponse("Order not found"));
 
             var orderToPatch = new OrderRequest
             {
@@ -117,9 +112,6 @@ namespace RestaurantReservationSystem.API.Controllers
         public async Task<ActionResult<OrderResponse>> Update(int id, OrderRequest request)
         {
             var updatedOrder = await _orderService.UpdateAsync(id, request);
-            if (updatedOrder == null)
-                return NotFound(ApiResponse<string>.FailResponse("Order not found"));
-
             return Ok(ApiResponse<OrderResponse>.SuccessResponse(updatedOrder));
         }
 
@@ -133,9 +125,6 @@ namespace RestaurantReservationSystem.API.Controllers
             try
             {
                 var deletedOrder = await _orderService.DeleteAsync(id);
-                if (!deletedOrder)
-                    return NotFound(ApiResponse<string>.FailResponse("Order not found"));
-
                 return Ok(ApiResponse<string>.SuccessResponse("Order deleted successfully"));
             }
             catch (InvalidOperationException ex)
@@ -151,10 +140,6 @@ namespace RestaurantReservationSystem.API.Controllers
         [HttpGet("{id}/employee")]
         public async Task<ActionResult<EmployeeResponse>> GetEmployee(int id)
         {
-            var order = await _orderService.GetByIdAsync(id);
-            if (order == null)
-                return NotFound(ApiResponse<OrderResponse>.FailResponse("Order not found"));
-
             var employee = await _employeeService.GetEmployeeByOrderIdAsync(id);
             return Ok(ApiResponse<EmployeeResponse>.SuccessResponse(employee));
         }
@@ -166,10 +151,6 @@ namespace RestaurantReservationSystem.API.Controllers
         [HttpGet("{id}/reservation")]
         public async Task<ActionResult<ReservationResponse>> GetReservation(int id)
         {
-            var order = await _orderService.GetByIdAsync(id);
-            if (order == null)
-                return NotFound(ApiResponse<OrderResponse>.FailResponse("Order not found"));
-
             var reservation = await _reservationService.GetReservationByOrderIdAsync(id);
             return Ok(ApiResponse<ReservationResponse>.SuccessResponse(reservation));
         }
@@ -181,10 +162,6 @@ namespace RestaurantReservationSystem.API.Controllers
         [HttpGet("{id}/items")]
         public async Task<ActionResult<List<OrderItemResponse>>> GetOrderItems(int id)
         {
-            var order = await _orderService.GetByIdAsync(id);
-            if (order == null)
-                return NotFound(ApiResponse<OrderResponse>.FailResponse("Order not found"));
-
             var items = await _orderService.GetOrderItemsAsync(id);
             return Ok(ApiResponse<List<OrderItemResponse>>.SuccessResponse(items));
         }

@@ -135,8 +135,9 @@ namespace RestaurantReservationSystem.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(int id)
         {
-            var deletedEmployee = await _employeeService.DeleteAsync(id);
-
+            try
+            {
+                var deletedEmployee = await _employeeService.DeleteAsync(id);
                 return Ok(ApiResponse<string>.SuccessResponse("Employee deleted successfully"));
 
             }
@@ -154,7 +155,7 @@ namespace RestaurantReservationSystem.API.Controllers
         [HttpGet("{id}/orders")]
         public async Task<IActionResult> GetOrdersAsync(int id)
         {
-            var orders = await _employeeService.GetOrdersByEmployeeIdAsync(id);
+            var orders = await _orderService.GetOrdersByEmployeeIdAsync(id);
             return Ok(ApiResponse<List<OrderResponse>>.SuccessResponse(orders));
         }
 

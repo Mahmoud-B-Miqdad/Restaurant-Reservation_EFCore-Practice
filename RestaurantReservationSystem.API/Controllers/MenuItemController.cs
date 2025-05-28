@@ -43,9 +43,6 @@ namespace RestaurantReservationSystem.API.Controllers
         public async Task<IActionResult> GetByIdAsync(int id)
         {
             var menuItem = await _menuItemService.GetByIdAsync(id);
-            if (menuItem == null)
-                return NotFound(ApiResponse<MenuItemResponse>.FailResponse("MenuItem not found"));
-
             return Ok(ApiResponse<MenuItemResponse>.SuccessResponse(menuItem));
         }
 
@@ -75,9 +72,6 @@ namespace RestaurantReservationSystem.API.Controllers
         public async Task<IActionResult> UpdateAsync(int id, MenuItemRequest request)
         {
             var updatedMenuItem = await _menuItemService.UpdateAsync(id, request);
-            if (updatedMenuItem == null)
-                return NotFound(ApiResponse<string>.FailResponse("MenuItem not found"));
-
             return Ok(ApiResponse<MenuItemResponse>.SuccessResponse(updatedMenuItem));
         }
 
@@ -94,8 +88,6 @@ namespace RestaurantReservationSystem.API.Controllers
                 return BadRequest(ApiResponse<string>.FailResponse("Patch document cannot be null"));
 
             var existingMenuItem = await _menuItemService.GetByIdAsync(id);
-            if (existingMenuItem == null)
-                return NotFound(ApiResponse<string>.FailResponse("MenuItem not found"));
 
             var menuItemToPatch = new MenuItemRequest
             {
@@ -131,9 +123,6 @@ namespace RestaurantReservationSystem.API.Controllers
             try
             {
                 var deletedEmployee = await _menuItemService.DeleteAsync(id);
-                if (!deletedEmployee)
-                    return NotFound(ApiResponse<string>.FailResponse("MenuItem not found"));
-
                 return Ok(ApiResponse<string>.SuccessResponse("menuItem deleted successfully"));
             }
             catch (InvalidOperationException ex)
@@ -150,10 +139,6 @@ namespace RestaurantReservationSystem.API.Controllers
         [HttpGet("{id}/order-items")]
         public async Task<IActionResult> GetOrderItemsAsync(int id)
         {
-            var menuItem = await _menuItemService.GetByIdAsync(id);
-            if (menuItem == null)
-                return NotFound(ApiResponse<MenuItemResponse>.FailResponse("MenuItem not found"));
-
             var orders = await _menuItemService.GetOrderItemsByMenuItamIdAsync(id);
             return Ok(ApiResponse<List<OrderItemResponse>>.SuccessResponse(orders));
         }
@@ -166,14 +151,7 @@ namespace RestaurantReservationSystem.API.Controllers
         [HttpGet("{id}/restaurant")]
         public async Task<IActionResult> GetRestaurantAsync(int id)
         {
-            var menuItem = await _menuItemService.GetByIdAsync(id);
-            if (menuItem == null)
-                return NotFound(ApiResponse<MenuItemResponse>.FailResponse("MenuItem not found"));
-
             var restaurant = await _restaurantService.GetRestaurantByMenuItamIdAsync(id);
-            if (restaurant == null)
-                return NotFound(ApiResponse<RestaurantResponse>.FailResponse("Restaurant not found"));
-
             return Ok(ApiResponse<RestaurantResponse>.SuccessResponse(restaurant));
         }
     }

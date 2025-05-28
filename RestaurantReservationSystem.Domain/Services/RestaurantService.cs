@@ -86,18 +86,23 @@ namespace RestaurantReservationSystem.Domain.Services
             return true;
         }
 
-
-
-
         /// <inheritdoc />
         public async Task<RestaurantResponse?> GetRestaurantByMenuItamIdAsync(int menuItemId)
         {
+            var menuItem = await _menuItemRepository.GetByIdAsync(menuItemId);
+            if (menuItem == null)
+                throw new NotFoundException($"MenuItem with ID {menuItemId} not found");
+
             var restaurant = await _restaurantRepository.GetRestaurantByMenuItemIdAsync(menuItemId);
             return _mapper.Map<RestaurantResponse>(restaurant);
         }
 
         public async Task<RestaurantResponse?> GetRestaurantByReservationIdAsync(int reservationId)
         {
+            var reservation = await _reservationRepository.GetByIdAsync(reservationId);
+            if (reservation == null)
+                throw new NotFoundException($"Reservation with ID {reservationId} not found");
+
             var restaurant = await _restaurantRepository.GetRestaurantByReservationIdAsync(reservationId);
             return restaurant == null ? null : _mapper.Map<RestaurantResponse>(restaurant);
         }

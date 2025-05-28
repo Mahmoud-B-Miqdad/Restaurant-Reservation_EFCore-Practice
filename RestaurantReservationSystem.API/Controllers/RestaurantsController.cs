@@ -28,7 +28,7 @@ namespace RestaurantReservationSystem.API.Controllers
             _tableService = tableService;
             _employeeService = employeeService;
             _menuItemService = menuItemService;
-            _restaurantService = restaurantService;
+            _reservationService = reservationService;
         }
 
         /// <summary>
@@ -63,9 +63,6 @@ namespace RestaurantReservationSystem.API.Controllers
         public async Task<IActionResult> CreateAsync(RestaurantRequest request)
         {
             var createdRestaurant = await _restaurantService.CreateAsync(request);
-
-            if (createdRestaurant == null)
-                return BadRequest(ApiResponse<string>.FailResponse("Failed to create restaurant"));
 
             return CreatedAtAction(
                 nameof(GetByIdAsync),
@@ -174,7 +171,7 @@ namespace RestaurantReservationSystem.API.Controllers
         [HttpGet("{id}/menu-items")]
         public async Task<IActionResult> GetMenuItemsAsync(int id)
         {
-            var menuItems = await _restaurantService.GetMenuItemsByRestaurantIdAsync(id);
+            var menuItems = await _menuItemService.GetMenuItemsByRestaurantIdAsync(id);
             return Ok(ApiResponse<List<MenuItemResponse>>.SuccessResponse(menuItems));
         }
 
@@ -189,7 +186,7 @@ namespace RestaurantReservationSystem.API.Controllers
         [HttpGet("{id}/reservations")]
         public async Task<IActionResult> GetReservationsAsync(int id)
         {
-            var reservations = await _restaurantService.GetReservationsByRestaurantIdAsync(id);
+            var reservations = await _reservationService.GetReservationsByRestaurantIdAsync(id);
             return Ok(ApiResponse<List<ReservationResponse>>.SuccessResponse(reservations));
         }
     }
