@@ -1,8 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RestaurantReservationSystem.Domain.Exceptions;
-using RestaurantReservationSystem.Domain.Responses;
-using System.Text.Json;
-
 namespace RestaurantReservationSystem.API.Middlewares
 {
     public class ExceptionHandlingMiddleware
@@ -16,43 +13,39 @@ namespace RestaurantReservationSystem.API.Middlewares
             _logger = logger;
         }
 
+        private static async Task HandleExceptionAsync(HttpContext context, Exception exception, ILogger logger)
+        {
+            var (statusCode, title, detail) = exception switch
+            {
+                NotFoundException => (StatusCodes.Status404NotFound, "Resource not found", exception.Message),
+                UnauthorizedAccessException => (StatusCodes.Status401Unauthorized, "Unauthorized", "Access is denied"),
+                _ => (StatusCodes.Status500InternalServerError, "An unexpected error occurred", "Internal server error")
+            };
+
+            logger.LogError(exception, title);
+
+            var problemDetails = new ProblemDetails
+            {
+                Title = title,
+                Status = statusCode,
+                Detail = detail,
+                Instance = context.Request.Path
+            };
+
+            context.Response.StatusCode = statusCode;
+            context.Response.ContentType = "application/problem+json";
+            await context.Response.WriteAsJsonAsync(problemDetails);
+        }
+
         public async Task Invoke(HttpContext context)
         {
             try
             {
                 await _next(context);
             }
-            catch (NotFoundException ex)
-            {
-                _logger.LogWarning(ex, "NotFoundException occurred");
-
-                var problemDetails = new ProblemDetails
-                {
-                    Title = "Resource not found",
-                    Status = StatusCodes.Status404NotFound,
-                    Detail = ex.Message,
-                    Instance = context.Request.Path
-                };
-
-                context.Response.StatusCode = StatusCodes.Status404NotFound;
-                context.Response.ContentType = "application/problem+json";
-                await context.Response.WriteAsJsonAsync(problemDetails);
-            }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Unhandled exception");
-
-                var problemDetails = new ProblemDetails
-                {
-                    Title = "An unexpected error occurred",
-                    Status = StatusCodes.Status500InternalServerError,
-                    Detail = "Internal server error",
-                    Instance = context.Request.Path
-                };
-
-                context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-                context.Response.ContentType = "application/problem+json";
-                await context.Response.WriteAsJsonAsync(problemDetails);
+                await HandleExceptionAsync(context, ex, _logger);
             }
         }
     }
