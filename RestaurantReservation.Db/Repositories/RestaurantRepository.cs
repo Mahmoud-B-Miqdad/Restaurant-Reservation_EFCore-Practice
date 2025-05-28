@@ -1,10 +1,10 @@
 ﻿using RestaurantReservation.Db.Entities;
 using RestaurantReservation.Db;
 using Microsoft.EntityFrameworkCore;
-using RestaurantReservationSystem.Domain.Interfaces.Repositories;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using RestaurantReservationSystem.Domain.Models;
+using RestaurantReservationSystem.Domain.Interfaces.Repositories;
 
 internal class RestaurantRepository : IRestaurantRepository
 {

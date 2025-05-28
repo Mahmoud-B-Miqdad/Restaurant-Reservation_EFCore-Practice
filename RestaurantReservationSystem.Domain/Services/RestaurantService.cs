@@ -14,10 +14,10 @@ namespace RestaurantReservationSystem.Domain.Services
     public class RestaurantService : IRestaurantService
     {
         private readonly IRestaurantRepository _restaurantRepository;
-        private readonly IMenuItemRepository _menuItemRepository;
-        private readonly IReservationRepository _reservationRepository;
-        private readonly IEmployeeRepository _employeeRepository;
-        private readonly ITableRepository _tableRepository;
+        private readonly IMenuItemService _menuItemService;
+        private readonly IReservationService _reservationService;
+        private readonly IEmployeeService _employeeService;
+        private readonly ITableService _tableService;
         private readonly IMapper _mapper;
 
         /// <summary>
@@ -26,15 +26,15 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <param name="restaurantRepository">The restaurant repository.</param>
         /// <param name="mapper">The AutoMapper instance.</param>
         public RestaurantService(IRestaurantRepository restaurantRepository, IMapper mapper,
-            IMenuItemRepository menuItemRepository, IReservationRepository reservationRepository,
-            IEmployeeRepository employeeRepository, ITableRepository tableRepository)
+            IMenuItemService menuItemService, IReservationService reservationService,
+            IEmployeeService employeeService, ITableService tableService)
         {
             _restaurantRepository = restaurantRepository;
             _mapper = mapper;
-            _menuItemRepository = menuItemRepository;
-            _reservationRepository = reservationRepository;
-            _employeeRepository = employeeRepository;
-            _tableRepository = tableRepository;
+            _menuItemService = menuItemService;
+            _reservationService = reservationService;
+            _employeeService = employeeService;
+            _tableService = tableService;
         }
 
         /// <inheritdoc />
@@ -80,7 +80,7 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<RestaurantResponse?> GetRestaurantByMenuItamIdAsync(int menuItemId)
         {
-            var menuItem = await _menuItemRepository.GetByIdAsync(menuItemId);
+            var menuItem = await _menuItemService.GetByIdAsync(menuItemId);
             if (menuItem == null)
                 throw new NotFoundException($"MenuItem with ID {menuItemId} not found");
 
@@ -90,7 +90,7 @@ namespace RestaurantReservationSystem.Domain.Services
 
         public async Task<RestaurantResponse?> GetRestaurantByReservationIdAsync(int reservationId)
         {
-            var reservation = await _reservationRepository.GetByIdAsync(reservationId);
+            var reservation = await _reservationService.GetByIdAsync(reservationId);
             if (reservation == null)
                 throw new NotFoundException($"Reservation with ID {reservationId} not found");
 
@@ -100,7 +100,7 @@ namespace RestaurantReservationSystem.Domain.Services
 
         public async Task<RestaurantResponse?> GetRestaurantByTableIdAsync(int tableId)
         {
-            var table = await _tableRepository.GetByIdAsync(tableId);
+            var table = await _tableService.GetByIdAsync(tableId);
             if (table == null)
                 throw new NotFoundException($"Table with ID {tableId} not found");
 
@@ -111,7 +111,7 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<RestaurantResponse?> GetRestaurantByEmployeeIdAsync(int employeeId)
         {
-            var employee = await _employeeRepository.GetByIdAsync(employeeId);
+            var employee = await _employeeService.GetByIdAsync(employeeId);
             if (employee == null)
                 throw new NotFoundException($"Employee with ID {employeeId} not found");
 

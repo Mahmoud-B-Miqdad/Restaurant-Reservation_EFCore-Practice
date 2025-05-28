@@ -16,8 +16,8 @@ namespace RestaurantReservationSystem.Domain.Services
     {
         private readonly IOrderRepository _orderRepository;
         private readonly IOrderItemRepository _orderItemRepository;
-        private readonly IEmployeeRepository _employeeRepository;
-        private readonly IReservationRepository _reservationRepository;
+        private readonly IEmployeeService _employeeService;
+        private readonly IReservationService _reservationService;
         private readonly IMapper _mapper;
 
         /// <summary>
@@ -28,13 +28,13 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <param name="orderItemRepository">Repository for accessing order item data.</param>
 
         public OrderService(IOrderRepository orderRepository, IMapper mapper, IOrderItemRepository orderItemRepository,
-            IEmployeeRepository employeeRepository, IReservationRepository reservationRepository)
+            IEmployeeService employeeService, IReservationService reservationService)
         {
             _orderRepository = orderRepository;
             _orderItemRepository = orderItemRepository;
             _mapper = mapper;
-            _employeeRepository = employeeRepository;
-            _reservationRepository = reservationRepository;
+            _employeeService = employeeService;
+            _reservationService = reservationService;
         }
 
         private async Task<OrderModel> EnsureOrderExistsAsync(int orderId)
@@ -104,7 +104,7 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<List<OrderResponse>> GetOrdersByEmployeeIdAsync(int employeeId)
         {
-            var employee = await _employeeRepository.GetByIdAsync(employeeId);
+            var employee = await _employeeService.GetByIdAsync(employeeId);
             if (employee == null)
                 throw new NotFoundException($"Employee with ID {employeeId} not found");
 
@@ -115,7 +115,7 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<List<OrderResponse>> GetOrdersByReservationIdAsync(int reservationId)
         {
-            var reservation = await _reservationRepository.GetByIdAsync(reservationId);
+            var reservation = await _reservationService.GetByIdAsync(reservationId);
             if (reservation == null)
                 throw new NotFoundException($"Reservation with ID {reservationId} not found");
 

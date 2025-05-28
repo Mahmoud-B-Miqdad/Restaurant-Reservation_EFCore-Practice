@@ -14,11 +14,11 @@ namespace RestaurantReservationSystem.Domain.Services
     public class ReservationService : IReservationService
     {
         private readonly IReservationRepository _reservationRepository;
-        private readonly IOrderRepository _orderRepository;
-        private readonly IMenuItemRepository _menuItemRepository;
+        private readonly IOrderService _orderService;
+        private readonly IMenuItemService _menuItemService;
         private readonly ICustomerRepository _customerRepository;
-        private readonly IRestaurantRepository _restaurantRepository;
-        private readonly ITableRepository _tableRepository;
+        private readonly IRestaurantService _restaurantService;
+        private readonly ITableService _tableService;
         private readonly IMapper _mapper;
 
         /// <summary>
@@ -26,17 +26,17 @@ namespace RestaurantReservationSystem.Domain.Services
         /// </summary>
         /// <param name="repository">The repository responsible for reservation data access.</param>
         /// <param name="mapper">The mapper used to convert between entities and DTOs.</param>
-        public ReservationService(IReservationRepository repository, IMapper mapper, IOrderRepository orderRepository,
-            IMenuItemRepository menuItemRepository, ICustomerRepository customerRepository,
-            IRestaurantRepository restaurantRepository, ITableRepository tableRepository)
+        public ReservationService(IReservationRepository repository, IMapper mapper, IOrderService orderService,
+            IMenuItemService menuItemService, ICustomerRepository customerRepository,
+            IRestaurantService restaurantService, ITableService tableService)
         {
             _reservationRepository = repository;
-            _orderRepository = orderRepository;
+            _orderService = orderService;
             _mapper = mapper;
-            _menuItemRepository = menuItemRepository;
+            _menuItemService = menuItemService;
             _customerRepository = customerRepository;
-            _restaurantRepository = restaurantRepository;
-            _tableRepository = tableRepository;
+            _restaurantService = restaurantService;
+            _tableService = tableService;
         }
 
         private async Task<ReservationModel> EnsureReservationExistsAsync(int reservationId)
@@ -118,7 +118,7 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<ReservationResponse?> GetReservationByOrderIdAsync(int orderId)
         {
-            var order = await _orderRepository.GetByIdAsync(orderId);
+            var order = await _orderService.GetByIdAsync(orderId);
             if (order == null)
                 throw new NotFoundException($"Order with ID {orderId} not found");
 
@@ -130,7 +130,7 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<List<ReservationResponse>> GetReservationsByRestaurantIdAsync(int restaurantId)
         {
-            var restaurant = await _restaurantRepository.GetByIdAsync(restaurantId);
+            var restaurant = await _restaurantService.GetByIdAsync(restaurantId);
             if (restaurant == null)
                 throw new NotFoundException($"Restaurant with ID {restaurantId} not found");
 
@@ -141,7 +141,7 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<List<ReservationResponse>> GetReservationsByTableIdAsync(int tableId)
         {
-            var table = await _tableRepository.GetByIdAsync(tableId);
+            var table = await _tableService.GetByIdAsync(tableId);
             if (table == null)
                 throw new NotFoundException($"Table with ID {tableId} not found");
 

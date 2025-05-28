@@ -16,15 +16,15 @@ namespace RestaurantReservationSystem.API.Controllers
     [ApiController]
     public class ReservationsController : ControllerBase
     {
-        private readonly IReservationService _reservationService;
+        private readonly Domain.Interfaces.Services.IReservationService _reservationService;
         private readonly ICustomerRepository _customerRepository;
         private readonly IOrderService _ordersService;
-        private readonly IRestaurantService _restaurantService;
+        private readonly Domain.Interfaces.Services.IRestaurantService _restaurantService;
         private readonly ITableService _tableService;
         private readonly IMenuItemService _menuItemService;
 
-        public ReservationsController(IReservationService reservationService, ICustomerRepository customerRepository
-            , IOrderService ordersService, IRestaurantService restaurantService, ITableService tableService, IMenuItemService menuItemService)
+        public ReservationsController(Domain.Interfaces.Services.IReservationService reservationService, ICustomerRepository customerRepository
+            , IOrderService ordersService, Domain.Interfaces.Services.IRestaurantService restaurantService, ITableService tableService, IMenuItemService menuItemService)
         {
             _reservationService = reservationService;
             _customerRepository = customerRepository;
