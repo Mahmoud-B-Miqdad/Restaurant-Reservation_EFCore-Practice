@@ -31,16 +31,6 @@ namespace RestaurantReservationSystem.Domain.Services
             _restaurantRepository = restaurantRepository;
         }
 
-        private async Task<EmployeeModel> EnsureEmployeeExistsAsync(int employeeId)
-
-        {
-            var employee = await _employeeRepository.GetByIdAsync(employeeId);
-            if (employee == null)
-                throw new NotFoundException($"Employee with ID {employeeId} not found");
-
-            return employee;
-        }
-
         /// <inheritdoc />
         public async Task<List<EmployeeResponse>> ListManagersAsync()
         {
@@ -107,6 +97,16 @@ namespace RestaurantReservationSystem.Domain.Services
 
             var employees = await _employeeRepository.GetByRestaurantIdAsync(restaurantId);
             return _mapper.Map<List<EmployeeResponse>>(employees);
+        }
+
+        private async Task<EmployeeModel> EnsureEmployeeExistsAsync(int employeeId)
+
+        {
+            var employee = await _employeeRepository.GetByIdAsync(employeeId);
+            if (employee == null)
+                throw new NotFoundException($"Employee with ID {employeeId} not found");
+
+            return employee;
         }
     }
 }

@@ -33,16 +33,6 @@ namespace RestaurantReservationSystem.Domain.Services
             _restaurantRepository = restaurantRepository;
         }
 
-        private async Task<TableModel> EnsureTableExistsAsync(int tableId)
-
-        {
-            var table = await _tableRepository.GetByIdAsync(tableId);
-            if (table == null)
-                throw new NotFoundException($"Table with ID {tableId} not found");
-
-            return table;
-        }
-
         /// <inheritdoc />
         public async Task<List<TableResponse>> GetAllAsync()
         {
@@ -100,6 +90,16 @@ namespace RestaurantReservationSystem.Domain.Services
 
             var tables = await _tableRepository.GetByRestaurantIdAsync(restaurantId);
             return _mapper.Map<List<TableResponse>>(tables);
+        }
+
+        private async Task<TableModel> EnsureTableExistsAsync(int tableId)
+
+        {
+            var table = await _tableRepository.GetByIdAsync(tableId);
+            if (table == null)
+                throw new NotFoundException($"Table with ID {tableId} not found");
+
+            return table;
         }
     }
 }

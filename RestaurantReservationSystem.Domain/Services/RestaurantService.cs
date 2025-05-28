@@ -36,15 +36,6 @@ namespace RestaurantReservationSystem.Domain.Services
             _employeeRepository = employeeRepository;
             _tableRepository = tableRepository;
         }
-        private async Task<RestaurantModel> EnsureRestaurantExistsAsync(int restaurantId)
-
-        {
-            var restaurant = await _restaurantRepository.GetByIdAsync(restaurantId);
-            if (restaurant == null)
-                throw new NotFoundException($"Restaurant with ID {restaurantId} not found");
-
-            return restaurant;
-        }
 
         /// <inheritdoc />
         public async Task<List<RestaurantResponse>> GetAllAsync()
@@ -123,6 +114,16 @@ namespace RestaurantReservationSystem.Domain.Services
 
             var restaurant = await _restaurantRepository.GetRestaurantByTableIdAsync(tableId);
             return restaurant == null ? null : _mapper.Map<RestaurantResponse>(restaurant);
+        }
+
+        private async Task<RestaurantModel> EnsureRestaurantExistsAsync(int restaurantId)
+
+        {
+            var restaurant = await _restaurantRepository.GetByIdAsync(restaurantId);
+            if (restaurant == null)
+                throw new NotFoundException($"Restaurant with ID {restaurantId} not found");
+
+            return restaurant;
         }
     }
 }
