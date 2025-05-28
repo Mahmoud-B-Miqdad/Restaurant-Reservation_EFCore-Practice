@@ -15,6 +15,7 @@ namespace RestaurantReservationSystem.Domain.Services
     {
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IOrderRepository _orderRepository;
+        private readonly IRestaurantRepository _restaurantRepository;
         private readonly IMapper _mapper;
 
         /// <summary>
@@ -22,11 +23,22 @@ namespace RestaurantReservationSystem.Domain.Services
         /// </summary>
         /// <param name="repository">The repository responsible for employee data access.</param>
         /// <param name="mapper">The mapper used to convert between entities and DTOs.</param>
-        public EmployeeService(IEmployeeRepository repository, IMapper mapper, IOrderRepository orderRepository)
+        public EmployeeService(IEmployeeRepository repository, IMapper mapper, IOrderRepository orderRepository, IRestaurantRepository restaurantRepository)
         {
             _employeeRepository = repository;
             _orderRepository = orderRepository;
             _mapper = mapper;
+            _restaurantRepository = restaurantRepository;
+        }
+
+        private async Task<EmployeeModel> EnsureEmployeeExistsAsync(int employeeId)
+
+        {
+            var employee = await _employeeRepository.GetByIdAsync(employeeId);
+            if (employee == null)
+                throw new NotFoundException($"Employee with ID {employeeId} not found");
+
+            return employee;
         }
 
         /// <inheritdoc />
@@ -46,9 +58,7 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<EmployeeResponse?> GetByIdAsync(int id)
         {
-
-            var employee = await _employeeRepository.GetByIdAsync(id)
-                              ?? throw new NotFoundException($"Employee with ID {id} not found");
+            var employee = await EnsureEmployeeExistsAsync(id);
             return _mapper.Map<EmployeeResponse>(employee);
 
         }
@@ -64,8 +74,7 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<EmployeeResponse?> UpdateAsync(int id, EmployeeRequest request)
         {
-            var updatedEmployee = await _employeeRepository.GetByIdAsync(id)
-                             ?? throw new NotFoundException($"Employee with ID {id} not found");
+            var updatedEmployee = await EnsureEmployeeExistsAsync(id);
 
             _mapper.Map(request, updatedEmployee);
             await _employeeRepository.UpdateAsync(updatedEmployee);
@@ -75,9 +84,7 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<bool> DeleteAsync(int id)
         {
-            var existing = await _employeeRepository.GetByIdAsync(id)
-                                      ?? throw new NotFoundException($"Employee with ID {id} not found");
-
+            var existingEemployee = await EnsureEmployeeExistsAsync(id);
             await _employeeRepository.DeleteAsync(id);
             return true;
         }
@@ -85,8 +92,7 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<List<OrderResponse>> GetOrdersByEmployeeIdAsync(int employeeId)
         {
-            _ = await _employeeRepository.GetByIdAsync(employeeId)
-                ?? throw new NotFoundException($"Employee with ID {employeeId} not found");
+            var existingEemployee = await EnsureEmployeeExistsAsync(employeeId);
 
             var orders = await _orderRepository.GetOrdersByEmployeeIdAsync(employeeId);
             return _mapper.Map<List<OrderResponse>>(orders);
@@ -95,6 +101,10 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<List<EmployeeResponse>> GetEmployeesByRestaurantIdAsync(int restaurantId)
         {
+            var restaurant = await _restaurantRepository.GetByIdAsync(restaurantId);
+            if (restaurant == null)
+                throw new NotFoundException($"Restaurant with ID {restaurantId} not found");
+
             var employees = await _employeeRepository.GetByRestaurantIdAsync(restaurantId);
             return _mapper.Map<List<EmployeeResponse>>(employees);
         }

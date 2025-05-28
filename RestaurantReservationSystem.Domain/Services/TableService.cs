@@ -15,6 +15,7 @@ namespace RestaurantReservationSystem.Domain.Services
     {
         private readonly ITableRepository _tableRepository;
         private readonly IReservationRepository _reservationRepository;
+        private readonly IRestaurantRepository _restaurantRepository;
         private readonly IMapper _mapper;
 
         /// <summary>
@@ -24,11 +25,22 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <param name="mapper">The AutoMapper instance for mapping entities to DTOs.</param>
         /// <param name="reservationRepository">The repository for reservation data access.</param>
 
-        public TableService(ITableRepository tableRepository, IMapper mapper, IReservationRepository reservationRepository)
+        public TableService(ITableRepository tableRepository, IMapper mapper, IReservationRepository reservationRepository, IRestaurantRepository restaurantRepository)
         {
             _tableRepository = tableRepository;
             _mapper = mapper;
             _reservationRepository = reservationRepository;
+            _restaurantRepository = restaurantRepository;
+        }
+
+        private async Task<TableModel> EnsureTableExistsAsync(int tableId)
+
+        {
+            var table = await _tableRepository.GetByIdAsync(tableId);
+            if (table == null)
+                throw new NotFoundException($"Table with ID {tableId} not found");
+
+            return table;
         }
 
         /// <inheritdoc />
@@ -41,8 +53,7 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<TableResponse?> GetByIdAsync(int id)
         {
-            var table = await _tableRepository.GetByIdAsync(id)
-                              ?? throw new NotFoundException($"Table with ID {id} not found");
+            var table = await EnsureTableExistsAsync(id);
             return table == null ? null : _mapper.Map<TableResponse>(table);
         }
 
@@ -57,8 +68,7 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<TableResponse?> UpdateAsync(int id, TableRequest request)
         {
-            var updatedTable = await _tableRepository.GetByIdAsync(id)
-                           ?? throw new NotFoundException($"Table with ID {id} not found");
+            var updatedTable = await EnsureTableExistsAsync(id);
 
             _mapper.Map(request, updatedTable);
             await _tableRepository.UpdateAsync(updatedTable);
@@ -68,9 +78,7 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<bool> DeleteAsync(int id)
         {
-            var existing = await _tableRepository.GetByIdAsync(id)
-                           ?? throw new NotFoundException($"Table with ID {id} not found");
-
+            var existingTable = await EnsureTableExistsAsync(id);
             await _tableRepository.DeleteAsync(id);
             return true;
         }
@@ -78,9 +86,7 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<List<ReservationResponse>> GetReservationsAsync(int tableId)
         {
-            _ = await _tableRepository.GetByIdAsync(tableId)
-                ?? throw new NotFoundException($"Table with ID {tableId} not found");
-
+            var existingTable = await EnsureTableExistsAsync(tableId);
             var orders = await _reservationRepository.GetReservationsByTableIdAsync(tableId);
             return _mapper.Map<List<ReservationResponse>>(orders);
         }
@@ -88,6 +94,10 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<List<TableResponse>> GetTablesByRestaurantIdAsync(int restaurantId)
         {
+            var restaurant = await _restaurantRepository.GetByIdAsync(restaurantId);
+            if (restaurant == null)
+                throw new NotFoundException($"Restaurant with ID {restaurantId} not found");
+
             var tables = await _tableRepository.GetByRestaurantIdAsync(restaurantId);
             return _mapper.Map<List<TableResponse>>(tables);
         }

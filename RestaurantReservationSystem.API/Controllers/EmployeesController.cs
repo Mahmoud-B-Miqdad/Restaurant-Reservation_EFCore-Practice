@@ -146,8 +146,6 @@ namespace RestaurantReservationSystem.API.Controllers
         [HttpGet("{id}/orders")]
         public async Task<IActionResult> GetOrdersAsync(int id)
         {
-            var employee = await _employeeService.GetByIdAsync(id);
-
             var orders = await _employeeService.GetOrdersByEmployeeIdAsync(id);
             return Ok(ApiResponse<List<OrderResponse>>.SuccessResponse(orders));
         }
@@ -160,10 +158,7 @@ namespace RestaurantReservationSystem.API.Controllers
         [HttpGet("{id}/restaurant")]
         public async Task<IActionResult> GetRestaurantAsync(int id)
         {
-            var employee = await _employeeService.GetByIdAsync(id);
-
             var restaurant = await _restaurantService.GetRestaurantByEmployeeIdAsync(id);
-
             return Ok(ApiResponse<RestaurantResponse>.SuccessResponse(restaurant));
         }
     }

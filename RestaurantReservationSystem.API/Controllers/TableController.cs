@@ -120,7 +120,6 @@ namespace RestaurantReservationSystem.API.Controllers
         public async Task<IActionResult> DeleteAsync(int id)
         {
             var deletedTable = await _tableService.DeleteAsync(id);
-
             return Ok(ApiResponse<string>.SuccessResponse("Table deleted successfully"));
         }
 
@@ -132,10 +131,7 @@ namespace RestaurantReservationSystem.API.Controllers
         [HttpGet("{id}/restaurant")]
         public async Task<IActionResult> GetRestaurantAsync(int id)
         {
-            var table = await _tableService.GetByIdAsync(id);
-
             var restaurant = await _restaurantService.GetRestaurantByTableIdAsync(id);
-
             return Ok(ApiResponse<RestaurantResponse>.SuccessResponse(restaurant));
         }
 
@@ -147,8 +143,6 @@ namespace RestaurantReservationSystem.API.Controllers
         [HttpGet("{id}/reservations")]
         public async Task<IActionResult> GetReservationsAsync(int id)
         {
-            var table = await _tableService.GetByIdAsync(id);
-
             var reservations = await _tableService.GetReservationsAsync(id);
             return Ok(ApiResponse<List<ReservationResponse>>.SuccessResponse(reservations));
         }
