@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using RestaurantReservation.Db.Entities;
 using RestaurantReservationSystem.Domain.Interfaces.Repositories;
@@ -77,20 +78,40 @@ namespace RestaurantReservation.Db.Repositories
 
         public async Task DeleteAsync(int id)
         {
-            var order = await _context.Orders.FindAsync(id);
+            var order = await _context.Orders
+                .Include(o => o.OrderItems)
+                .FirstOrDefaultAsync(o => o.OrderId == id);
+
             if (order is null) return;
 
             _context.Orders.Remove(order);
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<OrderModel>> GetOrdersByEmployeeIdAsync(int employeeId)
+        public async Task<OrderModel?> GetOrderByIdWithOrderItemsAsync(int id)
+        {
+            var items = await _context.Orders
+                .Include(o => o.OrderItems)
+                .FirstOrDefaultAsync(o => o.OrderId == id);
+
+            return _mapper.Map<OrderModel>(items);
+        }
+
+        public async Task<List<OrderModel>> GetOrdersByEmployeeIdAsync(int employeeId)
         {
             var orders = await _context.Orders
                 .Where(o => o.EmployeeId == employeeId)
                 .ToListAsync();
 
-            return _mapper.Map<IEnumerable<OrderModel>>(orders);
+            return _mapper.Map<List<OrderModel>>(orders);
+        }
+
+        public async Task<List<OrderModel>> GetOrdersByReservationIdAsync(int reservationId)
+        {
+            return await _context.Orders
+                .Where(o => o.ReservationId == reservationId)
+                .ProjectTo<OrderModel>(_mapper.ConfigurationProvider)
+                .ToListAsync();
         }
     }
 }

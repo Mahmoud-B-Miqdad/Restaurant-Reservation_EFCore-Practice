@@ -62,14 +62,17 @@ namespace RestaurantReservation.Db.Repositories
 
         public async Task DeleteAsync(int id)
         {
-            var menuItem = await _context.MenuItems.FindAsync(id);
+            var menuItem = await _context.MenuItems
+                .Include(m => m.OrderItems)
+                .FirstOrDefaultAsync(m => m.ItemId == id);
+
             if (menuItem is null) return;
 
             _context.MenuItems.Remove(menuItem);
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<MenuItemModel>> GetByRestaurantIdAsync(int restaurantId)
+        public async Task<List<MenuItemModel>> GetMenuItemsByRestaurantIdAsync(int restaurantId)
         {
             var items = await _context.MenuItems
                 .Where(e => e.RestaurantId == restaurantId)
@@ -77,5 +80,15 @@ namespace RestaurantReservation.Db.Repositories
 
             return _mapper.Map<List<MenuItemModel>>(items);
         }
+
+        public async Task<MenuItemModel?> GetByIdWithOrderItemsAsync(int id)
+        {
+            var items =  await _context.MenuItems
+                .Include(m => m.OrderItems)
+                .FirstOrDefaultAsync(m => m.ItemId == id);
+
+            return _mapper.Map<MenuItemModel>(items);
+        }
+
     }
 }

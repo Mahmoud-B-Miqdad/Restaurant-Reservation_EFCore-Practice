@@ -16,11 +16,13 @@ namespace RestaurantReservationSystem.API.Controllers
     {
         private readonly IEmployeeService _employeeService;
         private readonly IRestaurantService _restaurantService;
+        private readonly IOrderService _orderService;
 
-        public EmployeesController(IEmployeeService employeSservice, IRestaurantService restaurantService)
+        public EmployeesController(IEmployeeService employeSservice, IRestaurantService restaurantService, IOrderService orderService)
         {
             _employeeService = employeSservice;
             _restaurantService = restaurantService;
+            _orderService = orderService;
         }
 
         /// <summary>
@@ -31,7 +33,7 @@ namespace RestaurantReservationSystem.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] bool managersOnly = false)
         {
-            IEnumerable<EmployeeResponse> employees;
+            List<EmployeeResponse> employees;
 
             if (managersOnly)
             {
@@ -133,9 +135,16 @@ namespace RestaurantReservationSystem.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(int id)
         {
-            var deletedEmployee = await _employeeService.DeleteAsync(id);
+            try
+            {
+                var deletedEmployee = await _employeeService.DeleteAsync(id);
+                return Ok(ApiResponse<string>.SuccessResponse("Employee deleted successfully"));
 
-            return Ok(ApiResponse<string>.SuccessResponse("Employee deleted successfully"));
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ApiResponse<string>.FailResponse(ex.Message));
+            }
         }
 
         /// <summary>
@@ -146,7 +155,7 @@ namespace RestaurantReservationSystem.API.Controllers
         [HttpGet("{id}/orders")]
         public async Task<IActionResult> GetOrdersAsync(int id)
         {
-            var orders = await _employeeService.GetOrdersByEmployeeIdAsync(id);
+            var orders = await _orderService.GetOrdersByEmployeeIdAsync(id);
             return Ok(ApiResponse<List<OrderResponse>>.SuccessResponse(orders));
         }
 

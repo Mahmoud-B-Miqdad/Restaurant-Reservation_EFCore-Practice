@@ -66,4 +66,13 @@ internal class TableRepository : ITableRepository
             .ProjectTo<TableModel>(_mapper.ConfigurationProvider)
             .ToListAsync();
     }
+
+    public async Task<TableModel?> GetTableByReservationIdAsync(int reservationId)
+    {
+        var reservations = await _context.Reservations
+            .Include(r => r.Table)
+            .FirstOrDefaultAsync(r => r.ReservationId == reservationId);
+
+        return _mapper.Map<TableModel>(reservations?.Table);
+    }
 }

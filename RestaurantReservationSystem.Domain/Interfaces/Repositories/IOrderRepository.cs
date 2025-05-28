@@ -9,5 +9,7 @@ public interface IOrderRepository
     Task AddAsync(OrderModel order);
     Task UpdateAsync(OrderModel order);
     Task DeleteAsync(int id);
-    Task<IEnumerable<OrderModel>> GetOrdersByEmployeeIdAsync(int employeeId);
+    Task<List<OrderModel>> GetOrdersByEmployeeIdAsync(int employeeId);
+    Task<List<OrderModel>> GetOrdersByReservationIdAsync(int reservationId);
+    Task<OrderModel?> GetOrderByIdWithOrderItemsAsync(int id);
 }

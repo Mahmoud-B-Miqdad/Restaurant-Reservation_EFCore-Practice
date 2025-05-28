@@ -9,5 +9,7 @@ public interface IMenuItemRepository
     Task AddAsync(MenuItemModel menuItem);
     Task UpdateAsync(MenuItemModel menuItem);
     Task DeleteAsync(int id);
-    Task<IEnumerable<MenuItemModel>> GetByRestaurantIdAsync(int restaurantId);
+    Task<List<MenuItemModel>> GetMenuItemsByRestaurantIdAsync(int restaurantId);
+    Task<List<MenuItemModel>> ListOrderedMenuItemsAsync(int reservationId);
+    Task<MenuItemModel?> GetByIdWithOrderItemsAsync(int id);
 }

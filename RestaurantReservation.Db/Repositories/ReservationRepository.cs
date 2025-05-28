@@ -57,7 +57,10 @@ namespace RestaurantReservation.Db.Repositories
 
         public async Task DeleteAsync(int id)
         {
-            var reservation = await _context.Reservations.FindAsync(id);
+            var reservation = await _context.Reservations
+                 .Include(r => r.Orders)
+                 .FirstOrDefaultAsync(r => r.ReservationId == id);
+
             if (reservation != null)
             {
                 _context.Reservations.Remove(reservation);
@@ -65,7 +68,16 @@ namespace RestaurantReservation.Db.Repositories
             }
         }
 
-        public async Task<IEnumerable<ReservationModel>> GetByRestaurantIdAsync(int restaurantId)
+        public async Task<ReservationModel?> GetReservationByIdWithOrdersAsync(int id)
+        {
+            var reservations = await _context.Reservations
+                .Include(r => r.Orders)
+                .FirstOrDefaultAsync(r => r.ReservationId == id);
+
+            return _mapper.Map<ReservationModel>(reservations);
+        }
+
+        public async Task<List<ReservationModel>> GetReservationsByRestaurantIdAsync(int restaurantId)
         {
             var reservations = await _context.Reservations
                                              .Where(r => r.RestaurantId == restaurantId)
@@ -74,12 +86,21 @@ namespace RestaurantReservation.Db.Repositories
         }
 
 
-        public async Task<IEnumerable<ReservationModel>> GetReservationsByTableIdAsync(int tableId)
+        public async Task<List<ReservationModel>> GetReservationsByTableIdAsync(int tableId)
         {
             var reservations = await _context.Reservations
                                              .Where(r => r.TableId == tableId)
                                              .ToListAsync();
             return _mapper.Map<List<ReservationModel>>(reservations);
+        }
+
+        public async Task<ReservationModel?> GetReservationByOrderIdAsync(int orderId)
+        {
+            var order = await _context.Orders
+                 .Include(o => o.Reservation)
+                .FirstOrDefaultAsync(o => o.OrderId == orderId);
+
+            return _mapper.Map<ReservationModel>(order?.Reservation);
         }
     }
 }

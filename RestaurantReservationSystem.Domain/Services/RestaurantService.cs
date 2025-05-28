@@ -14,10 +14,10 @@ namespace RestaurantReservationSystem.Domain.Services
     public class RestaurantService : IRestaurantService
     {
         private readonly IRestaurantRepository _restaurantRepository;
-        private readonly IMenuItemRepository _menuItemRepository;
-        private readonly IReservationRepository _reservationRepository;
-        private readonly IEmployeeRepository _employeeRepository;
-        private readonly ITableRepository _tableRepository;
+        private readonly IMenuItemService _menuItemService;
+        private readonly IReservationService _reservationService;
+        private readonly IEmployeeService _employeeService;
+        private readonly ITableService _tableService;
         private readonly IMapper _mapper;
 
         /// <summary>
@@ -26,15 +26,15 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <param name="restaurantRepository">The restaurant repository.</param>
         /// <param name="mapper">The AutoMapper instance.</param>
         public RestaurantService(IRestaurantRepository restaurantRepository, IMapper mapper,
-            IMenuItemRepository menuItemRepository, IReservationRepository reservationRepository,
-            IEmployeeRepository employeeRepository, ITableRepository tableRepository)
+            IMenuItemService menuItemService, IReservationService reservationService,
+            IEmployeeService employeeService, ITableService tableService)
         {
             _restaurantRepository = restaurantRepository;
             _mapper = mapper;
-            _menuItemRepository = menuItemRepository;
-            _reservationRepository = reservationRepository;
-            _employeeRepository = employeeRepository;
-            _tableRepository = tableRepository;
+            _menuItemService = menuItemService;
+            _reservationService = reservationService;
+            _employeeService = employeeService;
+            _tableService = tableService;
         }
 
         /// <inheritdoc />
@@ -78,42 +78,45 @@ namespace RestaurantReservationSystem.Domain.Services
         }
 
         /// <inheritdoc />
-        public async Task<List<MenuItemResponse>> GetMenuItemsByRestaurantIdAsync(int restaurantId)
+        public async Task<RestaurantResponse?> GetRestaurantByMenuItamIdAsync(int menuItemId)
         {
-            var restaurant = await EnsureRestaurantExistsAsync(restaurantId);
+            var menuItem = await _menuItemService.GetByIdAsync(menuItemId);
+            if (menuItem == null)
+                throw new NotFoundException($"MenuItem with ID {menuItemId} not found");
 
-            var menuItems = await _menuItemRepository.GetByRestaurantIdAsync(restaurantId);
-            return _mapper.Map<List<MenuItemResponse>>(menuItems);
+            var restaurant = await _restaurantRepository.GetRestaurantByMenuItemIdAsync(menuItemId);
+            return _mapper.Map<RestaurantResponse>(restaurant);
         }
 
-        /// <inheritdoc />
-        public async Task<List<ReservationResponse>> GetReservationsByRestaurantIdAsync(int restaurantId)
+        public async Task<RestaurantResponse?> GetRestaurantByReservationIdAsync(int reservationId)
         {
-            var restaurant = await EnsureRestaurantExistsAsync(restaurantId);
+            var reservation = await _reservationService.GetByIdAsync(reservationId);
+            if (reservation == null)
+                throw new NotFoundException($"Reservation with ID {reservationId} not found");
 
-            var reservations = await _reservationRepository.GetByRestaurantIdAsync(restaurantId);
-            return _mapper.Map<List<ReservationResponse>>(reservations);
-        }
-
-        /// <inheritdoc />
-        public async Task<RestaurantResponse?> GetRestaurantByEmployeeIdAsync(int employeeId)
-        {
-            var employee = await _employeeRepository.GetByIdAsync(employeeId);
-            if (employee == null)
-                throw new NotFoundException($"Employee with ID {employeeId} not found");
-
-            var restaurant = await _restaurantRepository.GetRestaurantByEmployeeIdAsync(employeeId);
-            return employee == null ? null : _mapper.Map<RestaurantResponse>(employee);
+            var restaurant = await _restaurantRepository.GetRestaurantByReservationIdAsync(reservationId);
+            return restaurant == null ? null : _mapper.Map<RestaurantResponse>(restaurant);
         }
 
         public async Task<RestaurantResponse?> GetRestaurantByTableIdAsync(int tableId)
         {
-            var table = await _tableRepository.GetByIdAsync(tableId);
+            var table = await _tableService.GetByIdAsync(tableId);
             if (table == null)
                 throw new NotFoundException($"Table with ID {tableId} not found");
 
             var restaurant = await _restaurantRepository.GetRestaurantByTableIdAsync(tableId);
             return restaurant == null ? null : _mapper.Map<RestaurantResponse>(restaurant);
+        }
+
+        /// <inheritdoc />
+        public async Task<RestaurantResponse?> GetRestaurantByEmployeeIdAsync(int employeeId)
+        {
+            var employee = await _employeeService.GetByIdAsync(employeeId);
+            if (employee == null)
+                throw new NotFoundException($"Employee with ID {employeeId} not found");
+
+            var restaurant = await _restaurantRepository.GetRestaurantByEmployeeIdAsync(employeeId);
+            return employee == null ? null : _mapper.Map<RestaurantResponse>(employee);
         }
 
         private async Task<RestaurantModel> EnsureRestaurantExistsAsync(int restaurantId)

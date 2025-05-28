@@ -8,6 +8,9 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IRestaurantService, RestaurantService>();
         services.AddScoped<IEmployeeService, EmployeeService>();
         services.AddScoped<ITableService, TableService>();
+        services.AddScoped<IMenuItemService, MenuItemService>();
+        services.AddScoped<IReservationService, ReservationService>();
+        services.AddScoped<IOrderService, OrderService>();
 
         return services;
     }

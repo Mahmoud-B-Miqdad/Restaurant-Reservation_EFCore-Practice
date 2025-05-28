@@ -10,5 +10,6 @@ public interface IRestaurantRepository
     Task DeleteAsync(int id);
     Task<RestaurantModel?> GetRestaurantByEmployeeIdAsync(int employeeId);
     Task<RestaurantModel?> GetRestaurantByTableIdAsync(int tableId);
-
+    Task<RestaurantModel?> GetRestaurantByMenuItemIdAsync(int menuItemId);
+    Task<RestaurantModel?> GetRestaurantByReservationIdAsync(int reservationId);
 }

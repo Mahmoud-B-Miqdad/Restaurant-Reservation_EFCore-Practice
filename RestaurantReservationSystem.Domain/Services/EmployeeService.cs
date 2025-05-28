@@ -14,8 +14,8 @@ namespace RestaurantReservationSystem.Domain.Services
     public class EmployeeService : IEmployeeService
     {
         private readonly IEmployeeRepository _employeeRepository;
-        private readonly IOrderRepository _orderRepository;
-        private readonly IRestaurantRepository _restaurantRepository;
+        private readonly IOrderService _orderService;
+        private readonly IRestaurantService _restaurantService;
         private readonly IMapper _mapper;
 
         /// <summary>
@@ -23,26 +23,26 @@ namespace RestaurantReservationSystem.Domain.Services
         /// </summary>
         /// <param name="repository">The repository responsible for employee data access.</param>
         /// <param name="mapper">The mapper used to convert between entities and DTOs.</param>
-        public EmployeeService(IEmployeeRepository repository, IMapper mapper, IOrderRepository orderRepository, IRestaurantRepository restaurantRepository)
+        public EmployeeService(IEmployeeRepository repository, IMapper mapper, IOrderService orderService, IRestaurantService restaurantService)
         {
             _employeeRepository = repository;
-            _orderRepository = orderRepository;
+            _orderService = orderService;
             _mapper = mapper;
-            _restaurantRepository = restaurantRepository;
+            _restaurantService = restaurantService;
         }
 
         /// <inheritdoc />
         public async Task<List<EmployeeResponse>> ListManagersAsync()
         {
-            var employees = await _employeeRepository.ListManagersAsync();
-            return _mapper.Map<List<EmployeeResponse>>(employees);
+            var managers = await _employeeRepository.ListManagersAsync();
+            return _mapper.Map<List<EmployeeResponse>>(managers);
         }
 
         /// <inheritdoc />
         public async Task<List<EmployeeResponse>> GetAllAsync()
         {
-            var managers = await _employeeRepository.GetAllAsync();
-            return _mapper.Map<List<EmployeeResponse>>(managers);
+            var employees = await _employeeRepository.GetAllAsync();
+            return _mapper.Map<List<EmployeeResponse>>(employees);
         }
 
         /// <inheritdoc />
@@ -76,27 +76,30 @@ namespace RestaurantReservationSystem.Domain.Services
         {
             var existingEemployee = await EnsureEmployeeExistsAsync(id);
             await _employeeRepository.DeleteAsync(id);
-            return true;
+                return true;
         }
 
         /// <inheritdoc />
-        public async Task<List<OrderResponse>> GetOrdersByEmployeeIdAsync(int employeeId)
-        {
-            var existingEemployee = await EnsureEmployeeExistsAsync(employeeId);
-
-            var orders = await _orderRepository.GetOrdersByEmployeeIdAsync(employeeId);
-            return _mapper.Map<List<OrderResponse>>(orders);
-        }
-
         /// <inheritdoc />
         public async Task<List<EmployeeResponse>> GetEmployeesByRestaurantIdAsync(int restaurantId)
         {
-            var restaurant = await _restaurantRepository.GetByIdAsync(restaurantId);
+            var restaurant = await _restaurantService.GetByIdAsync(restaurantId);
             if (restaurant == null)
                 throw new NotFoundException($"Restaurant with ID {restaurantId} not found");
 
             var employees = await _employeeRepository.GetByRestaurantIdAsync(restaurantId);
             return _mapper.Map<List<EmployeeResponse>>(employees);
+        }
+
+        /// <inheritdoc />
+        public async Task<EmployeeResponse?> GetEmployeeByOrderIdAsync(int orderId)
+        {
+            var order = await _orderService.GetByIdAsync(orderId);
+            if (order == null)
+                throw new NotFoundException($"Order with ID {orderId} not found");
+
+            var employee = await _employeeRepository.GetEmployeeByOrderIdAsync(orderId);
+            return employee == null ? null : _mapper.Map<EmployeeResponse>(employee);
         }
 
         private async Task<EmployeeModel> EnsureEmployeeExistsAsync(int employeeId)

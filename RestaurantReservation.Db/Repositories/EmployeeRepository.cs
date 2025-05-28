@@ -62,19 +62,40 @@ namespace RestaurantReservation.Db.Repositories
 
         public async Task DeleteAsync(int id)
         {
-            var employee = await _context.Employees.FindAsync(id);
+            var employee = await _context.Employees
+                .Include(e => e.Orders)
+                .FirstOrDefaultAsync(e => e.EmployeeId == id);
+
             if (employee is null) return;
 
             _context.Employees.Remove(employee);
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<EmployeeModel>> GetByRestaurantIdAsync(int restaurantId)
+        public async Task<EmployeeModel?> GetByIdWithOrdersAsync(int id)
+        {
+            var items = await _context.Employees
+                .Include(e => e.Orders)
+                .FirstOrDefaultAsync(e => e.EmployeeId == id);
+
+            return _mapper.Map<EmployeeModel>(items);
+        }
+
+        public async Task<List<EmployeeModel>> GetByRestaurantIdAsync(int restaurantId)
         {
             return await _context.Employees
             .Where(e => e.RestaurantId == restaurantId)
             .ProjectTo<EmployeeModel>(_mapper.ConfigurationProvider)
             .ToListAsync();
+        }
+
+        public async Task<EmployeeModel?> GetEmployeeByOrderIdAsync(int orderId)
+        {
+            var order = await _context.Orders
+                 .Include(o => o.Employee)
+                .FirstOrDefaultAsync(o => o.OrderId == orderId);
+
+            return _mapper.Map<EmployeeModel>(order?.Employee);
         }
     }
 }

@@ -31,6 +31,12 @@ namespace RestaurantReservationSystem.Db.Mapping
             CreateMap<OrderModel, OrderResponse>();
             CreateMap<OrderRequest, OrderModel>();
 
+            CreateMap<OrderItemModel, OrderItemResponse>();
+            CreateMap<OrderItemRequest, OrderItemModel>();
+
+            CreateMap<CustomerModel, CustomerResponse>();
+            CreateMap<CustomerRequest, CustomerModel>();
+
             CreateMap<Restaurant, RestaurantModel>().ReverseMap();
             CreateMap<Employee, EmployeeModel>().ReverseMap();
             CreateMap<Customer, CustomerModel>().ReverseMap();
