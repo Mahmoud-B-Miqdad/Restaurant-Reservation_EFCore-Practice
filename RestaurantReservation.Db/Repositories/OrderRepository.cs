@@ -29,6 +29,14 @@ namespace RestaurantReservation.Db.Repositories
             return _mapper.Map<List<OrderModel>>(orders);
         }
 
+        public async Task<List<decimal>> GetOrderAmountsByEmployeeIdAsync(int employeeId)
+        {
+            return await _context.Orders
+                .Where(o => o.EmployeeId == employeeId)
+                .Select(o => o.TotalAmount)
+                .ToListAsync();
+        }
+
         public async Task<List<OrderModel>> GetAllAsync()
         {
             var orders = await _context.Orders.ToListAsync();

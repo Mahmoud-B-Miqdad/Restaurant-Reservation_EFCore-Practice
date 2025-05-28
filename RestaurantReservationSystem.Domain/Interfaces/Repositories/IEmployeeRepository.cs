@@ -12,6 +12,5 @@ namespace RestaurantReservationSystem.Domain.Interfaces.Repositories
         Task DeleteAsync(int id);
         Task<List<EmployeeModel>> GetByRestaurantIdAsync(int restaurantId);
         Task<EmployeeModel?> GetEmployeeByOrderIdAsync(int orderId);
-        Task<decimal> CalculateAverageOrderAmountAsync(int employeeId);
     }
 }

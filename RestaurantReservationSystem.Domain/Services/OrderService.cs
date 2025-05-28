@@ -101,5 +101,16 @@ namespace RestaurantReservationSystem.Domain.Services
             var orders = await _orderRepository.ListOrdersAndMenuItemsAsync(reservationId);
             return _mapper.Map<List<OrderResponse>>(orders);
         }
+
+        /// <inheritdoc />
+        public async Task<decimal> GetAverageOrderAmountAsync(int employeeId)
+        {
+            var amounts = await _orderRepository.GetOrderAmountsByEmployeeIdAsync(employeeId);
+
+            if (!amounts.Any())
+                return 0;
+
+            return amounts.Average();
+        }
     }
 }

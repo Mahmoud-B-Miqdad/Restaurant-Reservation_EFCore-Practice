@@ -13,4 +13,5 @@ public interface IOrderRepository
     Task<List<OrderModel>> GetOrdersByReservationIdAsync(int reservationId);
     Task<OrderModel?> GetOrderByOrderItemIdAsync(int orderItemId);
     Task<List<OrderModel>> ListOrdersAndMenuItemsAsync(int reservationId);
+    Task<List<decimal>> GetOrderAmountsByEmployeeIdAsync(int employeeId);
 }

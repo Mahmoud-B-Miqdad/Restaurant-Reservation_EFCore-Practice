@@ -60,12 +60,5 @@ namespace RestaurantReservationSystem.Domain.Interfaces.Services
         /// <param name="orderId">The ID of the order.</param>
         /// <returns>The associated <see cref="EmployeeResponse"/> if found; otherwise, null.</returns>
         Task<EmployeeResponse?> GetEmployeeByOrderIdAsync(int orderId);
-
-        /// <summary>
-        /// Retrieves the Average Order Amount associated with a specific employee.
-        /// </summary>
-        /// <param name="employeeId">The unique identifier of the employee.</param>
-        /// <returns>A task that represents the asynchronous operation. The task result contains the restaurant response DTO if found; otherwise, null.</returns>
-        Task<decimal> GetAverageOrderAmountAsync(int employeeId);
     }
 }

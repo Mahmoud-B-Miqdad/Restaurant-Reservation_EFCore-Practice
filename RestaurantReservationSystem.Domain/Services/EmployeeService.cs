@@ -13,7 +13,6 @@ namespace RestaurantReservationSystem.Domain.Services
     public class EmployeeService : IEmployeeService
     {
         private readonly IEmployeeRepository _employeeRepository;
-        private readonly IOrderRepository _orderRepository;
         private readonly IMapper _mapper;
 
         /// <summary>
@@ -21,10 +20,9 @@ namespace RestaurantReservationSystem.Domain.Services
         /// </summary>
         /// <param name="repository">The repository responsible for employee data access.</param>
         /// <param name="mapper">The mapper used to convert between entities and DTOs.</param>
-        public EmployeeService(IEmployeeRepository repository, IMapper mapper, IOrderRepository orderRepository)
+        public EmployeeService(IEmployeeRepository repository, IMapper mapper)
         {
             _employeeRepository = repository;
-            _orderRepository = orderRepository;
             _mapper = mapper;
         }
 
@@ -90,12 +88,6 @@ namespace RestaurantReservationSystem.Domain.Services
         {
             var employee = await _employeeRepository.GetEmployeeByOrderIdAsync(orderId);
             return employee == null ? null : _mapper.Map<EmployeeResponse>(employee);
-        }
-
-        /// <inheritdoc />
-        public async Task<decimal> GetAverageOrderAmountAsync(int employeeId)
-        {
-            return await _employeeRepository.CalculateAverageOrderAmountAsync(employeeId);
         }
 
     }
