@@ -48,9 +48,6 @@ namespace RestaurantReservationSystem.API.Controllers
         public async Task<IActionResult> GetByIdAsync(int id)
         {
             var orderItem = await _orderItemService.GetByIdAsync(id);
-            if (orderItem == null)
-                return NotFound(ApiResponse<OrderItemResponse>.FailResponse("OrderItem not found"));
-
             return Ok(ApiResponse<OrderItemResponse>.SuccessResponse(orderItem));
         }
 
@@ -80,9 +77,6 @@ namespace RestaurantReservationSystem.API.Controllers
         public async Task<IActionResult> UpdateAsync(int id, OrderItemRequest request)
         {
             var updatedOrderItem = await _orderItemService.UpdateAsync(id, request);
-            if (updatedOrderItem == null)
-                return NotFound(ApiResponse<string>.FailResponse("OrderItem not found"));
-
             return Ok(ApiResponse<OrderItemResponse>.SuccessResponse(updatedOrderItem));
         }
 
@@ -99,8 +93,6 @@ namespace RestaurantReservationSystem.API.Controllers
                 return BadRequest(ApiResponse<string>.FailResponse("Patch document cannot be null"));
 
             var existingOrderItem = await _orderItemService.GetByIdAsync(id);
-            if (existingOrderItem == null)
-                return NotFound(ApiResponse<string>.FailResponse("OrderItem not found"));
 
             var orderItemToPatch = new OrderItemRequest
             {
@@ -135,9 +127,6 @@ namespace RestaurantReservationSystem.API.Controllers
             try
             {
                 var deletedOrderItem = await _orderItemService.DeleteAsync(id);
-                if (!deletedOrderItem)
-                    return NotFound(ApiResponse<string>.FailResponse("OrderItem not found"));
-
                 return Ok(ApiResponse<string>.SuccessResponse("OrderItem deleted successfully"));
 
             }
@@ -155,14 +144,7 @@ namespace RestaurantReservationSystem.API.Controllers
         [HttpGet("{id}/order")]
         public async Task<IActionResult> GetOrderAsync(int id)
         {
-            var orderItem = await _orderItemService.GetByIdAsync(id);
-            if (orderItem == null)
-                return NotFound(ApiResponse<OrderItemResponse>.FailResponse("OrderItem not found"));
-
             var order = await _orderService.GetOrderByOrderItemIdAsync(id);
-            if (order == null)
-                return NotFound(ApiResponse<OrderResponse>.FailResponse("Order not found"));
-
             return Ok(ApiResponse<OrderResponse>.SuccessResponse(order));
         }
 
@@ -174,14 +156,7 @@ namespace RestaurantReservationSystem.API.Controllers
         [HttpGet("{id}/menu-item")]
         public async Task<IActionResult> GetMenuItemAsync(int id)
         {
-            var orderItem = await _orderItemService.GetByIdAsync(id);
-            if (orderItem == null)
-                return NotFound(ApiResponse<OrderItemResponse>.FailResponse("OrderItem not found"));
-
             var menuItem = await _menuItemService.GetMenuItemByOrderItemIdAsync(id);
-            if (menuItem == null)
-                return NotFound(ApiResponse<MenuItemResponse>.FailResponse("MenuItem not found"));
-
             return Ok(ApiResponse<MenuItemResponse>.SuccessResponse(menuItem));
         }
     }

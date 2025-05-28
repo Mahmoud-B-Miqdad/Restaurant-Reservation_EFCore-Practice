@@ -16,7 +16,7 @@ namespace RestaurantReservationSystem.Domain.Services
         private readonly IReservationRepository _reservationRepository;
         private readonly IOrderService _orderService;
         private readonly IMenuItemService _menuItemService;
-        private readonly ICustomerRepository _customerRepository;
+        private readonly ICustomerService _customerService;
         private readonly IRestaurantService _restaurantService;
         private readonly ITableService _tableService;
         private readonly IMapper _mapper;
@@ -27,26 +27,16 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <param name="repository">The repository responsible for reservation data access.</param>
         /// <param name="mapper">The mapper used to convert between entities and DTOs.</param>
         public ReservationService(IReservationRepository repository, IMapper mapper, IOrderService orderService,
-            IMenuItemService menuItemService, ICustomerRepository customerRepository,
+            IMenuItemService menuItemService, ICustomerService customerService,
             IRestaurantService restaurantService, ITableService tableService)
         {
             _reservationRepository = repository;
             _orderService = orderService;
             _mapper = mapper;
             _menuItemService = menuItemService;
-            _customerRepository = customerRepository;
+            _customerService = customerService;
             _restaurantService = restaurantService;
             _tableService = tableService;
-        }
-
-        private async Task<ReservationModel> EnsureReservationExistsAsync(int reservationId)
-
-        {
-            var reservation = await _reservationRepository.GetByIdAsync(reservationId);
-            if (reservation == null)
-                throw new NotFoundException($"Reservation with ID {reservationId} not found");
-
-            return reservation;
         }
 
         /// <inheritdoc />
@@ -99,6 +89,10 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<List<ReservationResponse>> GetReservationsByCustomerIdAsync(int customerId)
         {
+            var customer = await _customerService.GetByIdAsync(customerId);
+            if (customer == null)
+                throw new NotFoundException($"Customer with ID {customerId} not found");
+
             var reservationsByCustomer = await _reservationRepository.GetReservationsByCustomerIdAsync(customerId);
             return _mapper.Map<List<ReservationResponse>>(reservationsByCustomer);
         }
@@ -134,6 +128,16 @@ namespace RestaurantReservationSystem.Domain.Services
 
             var orders = await _reservationRepository.GetReservationsByTableIdAsync(tableId);
             return _mapper.Map<List<ReservationResponse>>(orders);
+        }
+
+        private async Task<ReservationModel> EnsureReservationExistsAsync(int reservationId)
+
+        {
+            var reservation = await _reservationRepository.GetByIdAsync(reservationId);
+            if (reservation == null)
+                throw new NotFoundException($"Reservation with ID {reservationId} not found");
+
+            return reservation;
         }
     }
 }

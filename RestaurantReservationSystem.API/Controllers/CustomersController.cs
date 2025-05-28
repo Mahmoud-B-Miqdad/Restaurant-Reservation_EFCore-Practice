@@ -44,9 +44,6 @@ namespace RestaurantReservationSystem.API.Controllers
         public async Task<IActionResult> GetByIdAsync(int id)
         {
             var customer = await _customerService.GetByIdAsync(id);
-            if (customer == null)
-                return NotFound(ApiResponse<EmployeeResponse>.FailResponse("Customer not found"));
-
             return Ok(ApiResponse<CustomerResponse>.SuccessResponse(customer));
         }
 
@@ -76,9 +73,6 @@ namespace RestaurantReservationSystem.API.Controllers
         public async Task<IActionResult> UpdateAsync(int id, CustomerRequest request)
         {
             var updatedEmployee = await _customerService.UpdateAsync(id, request);
-            if (updatedEmployee == null)
-                return NotFound(ApiResponse<string>.FailResponse("Customer not found"));
-
             return Ok(ApiResponse<CustomerResponse>.SuccessResponse(updatedEmployee));
         }
 
@@ -95,8 +89,6 @@ namespace RestaurantReservationSystem.API.Controllers
                 return BadRequest(ApiResponse<string>.FailResponse("Patch document cannot be null"));
 
             var existingCustomer = await _customerService.GetByIdAsync(id);
-            if (existingCustomer == null)
-                return NotFound(ApiResponse<string>.FailResponse("Customer not found"));
 
             var customerToPatch = new CustomerRequest
             {
@@ -132,9 +124,6 @@ namespace RestaurantReservationSystem.API.Controllers
             try
             {
                 var deletedCustomer = await _customerService.DeleteAsync(id);
-                if (!deletedCustomer)
-                    return NotFound(ApiResponse<string>.FailResponse("Customer not found"));
-
                 return Ok(ApiResponse<string>.SuccessResponse("Customer deleted successfully"));
 
             }
@@ -152,10 +141,6 @@ namespace RestaurantReservationSystem.API.Controllers
         [HttpGet("{id}/reservations")]
         public async Task<IActionResult> GetReservationsAsync(int id)
         {
-            var customer = await _customerService.GetByIdAsync(id);
-            if (customer == null)
-                return NotFound(ApiResponse<EmployeeResponse>.FailResponse("Customer not found"));
-
             var reservations = await _reservationService.GetReservationsByCustomerIdAsync(id);
             return Ok(ApiResponse<List<ReservationResponse>>.SuccessResponse(reservations));
         }

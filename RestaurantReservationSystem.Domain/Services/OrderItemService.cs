@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using RestaurantReservationSystem.Domain.DTOs.Requests;
 using RestaurantReservationSystem.Domain.DTOs.Responses;
+using RestaurantReservationSystem.Domain.Exceptions;
 using RestaurantReservationSystem.Domain.Interfaces.Repositories;
 using RestaurantReservationSystem.Domain.Interfaces.Services;
 using RestaurantReservationSystem.Domain.Models;
@@ -13,6 +14,8 @@ namespace RestaurantReservationSystem.Domain.Services
     public class OrderItemService : IOrderItemService
     {
         private readonly IOrderItemRepository _orderItemRepository;
+        private readonly IMenuItemService _menuItemService;
+        private readonly IOrderService _orderService;
         private readonly IMapper _mapper;
 
         /// <summary>
@@ -20,9 +23,12 @@ namespace RestaurantReservationSystem.Domain.Services
         /// </summary>
         /// <param name="repository">The repository responsible for orderItem data access.</param>
         /// <param name="mapper">The mapper used to convert between entities and DTOs.</param>
-        public OrderItemService(IOrderItemRepository repository, IMapper mapper)
+        public OrderItemService(IOrderItemRepository repository, IMenuItemService menuItemService,
+            IOrderService orderService, IMapper mapper)
         {
             _orderItemRepository = repository;
+            _menuItemService = menuItemService;
+            _orderService = orderService;
             _mapper = mapper;
         }
 
@@ -36,7 +42,7 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<OrderItemResponse?> GetByIdAsync(int id)
         {
-            var orderItem = await _orderItemRepository.GetByIdAsync(id);
+            var orderItem = await EnsureOrderItemExistsAsync(id);
             return orderItem == null ? null : _mapper.Map<OrderItemResponse>(orderItem);
         }
 
@@ -51,8 +57,7 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<OrderItemResponse?> UpdateAsync(int id, OrderItemRequest request)
         {
-            var updatedorderItem = await _orderItemRepository.GetByIdAsync(id);
-            if (updatedorderItem == null) return null;
+            var updatedorderItem = await EnsureOrderItemExistsAsync(id);
 
             _mapper.Map(request, updatedorderItem);
             await _orderItemRepository.UpdateAsync(updatedorderItem);
@@ -62,9 +67,7 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<bool> DeleteAsync(int id)
         {
-            var existing = await _orderItemRepository.GetByIdAsync(id);
-            if (existing == null) return false;
-
+            var orderItem = await EnsureOrderItemExistsAsync(id);
             await _orderItemRepository.DeleteAsync(id);
             return true;
         }
@@ -72,6 +75,10 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<List<OrderItemResponse>> GetOrderItemsByMenuItamIdAsync(int menuItemId)
         {
+            var menuItem = await _menuItemService.GetByIdAsync(menuItemId);
+            if (menuItem == null)
+                throw new NotFoundException($"MenuItem with ID {menuItemId} not found");
+
             var orderItems = await _orderItemRepository.GetOrderItemsByMenuItemIdAsync(menuItemId);
             return _mapper.Map<List<OrderItemResponse>>(orderItems);
         }
@@ -79,8 +86,22 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<List<OrderItemResponse>> GetOrderItemsByOrderIdAsync(int orderId)
         {
+            var order = await _orderService.GetByIdAsync(orderId);
+            if (order == null)
+                throw new NotFoundException($"Order with ID {orderId} not found");
+
             var orders = await _orderItemRepository.GetOrderItemsByOrderIdAsync(orderId);
             return _mapper.Map<List<OrderItemResponse>>(orders);
+        }
+
+        private async Task<OrderItemModel> EnsureOrderItemExistsAsync(int orderItemId)
+
+        {
+            var orderItem = await _orderItemRepository.GetByIdAsync(orderItemId);
+            if (orderItem == null)
+                throw new NotFoundException($"OrderItem with ID {orderItemId} not found");
+
+            return orderItem;
         }
     }
 }

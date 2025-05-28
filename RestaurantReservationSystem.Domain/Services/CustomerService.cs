@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using RestaurantReservationSystem.Domain.DTOs.Requests;
 using RestaurantReservationSystem.Domain.DTOs.Responses;
+using RestaurantReservationSystem.Domain.Exceptions;
 using RestaurantReservationSystem.Domain.Interfaces.Repositories;
 using RestaurantReservationSystem.Domain.Interfaces.Services;
 using RestaurantReservationSystem.Domain.Models;
@@ -13,7 +14,7 @@ namespace RestaurantReservationSystem.Domain.Services
     public class CustomerService : ICustomerService
     {
         private readonly ICustomerRepository _customerRepository;
-        private readonly IReservationRepository _reservationRepository;
+        private readonly IReservationService _reservationService;
         private readonly IMapper _mapper;
 
         /// <summary>
@@ -21,11 +22,11 @@ namespace RestaurantReservationSystem.Domain.Services
         /// </summary>
         /// <param name="repository">The repository responsible for customer data access.</param>
         /// <param name="mapper">The mapper used to convert between entities and DTOs.</param>
-        public CustomerService(ICustomerRepository repository, IMapper mapper, IReservationRepository reservationRepository)
+        public CustomerService(ICustomerRepository repository, IMapper mapper, IReservationService reservationService)
         {
             _customerRepository = repository;
             _mapper = mapper;
-            _reservationRepository = reservationRepository;
+            _reservationService = reservationService;
         }
 
         /// <inheritdoc />
@@ -38,7 +39,7 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<CustomerResponse?> GetByIdAsync(int id)
         {
-            var customer = await _customerRepository.GetByIdAsync(id);
+            var customer = await EnsureCustomerExistsAsync(id);
             return customer == null ? null : _mapper.Map<CustomerResponse>(customer);
         }
 
@@ -53,8 +54,7 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<CustomerResponse?> UpdateAsync(int id, CustomerRequest request)
         {
-            var updatedCustomer = await _customerRepository.GetByIdAsync(id);
-            if (updatedCustomer == null) return null;
+            var updatedCustomer = await EnsureCustomerExistsAsync(id);
 
             _mapper.Map(request, updatedCustomer);
             await _customerRepository.UpdateAsync(updatedCustomer);
@@ -64,9 +64,7 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<bool> DeleteAsync(int id)
         {
-            var existing = await _customerRepository.GetByIdAsync(id);
-            if (existing == null) return false;
-
+            var customer = await EnsureCustomerExistsAsync(id);
             await _customerRepository.DeleteAsync(id);
             return true;
         }
@@ -74,8 +72,22 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<CustomerResponse?> GetCustomerByReservationIdAsync(int reservationId)
         {
+            var reservation = await _reservationService.GetByIdAsync(reservationId);
+            if (reservation == null)
+                throw new NotFoundException($"Reservation with ID {reservationId} not found");
+
             var customer = await _customerRepository.GetCustomerByReservationIdAsync(reservationId);
             return customer == null ? null : _mapper.Map<CustomerResponse>(customer);
+        }
+
+        private async Task<CustomerModel> EnsureCustomerExistsAsync(int customerId)
+
+        {
+            var customer = await _customerRepository.GetByIdAsync(customerId);
+            if (customer == null)
+                throw new NotFoundException($"Customer with ID {customerId} not found");
+
+            return customer;
         }
     }
 }

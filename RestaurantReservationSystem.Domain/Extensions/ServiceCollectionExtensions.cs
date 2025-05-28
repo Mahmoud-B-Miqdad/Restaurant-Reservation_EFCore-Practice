@@ -2,6 +2,7 @@
 using RestaurantReservationSystem.Domain.Configurations;
 using RestaurantReservationSystem.Domain.Interfaces.Services;
 using RestaurantReservationSystem.Domain.Services;
+
 public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddDomainServices(this IServiceCollection services, JwtSettings jwtSettings)
