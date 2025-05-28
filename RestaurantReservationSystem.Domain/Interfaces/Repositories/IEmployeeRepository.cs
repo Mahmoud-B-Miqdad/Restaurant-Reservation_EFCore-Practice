@@ -1,0 +1,15 @@
+﻿using RestaurantReservationSystem.Domain.Models;
+
+namespace RestaurantReservationSystem.Domain.Interfaces.Repositories
+{
+    public interface IEmployeeRepository
+    {
+        Task<List<EmployeeModel>> ListManagersAsync();
+        Task<List<EmployeeModel>> GetAllAsync();
+        Task<EmployeeModel> GetByIdAsync(int id);
+        Task AddAsync(EmployeeModel employee);
+        Task UpdateAsync(EmployeeModel employee);
+        Task DeleteAsync(int id);
+        Task<IEnumerable<EmployeeModel>> GetByRestaurantIdAsync(int restaurantId);
+    }
+}

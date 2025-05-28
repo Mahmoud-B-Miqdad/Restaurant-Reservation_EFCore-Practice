@@ -1,34 +1,49 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using RestaurantReservation.Db;
 using RestaurantReservation.Db.Entities;
-using RestaurantReservation.Db.Repositories.Interfaces;
+using RestaurantReservationSystem.Domain.Interfaces.Repositories;
+using RestaurantReservationSystem.Domain.Models;
 internal class CustomerRepository : ICustomerRepository
 {
     private readonly RestaurantReservationDbContext _context;
+    private readonly IMapper _mapper;
 
-    public CustomerRepository(RestaurantReservationDbContext context)
+    public CustomerRepository(RestaurantReservationDbContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
 
-    public async Task<List<Customer>> GetAllAsync()
+    public async Task<List<CustomerModel>> GetAllAsync()
     {
-        return await _context.Customers.ToListAsync();
+        var customers = await _context.Customers.ToListAsync();
+        return _mapper.Map<List<CustomerModel>>(customers);
     }
 
-    public async Task AddAsync(Customer customer)
+    public async Task<CustomerModel> GetByIdAsync(int id)
     {
+        var customer = await _context.Customers.FindAsync(id);
+        return _mapper.Map<CustomerModel>(customer);
+    }
+
+
+    public async Task AddAsync(CustomerModel model)
+    {
+        var customer = _mapper.Map<Customer>(model);
         await _context.Customers.AddAsync(customer);
         await _context.SaveChangesAsync();
+
+        model.CustomerId = customer.CustomerId;
     }
 
-    public async Task UpdateAsync(Customer customer)
+    public async Task UpdateAsync(CustomerModel customer)
     {
         var existingCustomer = await _context.Customers.FindAsync(customer.CustomerId);
         if (existingCustomer == null)
             return;
 
-        _context.Entry(existingCustomer).CurrentValues.SetValues(customer);
+        _mapper.Map(customer, existingCustomer);
         await _context.SaveChangesAsync();
     }
 

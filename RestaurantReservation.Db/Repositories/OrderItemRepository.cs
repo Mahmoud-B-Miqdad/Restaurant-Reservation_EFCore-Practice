@@ -1,35 +1,55 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using RestaurantReservation.Db.Entities;
-using RestaurantReservation.Db.Repositories.Interfaces;
+using RestaurantReservationSystem.Domain.Interfaces.Repositories;
+using RestaurantReservationSystem.Domain.Models;
 
 namespace RestaurantReservation.Db.Repositories;
 
 internal class OrderItemRepository : IOrderItemRepository
 { 
     private readonly RestaurantReservationDbContext _context;
+    private readonly IMapper _mapper;
 
-    public OrderItemRepository(RestaurantReservationDbContext context)
+    public OrderItemRepository(RestaurantReservationDbContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
 
-    public async Task<List<OrderItem>> GetAllAsync() => await _context.OrderItems.ToListAsync();
-
-    public async Task AddAsync(OrderItem orderItem)
+    public async Task<List<OrderItemModel>> GetAllAsync()
     {
+        var orderItems = await _context.OrderItems.ToListAsync();
+        return _mapper.Map<List<OrderItemModel>>(orderItems);
+    }
+
+    public async Task<OrderItemModel> GetByIdAsync(int id)
+    {
+        var orderItem = await _context.OrderItems.FindAsync(id);
+        return _mapper.Map<OrderItemModel>(orderItem);
+    }
+
+
+    public async Task AddAsync(OrderItemModel orderItemModel)
+    {
+        var orderItem = _mapper.Map<OrderItem>(orderItemModel);
         _context.OrderItems.Add(orderItem);
         await _context.SaveChangesAsync();
+
+        orderItemModel.OrderItemId = orderItem.OrderItemId;
     }
 
-    public async Task UpdateAsync(OrderItem orderItem)
+
+    public async Task UpdateAsync(OrderItemModel orderItemModel)
     {
-        var existingOrderItem = await _context.OrderItems.FindAsync(orderItem.OrderItemId);
+        var existingOrderItem = await _context.OrderItems.FindAsync(orderItemModel.OrderItemId);
         if (existingOrderItem == null)
             return;
 
-        _context.Entry(existingOrderItem).CurrentValues.SetValues(orderItem);
+        _context.Entry(existingOrderItem).CurrentValues.SetValues(_mapper.Map<OrderItem>(orderItemModel));
         await _context.SaveChangesAsync();
     }
+
 
     public async Task DeleteAsync(int id)
     {

@@ -1,13 +1,21 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using RestaurantReservation.Db;
 using RestaurantReservation.Db.Repositories;
-using RestaurantReservation.Db.Repositories.Interfaces;
 using RestaurantReservation.Db.Repositories.ReportRepositories;
 using RestaurantReservation.Db.Seeders;
+using RestaurantReservationSystem.Db.Mapping;
+using RestaurantReservationSystem.Domain.Interfaces.Repositories;
+using RestaurantReservationSystem.Domain.Interfaces.Repositories.Reports;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddRepositories(this IServiceCollection services)
+    public static IServiceCollection AddRepositories(this IServiceCollection services, string connectionString)
     {
+
+        services.AddDbContext<RestaurantReservationDbContext>(options =>
+                options.UseSqlServer(connectionString));
+
         services.AddScoped<IRestaurantReservationSeeder, RestaurantReservationSeeder>();
 
         services.AddScoped<ICustomerRepository, CustomerRepository>();
@@ -23,6 +31,9 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IEmployeeReportRepository, EmployeeReportRepository>();
         services.AddScoped<IRevenueReportRepository, RevenueReportRepository>();
         services.AddScoped<ICustomerReportRepository, CustomerReportRepository>();
+
+        services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
+
         return services;
     }
 }
