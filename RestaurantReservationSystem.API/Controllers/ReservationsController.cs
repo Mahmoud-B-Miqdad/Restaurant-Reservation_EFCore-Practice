@@ -6,6 +6,7 @@ using RestaurantReservationSystem.Domain.DTOs.Responses;
 using RestaurantReservationSystem.Domain.Interfaces.Repositories;
 using RestaurantReservationSystem.Domain.Interfaces.Services;
 using RestaurantReservationSystem.Domain.Responses;
+using RestaurantReservationSystem.Domain.Services;
 
 namespace RestaurantReservationSystem.API.Controllers
 {
@@ -24,9 +25,8 @@ namespace RestaurantReservationSystem.API.Controllers
         private readonly ITableService _tableService;
         private readonly IMenuItemService _menuItemService;
 
-        public ReservationsController(IReservationService reservationService, ICustomerRepository customerRepository
-            , IOrderService ordersService, IRestaurantService restaurantService,
-            ITableService tableService, IMenuItemService menuItemService, ICustomerService customerService)
+        public ReservationsController(IReservationService reservationService, ICustomerService customerService
+            , IOrderService ordersService, IRestaurantService restaurantService, ITableService tableService, IMenuItemService menuItemService)
         {
             _reservationService = reservationService;
             _ordersService = ordersService;
@@ -56,9 +56,6 @@ namespace RestaurantReservationSystem.API.Controllers
         public async Task<IActionResult> GetByIdAsync(int id)
         {
             var reservation = await _reservationService.GetByIdAsync(id);
-            if (reservation == null)
-                return NotFound(ApiResponse<ReservationResponse>.FailResponse("Reservation not found"));
-
             return Ok(ApiResponse<ReservationResponse>.SuccessResponse(reservation));
         }
 
@@ -88,9 +85,6 @@ namespace RestaurantReservationSystem.API.Controllers
         public async Task<IActionResult> UpdateAsync(int id, ReservationRequest request)
         {
             var updatedReservation = await _reservationService.UpdateAsync(id, request);
-            if (updatedReservation == null)
-                return NotFound(ApiResponse<string>.FailResponse("Reservation not found"));
-
             return Ok(ApiResponse<ReservationResponse>.SuccessResponse(updatedReservation));
         }
 
@@ -107,8 +101,6 @@ namespace RestaurantReservationSystem.API.Controllers
                 return BadRequest(ApiResponse<string>.FailResponse("Patch document cannot be null"));
 
             var existingReservation = await _reservationService.GetByIdAsync(id);
-            if (existingReservation == null)
-                return NotFound(ApiResponse<string>.FailResponse("Reservation not found"));
 
             var reservationToPatch = new ReservationRequest
             {
@@ -145,9 +137,6 @@ namespace RestaurantReservationSystem.API.Controllers
             try
             {
                 var deletedReservation = await _reservationService.DeleteAsync(id);
-                if (!deletedReservation)
-                    return NotFound(ApiResponse<string>.FailResponse("Reservation not found"));
-
                 return Ok(ApiResponse<string>.SuccessResponse("Reservation deleted successfully"));
             }
             catch (InvalidOperationException ex)
@@ -200,14 +189,7 @@ namespace RestaurantReservationSystem.API.Controllers
         [HttpGet("{id}/restaurant")]
         public async Task<IActionResult> GetRestaurantAsync(int id)
         {
-            var reservation = await _reservationService.GetByIdAsync(id);
-            if (reservation == null)
-                return NotFound(ApiResponse<ReservationResponse>.FailResponse("Reservation not found"));
-
             var restaurant = await _restaurantService.GetRestaurantByReservationIdAsync(id);
-            if (restaurant == null)
-                return NotFound(ApiResponse<RestaurantResponse>.FailResponse("Restaurant not found"));
-
             return Ok(ApiResponse<RestaurantResponse>.SuccessResponse(restaurant));
         }
 
@@ -219,14 +201,7 @@ namespace RestaurantReservationSystem.API.Controllers
         [HttpGet("{id}/table")]
         public async Task<IActionResult> GetTableAsync(int id)
         {
-            var reservation = await _reservationService.GetByIdAsync(id);
-            if (reservation == null)
-                return NotFound(ApiResponse<ReservationResponse>.FailResponse("Reservation not found"));
-
             var table = await _tableService.GetTableByReservationIdAsync(id);
-            if (table == null)
-                return NotFound(ApiResponse<TableResponse>.FailResponse("Table not found"));
-
             return Ok(ApiResponse<TableResponse>.SuccessResponse(table));
         }
 
@@ -257,10 +232,6 @@ namespace RestaurantReservationSystem.API.Controllers
         [HttpGet("{id}/menu-items")]
         public async Task<IActionResult> GetOrderedMenuItemsAsync(int id)
         {
-            var menuItems = await _reservationService.GetByIdAsync(id);
-            if (menuItems == null)
-                return NotFound(ApiResponse<MenuItemResponse>.FailResponse("MenuItem not found"));
-
             var orderedMenuItems = await _menuItemService.GetOrderedMenuItemsAsync(id);
             return Ok(ApiResponse<List<MenuItemResponse>>.SuccessResponse(orderedMenuItems));
         }

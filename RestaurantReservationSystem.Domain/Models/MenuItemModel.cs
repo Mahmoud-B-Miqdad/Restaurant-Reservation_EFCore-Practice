@@ -11,5 +11,7 @@
         public decimal Price { get; set; }
 
         public int RestaurantId { get; set; }
+
+        public List<OrderItemModel> OrderItems { get; set; }
     }
 }

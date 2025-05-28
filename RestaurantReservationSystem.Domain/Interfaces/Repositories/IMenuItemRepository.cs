@@ -12,4 +12,5 @@ public interface IMenuItemRepository
     Task<List<MenuItemModel>> GetMenuItemsByRestaurantIdAsync(int restaurantId);
     Task<List<MenuItemModel>> ListOrderedMenuItemsAsync(int reservationId);
     Task<MenuItemModel?> GetMenuItemByOrderItemIdAsync(int orderItemId);
+    Task<MenuItemModel?> GetByIdWithOrderItemsAsync(int id);
 }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using RestaurantReservationSystem.Domain.DTOs.Requests;
 using RestaurantReservationSystem.Domain.DTOs.Responses;
+using RestaurantReservationSystem.Domain.Exceptions;
 using RestaurantReservationSystem.Domain.Interfaces.Repositories;
 using RestaurantReservationSystem.Domain.Interfaces.Services;
 using RestaurantReservationSystem.Domain.Models;
@@ -15,6 +16,8 @@ namespace RestaurantReservationSystem.Domain.Services
 
         private readonly IMenuItemRepository _menuItemRepository;
         private readonly IOrderItemRepository _orderItemRepository;
+        private readonly IReservationService _reservationService;
+        private readonly IRestaurantService _restaurantService;
         private readonly IMapper _mapper;
 
         /// <summary>
@@ -22,11 +25,24 @@ namespace RestaurantReservationSystem.Domain.Services
         /// </summary>
         /// <param name="repository">The repository responsible for menuItem data access.</param>
         /// <param name="mapper">The mapper used to convert between entities and DTOs.</param>
-        public MenuItemService(IMenuItemRepository repository, IMapper mapper, IOrderItemRepository orderItemRepository)
+        public MenuItemService(IMenuItemRepository repository, IMapper mapper, IOrderItemRepository orderItemRepository,
+            IReservationService reservationService, IRestaurantService restaurantService)
         {
             _menuItemRepository = repository;
             _mapper = mapper;
             _orderItemRepository = orderItemRepository;
+            _reservationService = reservationService;
+            _restaurantService = restaurantService;
+        }
+
+        private async Task<MenuItemModel> EnsureMenuItemExistsAsync(int menuItemId)
+
+        {
+            var menuItem = await _menuItemRepository.GetByIdAsync(menuItemId);
+            if (menuItem == null)
+                throw new NotFoundException($"MenuItem with ID {menuItemId} not found");
+
+            return menuItem;
         }
 
         /// <inheritdoc />
@@ -39,8 +55,8 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<MenuItemResponse?> GetByIdAsync(int id)
         {
-            var menuItem = await _menuItemRepository.GetByIdAsync(id);
-            return menuItem == null ? null : _mapper.Map<MenuItemResponse>(menuItem);
+            var menuItem = await EnsureMenuItemExistsAsync(id);
+            return _mapper.Map<MenuItemResponse>(menuItem);
         }
 
         /// <inheritdoc />
@@ -54,8 +70,7 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<MenuItemResponse?> UpdateAsync(int id, MenuItemRequest request)
         {
-            var updatedMenuItem = await _menuItemRepository.GetByIdAsync(id);
-            if (updatedMenuItem == null) return null;
+            var updatedMenuItem = await EnsureMenuItemExistsAsync(id);
 
             _mapper.Map(request, updatedMenuItem);
             await _menuItemRepository.UpdateAsync(updatedMenuItem);
@@ -65,8 +80,11 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<bool> DeleteAsync(int id)
         {
-            var existing = await _menuItemRepository.GetByIdAsync(id);
-            if (existing == null) return false;
+            await EnsureMenuItemExistsAsync(id);
+            var existingMenuItem = await _menuItemRepository.GetByIdWithOrderItemsAsync(id);
+
+            if (existingMenuItem.OrderItems.Any())
+                throw new InvalidOperationException("Cannot delete menu item with existing order items.");
 
             await _menuItemRepository.DeleteAsync(id);
             return true;
@@ -75,6 +93,10 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<List<MenuItemResponse>> GetOrderedMenuItemsAsync(int reservationId)
         {
+            var reservation = await _reservationService.GetByIdAsync(reservationId);
+            if (reservation == null)
+                throw new NotFoundException($"Reservation with ID {reservationId} not found");
+
             var orderedMenuItems = await _menuItemRepository.ListOrderedMenuItemsAsync(reservationId);
             return _mapper.Map<List<MenuItemResponse>>(orderedMenuItems);
         }
@@ -82,6 +104,10 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<List<MenuItemResponse>> GetMenuItemsByRestaurantIdAsync(int restaurantId)
         {
+            var restaurant = await _restaurantService.GetByIdAsync(restaurantId);
+            if (restaurant == null)
+                throw new NotFoundException($"Restaurant with ID {restaurantId} not found");
+
             var menuItem = await _menuItemRepository.GetMenuItemsByRestaurantIdAsync(restaurantId);
             return _mapper.Map<List<MenuItemResponse>>(menuItem);
         }
