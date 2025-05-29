@@ -18,7 +18,7 @@
 								"auth": {
 									"type": "bearer",
 									"bearer": {
-										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImp0aSI6Ijc4ZGY1ZTFlLTEzZTMtNGRhMy1hZmNmLTRkZDUxMjc2N2E3OCIsImV4cCI6MTc0ODA5NjQzOSwiaXNzIjoiSnd0QXV0aERlbW9Jc3N1ZXIiLCJhdWQiOiJKd3RBdXRoRGVtb0F1ZGllbmNlIn0.vKgAZ01S0r7J7A0HQf8nMftGYciH8Z5_yEUF0T1ZFN8"
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImp0aSI6ImU4NDc5MmRjLThlZmYtNDg4Ni1hMjdkLWY0N2Q1MDdhNzdkYiIsImV4cCI6MTc0ODMzMTg0MywiaXNzIjoiSnd0QXV0aERlbW9Jc3N1ZXIiLCJhdWQiOiJKd3RBdXRoRGVtb0F1ZGllbmNlIn0.w0HhK6nPHz5QeEiifW3XLoAWkCiaLrI7914z8rASpI0"
 									}
 								},
 								"method": "GET",
@@ -50,7 +50,7 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": "https://localhost:7152/api/restaurants/50"
+								"url": "https://localhost:7152/api/restaurants/50/reservations"
 							},
 							"response": []
 						},
@@ -107,15 +107,6 @@
 								"url": "https://localhost:7152/api/restaurants/50/menu-items"
 							},
 							"response": []
-						},
-						{
-							"name": "GET Restaurant Reservations (unexisting Restaurant)",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": "https://localhost:7152/api/restaurants/50/reservations"
-							},
-							"response": []
 						}
 					]
 				},
@@ -129,14 +120,14 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n            \"name\": \"Ocean View\",\r\n            \"address\": \"Beach Road\",\r\n            \"phoneNumber\": \"0987654321\",\r\n            \"openingHours\": \"10:00 - 22:00\"\r\n}",
+									"raw": "{\r\n            \"name\": \"Ocean View\",\r\n            \"address\": \"Beach Road\",\r\n            \"phoneNumber\": \"0987654321\",\r\n            \"openingHours\": \"15:00 - 22:00\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
 										}
 									}
 								},
-								"url": "https://localhost:7152/api/Restaurants"
+								"url": "https://localhost:7152/api/restaurants"
 							},
 							"response": []
 						},
@@ -154,7 +145,7 @@
 										}
 									}
 								},
-								"url": "https://localhost:7152/api/Restaurants"
+								"url": "https://localhost:7152/api/restaurants"
 							},
 							"response": []
 						}
@@ -308,7 +299,7 @@
 									"mode": "raw",
 									"raw": ""
 								},
-								"url": "https://localhost:7152/api/restaurants/9"
+								"url": "https://localhost:7152/api/restaurants/27"
 							},
 							"response": []
 						},
@@ -400,7 +391,24 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": "https://localhost:7152/api/employees/managers"
+								"url": {
+									"raw": "https://localhost:7152/api/employees?managersOnly=true",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7152",
+									"path": [
+										"api",
+										"employees"
+									],
+									"query": [
+										{
+											"key": "managersOnly",
+											"value": "true"
+										}
+									]
+								}
 							},
 							"response": []
 						},
@@ -415,7 +423,7 @@
 								},
 								"method": "GET",
 								"header": [],
-								"url": "https://localhost:7152/api/employees/1/average-order-amount"
+								"url": "https://localhost:7152/api/employees/1/order/average-amount"
 							},
 							"response": []
 						},
@@ -430,7 +438,7 @@
 								},
 								"method": "GET",
 								"header": [],
-								"url": "https://localhost:7152/api/employees/50/average-order-amount"
+								"url": "https://localhost:7152/api/employees/50/order/average-amount"
 							},
 							"response": []
 						}
@@ -446,7 +454,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n            \"restaurantId\": 3,\r\n            \"firstName\": \"Mahmoud\",\r\n            \"lastName\": \"Miqdad\",\r\n            \"position\": \"Manager\"\r\n        }",
+									"raw": "{\r\n            \"restaurantId\": 3,\r\n            \"firstName\": \"omer\",\r\n            \"lastName\": \"Miqdad\",\r\n            \"position\": \"Manager\"\r\n        }",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -546,7 +554,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "[\r\n    {\r\n      \"op\": \"replace\",\r\n      \"path\": \"/firstName\",\r\n      \"value\": \"Basel\"\r\n    }\r\n]",
+									"raw": "[\r\n    {\r\n      \"op\": \"replace\",\r\n      \"path\": \"/firstName\",\r\n      \"value\": \"Yousef\"\r\n    }\r\n]",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -718,25 +726,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n        \"restaurantId\": 3,\r\n        \"capacity\": 120\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": "https://localhost:7152/api/tables"
-							},
-							"response": []
-						},
-						{
-							"name": "POST Create Table(invalid data)",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n        \"restaurantId\": 3\r\n}",
+									"raw": "{\r\n        \"restaurantId\": 3,\r\n        \"capacity\": 100\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -759,7 +749,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n        \"restaurantId\": 4,\r\n        \"capacity\": 50\r\n}",
+									"raw": "{\r\n        \"restaurantId\": 4,\r\n        \"capacity\": 70\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1281,7 +1271,7 @@
 							"response": []
 						},
 						{
-							"name": "GET Reservations Menu Items",
+							"name": "GET Reservation Menu Items",
 							"request": {
 								"method": "GET",
 								"header": [],
@@ -1290,7 +1280,7 @@
 							"response": []
 						},
 						{
-							"name": "GET Reservations Menu Items (unexisting Reservation)",
+							"name": "GET Reservation Menu Items (unexisting Reservation)",
 							"request": {
 								"method": "GET",
 								"header": [],
