@@ -1,6 +1,6 @@
-﻿using RestaurantReservationSystem.Domain.DTOs.Responses;
-using RestaurantReservationSystem.Domain.Exceptions;
-using RestaurantReservationSystem.Domain.Interfaces.Services;
+﻿using RestaurantReservationSystem.Domain.Exceptions;
+using RestaurantReservationSystem.Domain.Interfaces.Repositories;
+using RestaurantReservationSystem.Domain.Models;
 
 
 
@@ -8,15 +8,15 @@ namespace RestaurantReservationSystem.Domain.Validators
 {
     public class EmployeeValidator
     {
-        private readonly IEmployeeService _employeeService;
+        private readonly IEmployeeRepository _employeeRepository;
 
-        public EmployeeValidator(IEmployeeService employeeService)
+        public EmployeeValidator(IEmployeeRepository employeeRepository)
         {
-            _employeeService = employeeService;
+            _employeeRepository = employeeRepository;
         }
-        public async Task<EmployeeResponse> EnsureEmployeeExistsAsync(int employeeId)
+        public async Task<EmployeeModel> EnsureEmployeeExistsAsync(int employeeId)
         {
-            var employee = await _employeeService.GetByIdAsync(employeeId);
+            var employee = await _employeeRepository.GetByIdAsync(employeeId);
             if (employee == null)
                 throw new NotFoundException($"Employee with ID {employeeId} not found");
 

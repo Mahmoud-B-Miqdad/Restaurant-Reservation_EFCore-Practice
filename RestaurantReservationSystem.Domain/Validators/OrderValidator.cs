@@ -1,20 +1,20 @@
-﻿using RestaurantReservationSystem.Domain.DTOs.Responses;
-using RestaurantReservationSystem.Domain.Exceptions;
-using RestaurantReservationSystem.Domain.Interfaces.Services;
+﻿using RestaurantReservationSystem.Domain.Exceptions;
+using RestaurantReservationSystem.Domain.Interfaces.Repositories;
+using RestaurantReservationSystem.Domain.Models;
 
 namespace RestaurantReservationSystem.Domain.Validators
 {
     public class OrderValidator
     {
-        private readonly IOrderService _orderService;
-        public OrderValidator(IOrderService orderService)
+        private readonly IOrderRepository _orderRepository;
+        public OrderValidator(IOrderRepository orderRepository)
         {
-            _orderService = orderService;
+            _orderRepository = orderRepository;
         }
-        public async Task<OrderResponse> EnsureOrderExistsAsync(int orderId)
+        public async Task<OrderModel> EnsureOrderExistsAsync(int orderId)
 
         {
-            var order = await _orderService.GetByIdAsync(orderId);
+            var order = await _orderRepository.GetByIdAsync(orderId);
             if (order == null)
                 throw new NotFoundException($"Order with ID {orderId} not found");
 

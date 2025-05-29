@@ -1,20 +1,20 @@
-﻿using RestaurantReservationSystem.Domain.DTOs.Responses;
-using RestaurantReservationSystem.Domain.Exceptions;
-using RestaurantReservationSystem.Domain.Interfaces.Services;
+﻿using RestaurantReservationSystem.Domain.Exceptions;
+using RestaurantReservationSystem.Domain.Interfaces.Repositories;
+using RestaurantReservationSystem.Domain.Models;
 
 namespace RestaurantReservationSystem.Domain.Validators
 {
     public class MenuItemValidator
     {
-        private readonly IMenuItemService _menuItemService;
-        public MenuItemValidator(IMenuItemService menuItemService)
+        private readonly IMenuItemRepository _menuItemRepository;
+        public MenuItemValidator(IMenuItemRepository menuItemRepository)
         {
-            _menuItemService = menuItemService;
+            _menuItemRepository = menuItemRepository;
         }
 
-        public async Task<MenuItemResponse> EnsureMenuItemExistsAsync(int menuItemId)
+        public async Task<MenuItemModel> EnsureMenuItemExistsAsync(int menuItemId)
         {
-            var menuItem = await _menuItemService.GetByIdAsync(menuItemId);
+            var menuItem = await _menuItemRepository.GetByIdAsync(menuItemId);
             if (menuItem == null)
                 throw new NotFoundException($"MenuItem with ID {menuItemId} not found");
 

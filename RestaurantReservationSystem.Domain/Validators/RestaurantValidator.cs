@@ -1,22 +1,22 @@
-﻿using RestaurantReservationSystem.Domain.DTOs.Responses;
-using RestaurantReservationSystem.Domain.Exceptions;
-using RestaurantReservationSystem.Domain.Interfaces.Services;
+﻿using RestaurantReservationSystem.Domain.Exceptions;
+using RestaurantReservationSystem.Domain.Interfaces.Repositories;
+using RestaurantReservationSystem.Domain.Models;
 
 
 namespace RestaurantReservationSystem.Domain.Validators
 {
     public class RestaurantValidator
     {
-        private readonly IRestaurantService _restaurantService;
+        private readonly IRestaurantRepository _restaurantRepository;
 
-        public RestaurantValidator(IRestaurantService restaurantService)
+        public RestaurantValidator(IRestaurantRepository restaurantRepository)
         {
-            _restaurantService = restaurantService;
+            _restaurantRepository = restaurantRepository;
         }
 
-        public async Task<RestaurantResponse> EnsureRestaurantExistsAsync(int restaurantId)
+        public async Task<RestaurantModel> EnsureRestaurantExistsAsync(int restaurantId)
         {
-            var restaurant = await _restaurantService.GetByIdAsync(restaurantId);
+            var restaurant = await _restaurantRepository.GetByIdAsync(restaurantId);
             if (restaurant == null)
                 throw new NotFoundException($"Restaurant with ID {restaurantId} not found");
 
