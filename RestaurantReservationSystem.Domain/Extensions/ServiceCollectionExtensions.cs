@@ -2,6 +2,7 @@
 using RestaurantReservationSystem.Domain.Configurations;
 using RestaurantReservationSystem.Domain.Interfaces.Services;
 using RestaurantReservationSystem.Domain.Services;
+using RestaurantReservationSystem.Domain.Validators;
 
 public static class ServiceCollectionExtensions
 {
@@ -16,8 +17,17 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ICustomerService, CustomerService>();
         services.AddScoped<IOrderItemService, OrderItemService>();
 
+        services.AddScoped<TableValidator>();
+        services.AddScoped<RestaurantValidator>();
+        services.AddScoped<ReservationValidator>();
+        services.AddScoped<OrderItemValidator>();
+        services.AddScoped<OrderValidator>();
+        services.AddScoped<EmployeeValidator>();
+        services.AddScoped<MenuItemValidator>();
+
         services.AddScoped<IAuthorizationService, AuthorizationService>();
         services.AddSingleton<IJwtTokenGenerator>(new JwtTokenGenerator(jwtSettings));
+
 
         return services;
     }

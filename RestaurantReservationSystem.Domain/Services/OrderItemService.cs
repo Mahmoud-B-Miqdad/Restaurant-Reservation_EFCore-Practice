@@ -5,6 +5,7 @@ using RestaurantReservationSystem.Domain.Exceptions;
 using RestaurantReservationSystem.Domain.Interfaces.Repositories;
 using RestaurantReservationSystem.Domain.Interfaces.Services;
 using RestaurantReservationSystem.Domain.Models;
+using RestaurantReservationSystem.Domain.Validators;
 
 namespace RestaurantReservationSystem.Domain.Services
 {
@@ -14,8 +15,8 @@ namespace RestaurantReservationSystem.Domain.Services
     public class OrderItemService : IOrderItemService
     {
         private readonly IOrderItemRepository _orderItemRepository;
-        private readonly IMenuItemService _menuItemService;
-        private readonly IOrderService _orderService;
+        private readonly MenuItemValidator _menuItemValidator;
+        private readonly OrderItemValidator _orderValidator;
         private readonly IMapper _mapper;
 
         /// <summary>
@@ -23,12 +24,12 @@ namespace RestaurantReservationSystem.Domain.Services
         /// </summary>
         /// <param name="repository">The repository responsible for orderItem data access.</param>
         /// <param name="mapper">The mapper used to convert between entities and DTOs.</param>
-        public OrderItemService(IOrderItemRepository repository, IMenuItemService menuItemService,
-            IOrderService orderService, IMapper mapper)
+        public OrderItemService(IOrderItemRepository repository,
+            OrderItemValidator orderValidator, IMapper mapper, MenuItemValidator menuItemValidator)
         {
             _orderItemRepository = repository;
-            _menuItemService = menuItemService;
-            _orderService = orderService;
+            _orderValidator = orderValidator;
+            _menuItemValidator = menuItemValidator;
             _mapper = mapper;
         }
 
@@ -75,7 +76,7 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<List<OrderItemResponse>> GetOrderItemsByMenuItamIdAsync(int menuItemId)
         {
-            var menuItem = await _menuItemService.GetByIdAsync(menuItemId);
+            var menuItem = await _menuItemValidator.EnsureMenuItemExistsAsync(menuItemId);
             if (menuItem == null)
                 throw new NotFoundException($"MenuItem with ID {menuItemId} not found");
 
@@ -86,7 +87,7 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<List<OrderItemResponse>> GetOrderItemsByOrderIdAsync(int orderId)
         {
-            var order = await _orderService.GetByIdAsync(orderId);
+            var order = await _orderValidator.EnsureOrderItemExistsAsync(orderId);
             if (order == null)
                 throw new NotFoundException($"Order with ID {orderId} not found");
 

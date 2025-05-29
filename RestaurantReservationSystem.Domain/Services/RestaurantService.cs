@@ -5,6 +5,7 @@ using RestaurantReservationSystem.Domain.Exceptions;
 using RestaurantReservationSystem.Domain.Interfaces.Repositories;
 using RestaurantReservationSystem.Domain.Interfaces.Services;
 using RestaurantReservationSystem.Domain.Models;
+using RestaurantReservationSystem.Domain.Validators;
 
 namespace RestaurantReservationSystem.Domain.Services
 {
@@ -14,10 +15,10 @@ namespace RestaurantReservationSystem.Domain.Services
     public class RestaurantService : IRestaurantService
     {
         private readonly IRestaurantRepository _restaurantRepository;
-        private readonly IMenuItemService _menuItemService;
-        private readonly IReservationService _reservationService;
-        private readonly IEmployeeService _employeeService;
-        private readonly ITableService _tableService;
+        private readonly MenuItemValidator _menuItemValidator;
+        private readonly EmployeeValidator _employeeValidator;
+        private readonly TableValidator _tableValidator;
+        private readonly ReservationValidator _reservationValidator;
         private readonly IMapper _mapper;
 
         /// <summary>
@@ -25,16 +26,14 @@ namespace RestaurantReservationSystem.Domain.Services
         /// </summary>
         /// <param name="restaurantRepository">The restaurant repository.</param>
         /// <param name="mapper">The AutoMapper instance.</param>
-        public RestaurantService(IRestaurantRepository restaurantRepository, IMapper mapper,
-            IMenuItemService menuItemService, IReservationService reservationService,
-            IEmployeeService employeeService, ITableService tableService)
+        public RestaurantService(IRestaurantRepository restaurantRepository, IMapper mapper, EmployeeValidator employeeValidator,
+            ReservationValidator reservationValidator, TableValidator tableValidator, MenuItemValidator menuItemValidator)
         {
             _restaurantRepository = restaurantRepository;
             _mapper = mapper;
-            _menuItemService = menuItemService;
-            _reservationService = reservationService;
-            _employeeService = employeeService;
-            _tableService = tableService;
+            _employeeValidator = employeeValidator;
+            _reservationValidator = reservationValidator;
+            _menuItemValidator = menuItemValidator;
         }
 
         /// <inheritdoc />
@@ -80,7 +79,7 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<RestaurantResponse?> GetRestaurantByMenuItamIdAsync(int menuItemId)
         {
-            var menuItem = await _menuItemService.GetByIdAsync(menuItemId);
+            var menuItem = await _menuItemValidator.EnsureMenuItemExistsAsync(menuItemId);
             if (menuItem == null)
                 throw new NotFoundException($"MenuItem with ID {menuItemId} not found");
 
@@ -90,9 +89,7 @@ namespace RestaurantReservationSystem.Domain.Services
 
         public async Task<RestaurantResponse?> GetRestaurantByReservationIdAsync(int reservationId)
         {
-            var reservation = await _reservationService.GetByIdAsync(reservationId);
-            if (reservation == null)
-                throw new NotFoundException($"Reservation with ID {reservationId} not found");
+            var reservation = await _reservationValidator.EnsureRestaurantExistsAsync(reservationId);
 
             var restaurant = await _restaurantRepository.GetRestaurantByReservationIdAsync(reservationId);
             return restaurant == null ? null : _mapper.Map<RestaurantResponse>(restaurant);
@@ -100,9 +97,7 @@ namespace RestaurantReservationSystem.Domain.Services
 
         public async Task<RestaurantResponse?> GetRestaurantByTableIdAsync(int tableId)
         {
-            var table = await _tableService.GetByIdAsync(tableId);
-            if (table == null)
-                throw new NotFoundException($"Table with ID {tableId} not found");
+            var table = await _tableValidator.EnsureTableExistsAsync(tableId);
 
             var restaurant = await _restaurantRepository.GetRestaurantByTableIdAsync(tableId);
             return restaurant == null ? null : _mapper.Map<RestaurantResponse>(restaurant);
@@ -111,12 +106,12 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<RestaurantResponse?> GetRestaurantByEmployeeIdAsync(int employeeId)
         {
-            var employee = await _employeeService.GetByIdAsync(employeeId);
+            var employee = await _employeeValidator.EnsureEmployeeExistsAsync(employeeId);
             if (employee == null)
                 throw new NotFoundException($"Employee with ID {employeeId} not found");
 
             var restaurant = await _restaurantRepository.GetRestaurantByEmployeeIdAsync(employeeId);
-            return employee == null ? null : _mapper.Map<RestaurantResponse>(employee);
+            return _mapper.Map<RestaurantResponse>(employee);
         }
 
         private async Task<RestaurantModel> EnsureRestaurantExistsAsync(int restaurantId)

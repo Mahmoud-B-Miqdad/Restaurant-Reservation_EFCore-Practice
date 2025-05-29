@@ -5,6 +5,7 @@ using RestaurantReservationSystem.Domain.Exceptions;
 using RestaurantReservationSystem.Domain.Interfaces.Repositories;
 using RestaurantReservationSystem.Domain.Interfaces.Services;
 using RestaurantReservationSystem.Domain.Models;
+using RestaurantReservationSystem.Domain.Validators;
 
 namespace RestaurantReservationSystem.Domain.Services
 {
@@ -14,11 +15,10 @@ namespace RestaurantReservationSystem.Domain.Services
     public class ReservationService : IReservationService
     {
         private readonly IReservationRepository _reservationRepository;
-        private readonly IOrderService _orderService;
-        private readonly IMenuItemService _menuItemService;
+        private readonly OrderValidator _orderValidator;
         private readonly ICustomerService _customerService;
-        private readonly IRestaurantService _restaurantService;
-        private readonly ITableService _tableService;
+        private readonly RestaurantValidator _restaurantValidator;
+        private readonly TableValidator _tableValidator;
         private readonly IMapper _mapper;
 
         /// <summary>
@@ -26,17 +26,15 @@ namespace RestaurantReservationSystem.Domain.Services
         /// </summary>
         /// <param name="repository">The repository responsible for reservation data access.</param>
         /// <param name="mapper">The mapper used to convert between entities and DTOs.</param>
-        public ReservationService(IReservationRepository repository, IMapper mapper, IOrderService orderService,
-            IMenuItemService menuItemService, ICustomerService customerService,
-            IRestaurantService restaurantService, ITableService tableService)
+        public ReservationService(IReservationRepository repository, IMapper mapper, OrderValidator orderValidator,
+             ICustomerService customerService,RestaurantValidator restaurantValidator, TableValidator tableValidator)
         {
             _reservationRepository = repository;
-            _orderService = orderService;
+            _orderValidator = orderValidator;
             _mapper = mapper;
-            _menuItemService = menuItemService;
             _customerService = customerService;
-            _restaurantService = restaurantService;
-            _tableService = tableService;
+            _restaurantValidator = restaurantValidator;
+            _tableValidator = tableValidator;
         }
 
         /// <inheritdoc />
@@ -100,7 +98,7 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<ReservationResponse?> GetReservationByOrderIdAsync(int orderId)
         {
-            var order = await _orderService.GetByIdAsync(orderId);
+            var order = await _orderValidator.EnsureOrderExistsAsync(orderId);
             if (order == null)
                 throw new NotFoundException($"Order with ID {orderId} not found");
 
@@ -111,9 +109,7 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<List<ReservationResponse>> GetReservationsByRestaurantIdAsync(int restaurantId)
         {
-            var restaurant = await _restaurantService.GetByIdAsync(restaurantId);
-            if (restaurant == null)
-                throw new NotFoundException($"Restaurant with ID {restaurantId} not found");
+            var restaurant = await _restaurantValidator.EnsureRestaurantExistsAsync(restaurantId);
 
             var reservation = await _reservationRepository.GetReservationsByRestaurantIdAsync(restaurantId);
             return _mapper.Map<List<ReservationResponse>>(reservation);
@@ -122,7 +118,7 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<List<ReservationResponse>> GetReservationsByTableIdAsync(int tableId)
         {
-            var table = await _tableService.GetByIdAsync(tableId);
+            var table = await _tableValidator.EnsureTableExistsAsync(tableId);
             if (table == null)
                 throw new NotFoundException($"Table with ID {tableId} not found");
 

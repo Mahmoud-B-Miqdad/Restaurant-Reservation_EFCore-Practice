@@ -1,5 +1,8 @@
 ﻿using FluentValidation;
 using RestaurantReservationSystem.Domain.DTOs.Requests;
+using RestaurantReservationSystem.Domain.Exceptions;
+using RestaurantReservationSystem.Domain.Interfaces.Repositories;
+using RestaurantReservationSystem.Domain.Models;
 
 namespace RestaurantReservationSystem.API.Validators
 {
@@ -17,6 +20,7 @@ namespace RestaurantReservationSystem.API.Validators
     /// </remarks>
     public class OrderItemRequestValidator : AbstractValidator<OrderItemRequest>
     {
+
         /// <summary>
         /// Initializes a new instance of the <see cref="OrderItemRequestValidator"/> class
         /// and defines validation rules for orderItem creation or update requests.
@@ -26,7 +30,7 @@ namespace RestaurantReservationSystem.API.Validators
             RuleFor(x => x.OrderId).GreaterThan(0);
             RuleFor(x => x.ItemId).GreaterThan(0);
             RuleFor(x => x.Quantity).GreaterThan(0)
-                .WithMessage("Quantity must be at least 1.");
+            .WithMessage("Quantity must be at least 1.");
         }
     }
 }

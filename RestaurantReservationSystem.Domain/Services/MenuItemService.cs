@@ -5,6 +5,7 @@ using RestaurantReservationSystem.Domain.Exceptions;
 using RestaurantReservationSystem.Domain.Interfaces.Repositories;
 using RestaurantReservationSystem.Domain.Interfaces.Services;
 using RestaurantReservationSystem.Domain.Models;
+using RestaurantReservationSystem.Domain.Validators;
 
 namespace RestaurantReservationSystem.Domain.Services
 {
@@ -15,9 +16,9 @@ namespace RestaurantReservationSystem.Domain.Services
     {
 
         private readonly IMenuItemRepository _menuItemRepository;
-        private readonly IOrderItemService _orderItemService;
-        private readonly IReservationService _reservationService;
-        private readonly IRestaurantService _restaurantService;
+        private readonly OrderItemValidator _orderItemValidator;
+        private readonly ReservationValidator _reservationValidator;
+        private readonly RestaurantValidator _restaurantValidator;
         private readonly IMapper _mapper;
 
         /// <summary>
@@ -25,14 +26,14 @@ namespace RestaurantReservationSystem.Domain.Services
         /// </summary>
         /// <param name="repository">The repository responsible for menuItem data access.</param>
         /// <param name="mapper">The mapper used to convert between entities and DTOs.</param>
-        public MenuItemService(IMenuItemRepository repository, IMapper mapper, IOrderItemService orderItemService,
-            IReservationService reservationService, IRestaurantService restaurantService)
+        public MenuItemService(IMenuItemRepository repository, IMapper mapper, OrderItemValidator orderItemValidator,
+            ReservationValidator reservationValidator, RestaurantValidator _restaurantValidator)
         {
             _menuItemRepository = repository;
+            _orderItemValidator = orderItemValidator;
             _mapper = mapper;
-            _orderItemService = orderItemService;
-            _reservationService = reservationService;
-            _restaurantService = restaurantService;
+            _reservationValidator = reservationValidator;
+            _reservationValidator = reservationValidator;
         }
 
         /// <inheritdoc />
@@ -83,7 +84,7 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<List<MenuItemResponse>> GetOrderedMenuItemsAsync(int reservationId)
         {
-            var reservation = await _reservationService.GetByIdAsync(reservationId);
+            var reservation = await _reservationValidator.EnsureRestaurantExistsAsync(reservationId);
             if (reservation == null)
                 throw new NotFoundException($"Reservation with ID {reservationId} not found");
 
@@ -94,7 +95,7 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<List<MenuItemResponse>> GetMenuItemsByRestaurantIdAsync(int restaurantId)
         {
-            var restaurant = await _restaurantService.GetByIdAsync(restaurantId);
+            var restaurant = await _restaurantValidator.EnsureRestaurantExistsAsync(restaurantId);
             if (restaurant == null)
                 throw new NotFoundException($"Restaurant with ID {restaurantId} not found");
 
@@ -105,7 +106,7 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<MenuItemResponse?> GetMenuItemByOrderItemIdAsync(int orderItemId)
         {
-            var orderItem = await _orderItemService.GetByIdAsync(orderItemId);
+            var orderItem = await _orderItemValidator.EnsureOrderItemExistsAsync(orderItemId);
             if (orderItem == null)
                 throw new NotFoundException($"OrderItem with ID {orderItemId} not found");
 

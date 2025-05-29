@@ -5,6 +5,7 @@ using RestaurantReservationSystem.Domain.Exceptions;
 using RestaurantReservationSystem.Domain.Interfaces.Repositories;
 using RestaurantReservationSystem.Domain.Interfaces.Services;
 using RestaurantReservationSystem.Domain.Models;
+using RestaurantReservationSystem.Domain.Validators;
 
 namespace RestaurantReservationSystem.Domain.Services
 {
@@ -14,7 +15,7 @@ namespace RestaurantReservationSystem.Domain.Services
     public class CustomerService : ICustomerService
     {
         private readonly ICustomerRepository _customerRepository;
-        private readonly IReservationService _reservationService;
+        private readonly ReservationValidator _reservationValidator;
         private readonly IMapper _mapper;
 
         /// <summary>
@@ -22,11 +23,11 @@ namespace RestaurantReservationSystem.Domain.Services
         /// </summary>
         /// <param name="repository">The repository responsible for customer data access.</param>
         /// <param name="mapper">The mapper used to convert between entities and DTOs.</param>
-        public CustomerService(ICustomerRepository repository, IMapper mapper, IReservationService reservationService)
+        public CustomerService(ICustomerRepository repository, IMapper mapper, ReservationValidator reservationValidator)
         {
             _customerRepository = repository;
             _mapper = mapper;
-            _reservationService = reservationService;
+            _reservationValidator = reservationValidator;
         }
 
         /// <inheritdoc />
@@ -72,7 +73,7 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<CustomerResponse?> GetCustomerByReservationIdAsync(int reservationId)
         {
-            var reservation = await _reservationService.GetByIdAsync(reservationId);
+            var reservation = await _reservationValidator.EnsureRestaurantExistsAsync(reservationId);
             if (reservation == null)
                 throw new NotFoundException($"Reservation with ID {reservationId} not found");
 
