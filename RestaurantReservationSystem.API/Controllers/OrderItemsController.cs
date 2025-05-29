@@ -9,7 +9,7 @@ using RestaurantReservationSystem.Domain.Responses;
 
 namespace RestaurantReservationSystem.API.Controllers
 {
-    [Authorize]
+    //[Authorize]
     /// <summary>
     /// Controller for managing orderItem-related operations.
     /// </summary>
@@ -124,16 +124,9 @@ namespace RestaurantReservationSystem.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(int id)
         {
-            try
-            {
-                var deletedOrderItem = await _orderItemService.DeleteAsync(id);
-                return Ok(ApiResponse<string>.SuccessResponse("OrderItem deleted successfully"));
+            var deletedOrderItem = await _orderItemService.DeleteAsync(id);
+            return Ok(ApiResponse<string>.SuccessResponse("OrderItem deleted successfully"));
 
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(ApiResponse<string>.FailResponse(ex.Message));
-            }
         }
 
         /// <summary>

@@ -8,7 +8,7 @@ using RestaurantReservationSystem.Domain.Responses;
 
 namespace RestaurantReservationSystem.API.Controllers
 {
-    [Authorize]
+    //[Authorize]
     /// <summary>
     /// Controller responsible for handling HTTP requests related to Order operations.
     /// Provides endpoints for CRUD operations, partial updates, and retrieving related entities
@@ -126,15 +126,8 @@ namespace RestaurantReservationSystem.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            try
-            {
-                var deletedOrder = await _orderService.DeleteAsync(id);
-                return Ok(ApiResponse<string>.SuccessResponse("Order deleted successfully"));
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(ApiResponse<string>.FailResponse(ex.Message));
-            }
+            var deletedOrder = await _orderService.DeleteAsync(id);
+            return Ok(ApiResponse<string>.SuccessResponse("Order deleted successfully"));
         }
 
         /// <summary>

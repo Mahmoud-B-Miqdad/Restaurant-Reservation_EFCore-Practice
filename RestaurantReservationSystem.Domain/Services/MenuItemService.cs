@@ -27,13 +27,13 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <param name="repository">The repository responsible for menuItem data access.</param>
         /// <param name="mapper">The mapper used to convert between entities and DTOs.</param>
         public MenuItemService(IMenuItemRepository repository, IMapper mapper, OrderItemValidator orderItemValidator,
-            ReservationValidator reservationValidator, RestaurantValidator _restaurantValidator)
+            ReservationValidator reservationValidator, RestaurantValidator restaurantValidator)
         {
             _menuItemRepository = repository;
             _orderItemValidator = orderItemValidator;
             _mapper = mapper;
             _reservationValidator = reservationValidator;
-            _reservationValidator = reservationValidator;
+            _restaurantValidator = restaurantValidator;
         }
 
         /// <inheritdoc />

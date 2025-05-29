@@ -8,7 +8,7 @@ using RestaurantReservationSystem.Domain.Responses;
 
 namespace RestaurantReservationSystem.API.Controllers
 {
-    [Authorize]
+    //[Authorize]
     /// <summary>
     /// Controller for managing menuItem-related operations.
     /// </summary>
@@ -124,15 +124,8 @@ namespace RestaurantReservationSystem.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(int id)
         {
-            try
-            {
-                var deletedEmployee = await _menuItemService.DeleteAsync(id);
-                return Ok(ApiResponse<string>.SuccessResponse("menuItem deleted successfully"));
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(ApiResponse<string>.FailResponse(ex.Message));
-            }
+            var deletedEmployee = await _menuItemService.DeleteAsync(id);
+            return Ok(ApiResponse<string>.SuccessResponse("menuItem deleted successfully"));
         }
 
         /// <summary>

@@ -8,7 +8,7 @@ using RestaurantReservationSystem.Domain.Responses;
 
 namespace RestaurantReservationSystem.API.Controllers
 {
-    [Authorize]
+    //[Authorize]
     /// <summary>
     /// Controller for managing employee-related operations.
     /// </summary>
@@ -72,10 +72,12 @@ namespace RestaurantReservationSystem.API.Controllers
         public async Task<IActionResult> CreateAsync(EmployeeRequest request)
         {
             var createdEmployee = await _employeeService.CreateAsync(request);
-            return CreatedAtAction(
+            CreatedAtAction(
                 nameof(GetByIdAsync),
                 new { id = createdEmployee.EmployeeId },
-                ApiResponse<EmployeeResponse>.SuccessResponse(createdEmployee));
+               createdEmployee);
+
+            return Ok(ApiResponse<EmployeeResponse>.SuccessResponse(createdEmployee));
         }
 
         /// <summary>
@@ -137,16 +139,8 @@ namespace RestaurantReservationSystem.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(int id)
         {
-            try
-            {
-                var deletedEmployee = await _employeeService.DeleteAsync(id);
-                return Ok(ApiResponse<string>.SuccessResponse("Employee deleted successfully"));
-
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(ApiResponse<string>.FailResponse(ex.Message));
-            }
+            var deletedEmployee = await _employeeService.DeleteAsync(id);
+            return Ok(ApiResponse<string>.SuccessResponse("Employee deleted successfully"));
         }
 
         /// <summary>

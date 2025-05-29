@@ -8,7 +8,7 @@ using RestaurantReservationSystem.Domain.Responses;
 
 namespace RestaurantReservationSystem.API.Controllers
 {
-    [Authorize]
+    //[Authorize]
     /// <summary>
     /// API controller for managing restaurants.
     /// Provides endpoints to create, retrieve, update, and delete restaurant data.
@@ -66,10 +66,11 @@ namespace RestaurantReservationSystem.API.Controllers
         {
             var createdRestaurant = await _restaurantService.CreateAsync(request);
 
-            return CreatedAtAction(
+            CreatedAtAction(
                 nameof(GetByIdAsync),
                 new { id = createdRestaurant.RestaurantId },
-                ApiResponse<RestaurantResponse>.SuccessResponse(createdRestaurant));
+                createdRestaurant);
+            return Ok(ApiResponse<RestaurantResponse>.SuccessResponse(createdRestaurant));
         }
 
         /// <summary>
