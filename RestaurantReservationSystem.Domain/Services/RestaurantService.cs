@@ -34,6 +34,7 @@ namespace RestaurantReservationSystem.Domain.Services
             _employeeValidator = employeeValidator;
             _reservationValidator = reservationValidator;
             _menuItemValidator = menuItemValidator;
+            _tableValidator = tableValidator;
         }
 
         /// <inheritdoc />
@@ -111,7 +112,7 @@ namespace RestaurantReservationSystem.Domain.Services
                 throw new NotFoundException($"Employee with ID {employeeId} not found");
 
             var restaurant = await _restaurantRepository.GetRestaurantByEmployeeIdAsync(employeeId);
-            return _mapper.Map<RestaurantResponse>(employee);
+            return _mapper.Map<RestaurantResponse>(restaurant);
         }
 
         private async Task<RestaurantModel> EnsureRestaurantExistsAsync(int restaurantId)
