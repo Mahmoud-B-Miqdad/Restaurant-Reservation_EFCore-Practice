@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.JsonPatch;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using RestaurantReservationSystem.Domain.DTOs.Requests;
 using RestaurantReservationSystem.Domain.DTOs.Responses;
@@ -7,6 +8,7 @@ using RestaurantReservationSystem.Domain.Responses;
 
 namespace RestaurantReservationSystem.API.Controllers
 {
+    //[Authorize]
     /// <summary>
     /// Controller for managing employee-related operations.
     /// </summary>
@@ -44,7 +46,7 @@ namespace RestaurantReservationSystem.API.Controllers
                 employees = await _employeeService.GetAllAsync();
             }
 
-            return Ok(ApiResponse<IEnumerable<EmployeeResponse>>.SuccessResponse(employees));
+            return Ok(ApiResponse<List<EmployeeResponse>>.SuccessResponse(employees));
         }
 
 
@@ -70,10 +72,12 @@ namespace RestaurantReservationSystem.API.Controllers
         public async Task<IActionResult> CreateAsync(EmployeeRequest request)
         {
             var createdEmployee = await _employeeService.CreateAsync(request);
-            return CreatedAtAction(
+            CreatedAtAction(
                 nameof(GetByIdAsync),
                 new { id = createdEmployee.EmployeeId },
-                ApiResponse<EmployeeResponse>.SuccessResponse(createdEmployee));
+               createdEmployee);
+
+            return Ok(ApiResponse<EmployeeResponse>.SuccessResponse(createdEmployee));
         }
 
         /// <summary>
@@ -135,16 +139,8 @@ namespace RestaurantReservationSystem.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(int id)
         {
-            try
-            {
-                var deletedEmployee = await _employeeService.DeleteAsync(id);
-                return Ok(ApiResponse<string>.SuccessResponse("Employee deleted successfully"));
-
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(ApiResponse<string>.FailResponse(ex.Message));
-            }
+            var deletedEmployee = await _employeeService.DeleteAsync(id);
+            return Ok(ApiResponse<string>.SuccessResponse("Employee deleted successfully"));
         }
 
         /// <summary>
@@ -169,6 +165,18 @@ namespace RestaurantReservationSystem.API.Controllers
         {
             var restaurant = await _restaurantService.GetRestaurantByEmployeeIdAsync(id);
             return Ok(ApiResponse<RestaurantResponse>.SuccessResponse(restaurant));
+        }
+
+        [HttpGet("{id}/order/average-amount")]
+        public async Task<IActionResult> GetAverageOrderAmount(int id)
+        {
+            var employee = await _employeeService.GetByIdAsync(id);
+            if (employee == null)
+                return NotFound(ApiResponse<EmployeeResponse>.FailResponse("Employee not found"));
+
+            var average = await _orderService.GetAverageOrderAmountAsync(id);
+
+            return Ok(ApiResponse<decimal>.SuccessResponse(average));
         }
     }
 }

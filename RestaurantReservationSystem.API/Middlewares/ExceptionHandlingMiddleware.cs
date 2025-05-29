@@ -19,6 +19,7 @@ namespace RestaurantReservationSystem.API.Middlewares
             {
                 NotFoundException => (StatusCodes.Status404NotFound, "Resource not found", exception.Message),
                 UnauthorizedAccessException => (StatusCodes.Status401Unauthorized, "Unauthorized", "Access is denied"),
+                InvalidOperationException => (StatusCodes.Status400BadRequest, "Invalid operation", exception.Message),
                 _ => (StatusCodes.Status500InternalServerError, "An unexpected error occurred", "Internal server error")
             };
 

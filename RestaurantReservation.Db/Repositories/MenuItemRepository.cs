@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using RestaurantReservation.Db.Entities;
 using RestaurantReservationSystem.Domain.Interfaces.Repositories;
 using RestaurantReservationSystem.Domain.Models;
+using System.Collections.Generic;
 
 namespace RestaurantReservation.Db.Repositories
 {
@@ -79,6 +80,16 @@ namespace RestaurantReservation.Db.Repositories
                 .ToListAsync();
 
             return _mapper.Map<List<MenuItemModel>>(items);
+        }
+
+
+        public async Task<MenuItemModel?> GetMenuItemByOrderItemIdAsync(int orderItemId)
+        {
+            var orderItems = await _context.OrderItems
+                .Include(o => o.MenuItem)
+                .FirstOrDefaultAsync(e => e.OrderItemId == orderItemId);
+
+            return _mapper.Map<MenuItemModel>(orderItems?.MenuItem);
         }
 
         public async Task<MenuItemModel?> GetByIdWithOrderItemsAsync(int id)

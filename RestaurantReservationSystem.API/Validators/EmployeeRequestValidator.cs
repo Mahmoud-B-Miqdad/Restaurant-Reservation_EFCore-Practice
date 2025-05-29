@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using RestaurantReservationSystem.Domain.DTOs.Requests;
 
-namespace RestaurantReservationSystem.Domain.Validators
+namespace RestaurantReservationSystem.API.Validators
 {
     /// <summary>
     /// Validates the <see cref="EmployeeRequest"/> object using FluentValidation rules.

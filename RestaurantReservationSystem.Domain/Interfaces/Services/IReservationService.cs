@@ -44,19 +44,12 @@ namespace RestaurantReservationSystem.Domain.Interfaces.Services
         Task<bool> DeleteAsync(int id);
 
         /// <summary>
-        /// Retrieves the customer associated with a specific reservation.
-        /// </summary>
-        /// <param name="reservationId">The unique identifier of the reservation.</param>
-        /// <returns>A task that represents the asynchronous operation. The task result contains the customer response DTO if found; otherwise, null.</returns>
-        Task<CustomerResponse?> GetCustomerAsync(int reservationId);
-
-        /// <summary>
         /// Retrieves a list of all Reservation handled by a specific Customer.
         /// </summary>
         /// <returns>A task that represents the asynchronous operation.
         /// The task result contains a list of Reservation response DTOs.
         /// </returns>
-        Task<List<ReservationResponse>> GetReservationsByCustomerAsync(int customerId);
+        Task<List<ReservationResponse>> GetReservationsByCustomerIdAsync(int customerId);
 
         /// <summary>
         /// Retrieves the reservation associated with a given order.

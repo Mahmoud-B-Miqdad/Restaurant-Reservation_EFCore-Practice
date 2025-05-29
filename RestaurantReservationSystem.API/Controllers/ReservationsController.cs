@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.JsonPatch;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using RestaurantReservationSystem.Domain.DTOs.Requests;
 using RestaurantReservationSystem.Domain.DTOs.Responses;
@@ -9,6 +10,7 @@ using RestaurantReservationSystem.Domain.Services;
 
 namespace RestaurantReservationSystem.API.Controllers
 {
+    //[Authorize]
     /// <summary>
     /// Controller for managing reservation-related operations.
     /// </summary>
@@ -16,19 +18,19 @@ namespace RestaurantReservationSystem.API.Controllers
     [ApiController]
     public class ReservationsController : ControllerBase
     {
-        private readonly Domain.Interfaces.Services.IReservationService _reservationService;
-        private readonly ICustomerRepository _customerRepository;
+        private readonly IReservationService _reservationService;
+        private readonly ICustomerService _customerService;
         private readonly IOrderService _ordersService;
-        private readonly Domain.Interfaces.Services.IRestaurantService _restaurantService;
+        private readonly IRestaurantService _restaurantService;
         private readonly ITableService _tableService;
         private readonly IMenuItemService _menuItemService;
 
-        public ReservationsController(Domain.Interfaces.Services.IReservationService reservationService, ICustomerRepository customerRepository
-            , IOrderService ordersService, Domain.Interfaces.Services.IRestaurantService restaurantService, ITableService tableService, IMenuItemService menuItemService)
+        public ReservationsController(IReservationService reservationService, ICustomerService customerService
+            , IOrderService ordersService, IRestaurantService restaurantService, ITableService tableService, IMenuItemService menuItemService)
         {
             _reservationService = reservationService;
-            _customerRepository = customerRepository;
             _ordersService = ordersService;
+            _customerService = customerService;
             _restaurantService = restaurantService;
             _tableService = tableService;
             _menuItemService = menuItemService;
@@ -42,7 +44,7 @@ namespace RestaurantReservationSystem.API.Controllers
         public async Task<IActionResult> GetAllAsync()
         {
             var reservations = await _reservationService.GetAllAsync();
-            return Ok(ApiResponse<IEnumerable<ReservationResponse>>.SuccessResponse(reservations));
+            return Ok(ApiResponse<List<ReservationResponse>>.SuccessResponse(reservations));
         }
 
         /// <summary>
@@ -132,26 +134,24 @@ namespace RestaurantReservationSystem.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(int id)
         {
-            try
-            {
-                var deletedReservation = await _reservationService.DeleteAsync(id);
-                return Ok(ApiResponse<string>.SuccessResponse("Reservation deleted successfully"));
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(ApiResponse<string>.FailResponse(ex.Message));
-            }
+            var deletedReservation = await _reservationService.DeleteAsync(id);
+            return Ok(ApiResponse<string>.SuccessResponse("Reservation deleted successfully"));
         }
 
         /// <summary>
-        /// Retrieves all orders handled by the specified reservation.
+        /// Retrieves all orders associated with the specified reservation,
+        /// including their corresponding menu items.
         /// </summary>
-        /// <param name="id">Reservation ID</param>
-        /// <returns>List of orders assigned to the reservation.</returns>
+        /// <param name="id">The unique identifier of the reservation.</param>
+        /// <returns>A list of orders, each containing order items and related menu item details.</returns>
         [HttpGet("{id}/orders")]
-        public async Task<IActionResult> GetOrdersAsync(int id)
+        public async Task<IActionResult> GetOrdersAndMenuItemsAsync(int id)
         {
-            var orders = await _ordersService.GetOrdersByReservationIdAsync(id);
+            var reservation = await _reservationService.GetByIdAsync(id);
+            if (reservation == null)
+                return NotFound(ApiResponse<ReservationResponse>.FailResponse("Reservation not found"));
+
+            var orders = await _ordersService.GetOrdersAndMenuItemsAsync(id);
             return Ok(ApiResponse<List<OrderResponse>>.SuccessResponse(orders));
         }
 
@@ -163,7 +163,14 @@ namespace RestaurantReservationSystem.API.Controllers
         [HttpGet("{id}/customer")]
         public async Task<IActionResult> GetCustomerAsync(int id)
         {
-            var customer = await _reservationService.GetCustomerAsync(id);
+            var employee = await _reservationService.GetByIdAsync(id);
+            if (employee == null)
+                return NotFound(ApiResponse<ReservationResponse>.FailResponse("Reservation not found"));
+
+            var customer = await _customerService.GetCustomerByReservationIdAsync(id);
+            if (customer == null)
+                return NotFound(ApiResponse<CustomerResponse>.FailResponse("Customer not found"));
+
             return Ok(ApiResponse<CustomerResponse>.SuccessResponse(customer));
         }
 
@@ -199,7 +206,14 @@ namespace RestaurantReservationSystem.API.Controllers
         [HttpGet("customer/{id}")]
         public async Task<IActionResult> GetReservationsByCustomerAsync(int id)
         {
-            var reservationsByCustomer = await _reservationService.GetReservationsByCustomerAsync(id);
+            var customer = await _customerService.GetByIdAsync(id);
+            if (customer == null)
+                return NotFound(ApiResponse<CustomerResponse>.FailResponse("Customer not found"));
+
+            var reservationsByCustomer = await _reservationService.GetReservationsByCustomerIdAsync(id);
+            if (reservationsByCustomer == null)
+                return NotFound(ApiResponse<TableResponse>.FailResponse("Theres no reservations for this Customer"));
+
             return Ok(ApiResponse<List<ReservationResponse>>.SuccessResponse(reservationsByCustomer));
         }
 

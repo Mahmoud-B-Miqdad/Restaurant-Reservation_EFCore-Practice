@@ -1,5 +1,8 @@
 ﻿using FluentValidation;
 using RestaurantReservationSystem.Domain.DTOs.Requests;
+using RestaurantReservationSystem.Domain.Exceptions;
+using RestaurantReservationSystem.Domain.Interfaces.Repositories;
+using RestaurantReservationSystem.Domain.Models;
 
 namespace RestaurantReservationSystem.API.Validators
 {
@@ -10,6 +13,7 @@ namespace RestaurantReservationSystem.API.Validators
     /// </summary>
     public class OrderRequestValidator : AbstractValidator<OrderRequest>
     {
+
         /// <summary>
         /// Initializes a new instance of the <see cref="OrderRequestValidator"/> class
         /// and defines validation rules for the order request properties.
@@ -33,5 +37,4 @@ namespace RestaurantReservationSystem.API.Validators
                 .WithMessage("Total amount must be 0 or more.");
         }
     }
-
 }

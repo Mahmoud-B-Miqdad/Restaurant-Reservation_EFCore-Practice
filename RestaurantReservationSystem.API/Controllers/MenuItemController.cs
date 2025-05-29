@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.JsonPatch;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using RestaurantReservationSystem.Domain.DTOs.Requests;
 using RestaurantReservationSystem.Domain.DTOs.Responses;
@@ -7,6 +8,7 @@ using RestaurantReservationSystem.Domain.Responses;
 
 namespace RestaurantReservationSystem.API.Controllers
 {
+    //[Authorize]
     /// <summary>
     /// Controller for managing menuItem-related operations.
     /// </summary>
@@ -16,11 +18,13 @@ namespace RestaurantReservationSystem.API.Controllers
     {
         private readonly IMenuItemService _menuItemService;
         private readonly IRestaurantService _restaurantService;
+        private readonly IOrderItemService _orderItemService;
 
-        public MenuItemController(IMenuItemService menuItemService, IRestaurantService restaurantService)
+        public MenuItemController(IMenuItemService menuItemService, IRestaurantService restaurantService, IOrderItemService orderItemService)
         {
             _menuItemService = menuItemService;
             _restaurantService = restaurantService;
+            _orderItemService = orderItemService;
         }
 
         /// <summary>
@@ -92,7 +96,7 @@ namespace RestaurantReservationSystem.API.Controllers
             var menuItemToPatch = new MenuItemRequest
             {
                 RestaurantId = existingMenuItem.RestaurantId,
-                Name= existingMenuItem.Name,
+                Name = existingMenuItem.Name,
                 Description = existingMenuItem.Description,
                 Price = existingMenuItem.Price,
             };
@@ -120,15 +124,8 @@ namespace RestaurantReservationSystem.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(int id)
         {
-            try
-            {
-                var deletedEmployee = await _menuItemService.DeleteAsync(id);
-                return Ok(ApiResponse<string>.SuccessResponse("menuItem deleted successfully"));
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(ApiResponse<string>.FailResponse(ex.Message));
-            }
+            var deletedEmployee = await _menuItemService.DeleteAsync(id);
+            return Ok(ApiResponse<string>.SuccessResponse("menuItem deleted successfully"));
         }
 
         /// <summary>
@@ -139,7 +136,7 @@ namespace RestaurantReservationSystem.API.Controllers
         [HttpGet("{id}/order-items")]
         public async Task<IActionResult> GetOrderItemsAsync(int id)
         {
-            var orders = await _menuItemService.GetOrderItemsByMenuItamIdAsync(id);
+            var orders = await _orderItemService.GetOrderItemsByMenuItamIdAsync(id);
             return Ok(ApiResponse<List<OrderItemResponse>>.SuccessResponse(orders));
         }
 

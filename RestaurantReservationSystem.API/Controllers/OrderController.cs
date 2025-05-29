@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.JsonPatch;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using RestaurantReservationSystem.Domain.DTOs.Requests;
 using RestaurantReservationSystem.Domain.DTOs.Responses;
@@ -7,6 +8,7 @@ using RestaurantReservationSystem.Domain.Responses;
 
 namespace RestaurantReservationSystem.API.Controllers
 {
+    //[Authorize]
     /// <summary>
     /// Controller responsible for handling HTTP requests related to Order operations.
     /// Provides endpoints for CRUD operations, partial updates, and retrieving related entities
@@ -19,16 +21,18 @@ namespace RestaurantReservationSystem.API.Controllers
         private readonly IOrderService _orderService;
         private readonly IEmployeeService _employeeService;
         private readonly IReservationService _reservationService;
+        private readonly IOrderItemService _orderItemService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OrdersController"/> class.
         /// </summary>
         /// <param name="orderService">Service used to manage orders.</param>
-        public OrdersController(IOrderService orderService, IEmployeeService employeeService, IReservationService reservationService)
+        public OrdersController(IOrderService orderService, IEmployeeService employeeService, IReservationService reservationService, IOrderItemService orderItemService)
         {
             _orderService = orderService;
             _employeeService = employeeService;
             _reservationService = reservationService;
+            _orderItemService = orderItemService;
         }
 
         /// <summary>
@@ -122,15 +126,8 @@ namespace RestaurantReservationSystem.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            try
-            {
-                var deletedOrder = await _orderService.DeleteAsync(id);
-                return Ok(ApiResponse<string>.SuccessResponse("Order deleted successfully"));
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(ApiResponse<string>.FailResponse(ex.Message));
-            }
+            var deletedOrder = await _orderService.DeleteAsync(id);
+            return Ok(ApiResponse<string>.SuccessResponse("Order deleted successfully"));
         }
 
         /// <summary>
@@ -162,7 +159,11 @@ namespace RestaurantReservationSystem.API.Controllers
         [HttpGet("{id}/items")]
         public async Task<ActionResult<List<OrderItemResponse>>> GetOrderItems(int id)
         {
-            var items = await _orderService.GetOrderItemsAsync(id);
+            var order = await _orderService.GetByIdAsync(id);
+            if (order == null)
+                return NotFound(ApiResponse<OrderResponse>.FailResponse("Order not found"));
+
+            var items = await _orderItemService.GetOrderItemsByOrderIdAsync(id);
             return Ok(ApiResponse<List<OrderItemResponse>>.SuccessResponse(items));
         }
     }

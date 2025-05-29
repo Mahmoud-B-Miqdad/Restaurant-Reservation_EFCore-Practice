@@ -5,6 +5,7 @@ using RestaurantReservationSystem.Domain.Exceptions;
 using RestaurantReservationSystem.Domain.Interfaces.Repositories;
 using RestaurantReservationSystem.Domain.Interfaces.Services;
 using RestaurantReservationSystem.Domain.Models;
+using RestaurantReservationSystem.Domain.Validators;
 
 namespace RestaurantReservationSystem.Domain.Services
 {
@@ -15,9 +16,9 @@ namespace RestaurantReservationSystem.Domain.Services
     public class OrderService : IOrderService
     {
         private readonly IOrderRepository _orderRepository;
-        private readonly IOrderItemRepository _orderItemRepository;
-        private readonly IEmployeeService _employeeService;
-        private readonly IReservationService _reservationService;
+        private readonly OrderItemValidator _orderItemValidator;
+        private readonly EmployeeValidator _employeeValidator;
+        private readonly ReservationValidator _reservationValidator;
         private readonly IMapper _mapper;
 
         /// <summary>
@@ -27,24 +28,15 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <param name="mapper">AutoMapper instance for mapping between entities and DTOs.</param>
         /// <param name="orderItemRepository">Repository for accessing order item data.</param>
 
-        public OrderService(IOrderRepository orderRepository, IMapper mapper, IOrderItemRepository orderItemRepository,
-            IEmployeeService employeeService, IReservationService reservationService)
+        public OrderService(IOrderRepository orderRepository, IMapper mapper, IOrderItemService orderItemService,
+             IReservationService reservationService, OrderItemValidator orderItemValidator,
+            EmployeeValidator employeeValidator, ReservationValidator reservationValidator)
         {
             _orderRepository = orderRepository;
-            _orderItemRepository = orderItemRepository;
             _mapper = mapper;
-            _employeeService = employeeService;
-            _reservationService = reservationService;
-        }
-
-        private async Task<OrderModel> EnsureOrderExistsAsync(int orderId)
-
-        {
-            var order = await _orderRepository.GetByIdAsync(orderId);
-            if (order == null)
-                throw new NotFoundException($"Order with ID {orderId} not found");
-
-            return order;
+            _orderItemValidator = orderItemValidator;
+            _employeeValidator = employeeValidator;
+            _reservationValidator = reservationValidator;
         }
 
         /// <inheritdoc />
@@ -94,19 +86,9 @@ namespace RestaurantReservationSystem.Domain.Services
         }
 
         /// <inheritdoc />
-        public async Task<List<OrderItemResponse>> GetOrderItemsAsync(int orderId)
-        {
-            var order = await EnsureOrderExistsAsync(orderId);
-            var orders = await _orderItemRepository.GetOrderItemsByOrderIdAsync(orderId);
-            return _mapper.Map<List<OrderItemResponse>>(orders);
-        }
-
-        /// <inheritdoc />
         public async Task<List<OrderResponse>> GetOrdersByEmployeeIdAsync(int employeeId)
         {
-            var employee = await _employeeService.GetByIdAsync(employeeId);
-            if (employee == null)
-                throw new NotFoundException($"Employee with ID {employeeId} not found");
+            var employee = await _employeeValidator.EnsureEmployeeExistsAsync(employeeId);
 
             var orders = await _orderRepository.GetOrdersByEmployeeIdAsync(employeeId);
             return _mapper.Map<List<OrderResponse>>(orders);
@@ -115,12 +97,52 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<List<OrderResponse>> GetOrdersByReservationIdAsync(int reservationId)
         {
-            var reservation = await _reservationService.GetByIdAsync(reservationId);
+            var reservation = await _reservationValidator.EnsureRestaurantExistsAsync(reservationId);
             if (reservation == null)
                 throw new NotFoundException($"Reservation with ID {reservationId} not found");
 
             var orders = await _orderRepository.GetOrdersByReservationIdAsync(reservationId);
             return _mapper.Map<List<OrderResponse>>(orders);
+        }
+
+        /// <inheritdoc />
+        public async Task<OrderResponse?> GetOrderByOrderItemIdAsync(int orderItemId)
+        {
+            var orderItem = await _orderItemValidator.EnsureOrderItemExistsAsync(orderItemId);
+
+            var order = await _orderRepository.GetOrderByOrderItemIdAsync(orderItemId);
+            return order == null ? null : _mapper.Map<OrderResponse>(order);
+        }
+
+        /// <inheritdoc />
+        public async Task<List<OrderResponse>> GetOrdersAndMenuItemsAsync(int reservationId)
+        {
+            var reservation = await _reservationValidator.EnsureRestaurantExistsAsync(reservationId);
+
+            var orders = await _orderRepository.ListOrdersAndMenuItemsAsync(reservationId);
+            return _mapper.Map<List<OrderResponse>>(orders);
+        }
+
+        /// <inheritdoc />
+        public async Task<decimal> GetAverageOrderAmountAsync(int employeeId)
+        {
+            var employee = await _employeeValidator.EnsureEmployeeExistsAsync(employeeId);
+
+            var amounts = await _orderRepository.GetOrderAmountsByEmployeeIdAsync(employeeId);
+            if (!amounts.Any())
+                return 0;
+
+            return amounts.Average();
+        }
+
+        private async Task<OrderModel> EnsureOrderExistsAsync(int orderId)
+
+        {
+            var order = await _orderRepository.GetByIdAsync(orderId);
+            if (order == null)
+                throw new NotFoundException($"Order with ID {orderId} not found");
+
+            return order;
         }
     }
 }

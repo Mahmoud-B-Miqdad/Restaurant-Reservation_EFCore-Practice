@@ -28,4 +28,6 @@ public class OrderResponse
     /// The total amount for the order.
     /// </summary>
     public decimal TotalAmount { get; set; }
+
+    public List<OrderItemResponse> OrderItems { get; set; }
 }

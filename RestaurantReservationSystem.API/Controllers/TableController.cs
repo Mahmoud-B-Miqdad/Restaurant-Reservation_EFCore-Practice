@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.JsonPatch;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using RestaurantReservationSystem.Domain.DTOs.Requests;
 using RestaurantReservationSystem.Domain.DTOs.Responses;
@@ -7,6 +8,7 @@ using RestaurantReservationSystem.Domain.Responses;
 
 namespace RestaurantReservationSystem.API.Controllers
 {
+    //[Authorize]
     /// <summary>
     /// Controller for managing restaurant tables.
     /// </summary>
@@ -58,10 +60,12 @@ namespace RestaurantReservationSystem.API.Controllers
         public async Task<IActionResult> CreateAsync([FromBody] TableRequest request)
         {
             var createdTable = await _tableService.CreateAsync(request);
-            return CreatedAtAction(
+            CreatedAtAction(
                 nameof(GetByIdAsync),
                 new { id = createdTable.TableId },
-                ApiResponse<TableResponse>.SuccessResponse(createdTable));
+                createdTable);
+
+            return Ok(ApiResponse<TableResponse>.SuccessResponse(createdTable));
         }
 
         /// <summary>

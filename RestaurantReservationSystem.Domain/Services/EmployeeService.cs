@@ -5,6 +5,7 @@ using RestaurantReservationSystem.Domain.Exceptions;
 using RestaurantReservationSystem.Domain.Interfaces.Repositories;
 using RestaurantReservationSystem.Domain.Interfaces.Services;
 using RestaurantReservationSystem.Domain.Models;
+using RestaurantReservationSystem.Domain.Validators;
 
 namespace RestaurantReservationSystem.Domain.Services
 {
@@ -14,8 +15,8 @@ namespace RestaurantReservationSystem.Domain.Services
     public class EmployeeService : IEmployeeService
     {
         private readonly IEmployeeRepository _employeeRepository;
-        private readonly IOrderService _orderService;
-        private readonly IRestaurantService _restaurantService;
+        private readonly OrderValidator _orderValidator;
+        private readonly RestaurantValidator _restaurantValidator;
         private readonly IMapper _mapper;
 
         /// <summary>
@@ -23,12 +24,13 @@ namespace RestaurantReservationSystem.Domain.Services
         /// </summary>
         /// <param name="repository">The repository responsible for employee data access.</param>
         /// <param name="mapper">The mapper used to convert between entities and DTOs.</param>
-        public EmployeeService(IEmployeeRepository repository, IMapper mapper, IOrderService orderService, IRestaurantService restaurantService)
+        public EmployeeService(IEmployeeRepository repository, IMapper mapper, IOrderService orderService
+            , IRestaurantService restaurantService, OrderValidator orderValidator, RestaurantValidator restaurantValidator)
         {
             _employeeRepository = repository;
-            _orderService = orderService;
+            _restaurantValidator = restaurantValidator;
+            _orderValidator = orderValidator;
             _mapper = mapper;
-            _restaurantService = restaurantService;
         }
 
         /// <inheritdoc />
@@ -80,12 +82,9 @@ namespace RestaurantReservationSystem.Domain.Services
         }
 
         /// <inheritdoc />
-        /// <inheritdoc />
         public async Task<List<EmployeeResponse>> GetEmployeesByRestaurantIdAsync(int restaurantId)
         {
-            var restaurant = await _restaurantService.GetByIdAsync(restaurantId);
-            if (restaurant == null)
-                throw new NotFoundException($"Restaurant with ID {restaurantId} not found");
+            var restaurant = await _restaurantValidator.EnsureRestaurantExistsAsync(restaurantId);
 
             var employees = await _employeeRepository.GetByRestaurantIdAsync(restaurantId);
             return _mapper.Map<List<EmployeeResponse>>(employees);
@@ -94,7 +93,7 @@ namespace RestaurantReservationSystem.Domain.Services
         /// <inheritdoc />
         public async Task<EmployeeResponse?> GetEmployeeByOrderIdAsync(int orderId)
         {
-            var order = await _orderService.GetByIdAsync(orderId);
+            var order = await _orderValidator.EnsureOrderExistsAsync(orderId);
             if (order == null)
                 throw new NotFoundException($"Order with ID {orderId} not found");
 
@@ -103,7 +102,6 @@ namespace RestaurantReservationSystem.Domain.Services
         }
 
         private async Task<EmployeeModel> EnsureEmployeeExistsAsync(int employeeId)
-
         {
             var employee = await _employeeRepository.GetByIdAsync(employeeId);
             if (employee == null)

@@ -49,7 +49,13 @@ internal class CustomerRepository : ICustomerRepository
 
     public async Task DeleteAsync(int id)
     {
-        var customer = await _context.Customers.FindAsync(id);
+        var customer = await _context.Customers
+            .Include(c => c.Reservations)
+            .FirstOrDefaultAsync(c => c.CustomerId == id);
+
+        if (customer.Reservations.Any())
+            throw new InvalidOperationException("Cannot delete customer with existing reservations.");
+
         if (customer != null)
         {
             _context.Customers.Remove(customer);

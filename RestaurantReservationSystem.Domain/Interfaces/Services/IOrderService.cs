@@ -41,13 +41,6 @@ namespace RestaurantReservationSystem.Domain.Interfaces.Services
         Task<bool> DeleteAsync(int id);
 
         /// <summary>
-        /// Retrieves all order items handled by a specific order.
-        /// </summary>
-        /// <param name="orderId">The ID of the order.</param>
-        /// <returns>A collection of <see cref="OrderItemResponse"/> linked to the order.</returns>
-        Task<List<OrderItemResponse>> GetOrderItemsAsync(int orderId);
-
-        /// <summary>
         /// Retrieves all orders handled by a specific employee.
         /// </summary>
         /// <param name="employeeId">The unique identifier of the employee.</param>
@@ -60,5 +53,21 @@ namespace RestaurantReservationSystem.Domain.Interfaces.Services
         /// <param name="reservationId">The unique identifier of the reservation.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains a list of order response DTOs.</returns>
         Task<List<OrderResponse>> GetOrdersByReservationIdAsync(int reservationId);
+
+        /// <summary>
+        /// Retrieves the restaurant associated with a specific order.
+        /// </summary>
+        /// <param name="orderItemId">The unique identifier of the order.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains the restaurant response DTO if found; otherwise, null.</returns>
+        Task<OrderResponse?> GetOrderByOrderItemIdAsync(int orderItemId);
+
+        Task<List<OrderResponse>> GetOrdersAndMenuItemsAsync(int reservationId);
+
+        /// <summary>
+        /// Retrieves the Average Order Amount associated with a specific employee.
+        /// </summary>
+        /// <param name="employeeId">The unique identifier of the employee.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains the restaurant response DTO if found; otherwise, null.</returns>
+        Task<decimal> GetAverageOrderAmountAsync(int employeeId);
     }
 }

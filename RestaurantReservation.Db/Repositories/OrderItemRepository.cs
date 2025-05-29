@@ -8,7 +8,7 @@ using RestaurantReservationSystem.Domain.Models;
 namespace RestaurantReservation.Db.Repositories;
 
 internal class OrderItemRepository : IOrderItemRepository
-{ 
+{
     private readonly RestaurantReservationDbContext _context;
     private readonly IMapper _mapper;
 
