@@ -36,29 +36,52 @@ Restaurant-Reservation/
 
 ### 📍 Restaurants
 - `GET /api/restaurants` - List all restaurants
-- `GET /api/restaurants/{id}` - Get restaurant by ID
-- `POST /api/restaurants` - Create new restaurant
-- `PUT /api/restaurants/{id}` - Update restaurant
-- `DELETE /api/restaurants/{id}` - Delete restaurant
+- `GET /api/restaurants/{id}` - Get restaurant details by ID
+- `POST /api/restaurants` - Create a new restaurant
+- `PUT /api/restaurants/{id}` - Update an existing restaurant (full update)
+- `PATCH /api/restaurants/{id}` - Partially update an existing restaurant
+- `DELETE /api/restaurants/{id}` - Delete a restaurant by ID
 
 ### 📅 Reservations
 - `GET /api/reservations` - List all reservations
-- `GET /api/reservations/customer/{customerId}` - Get reservations by customer
-- `GET /api/reservations/{id}/orders` - Get orders for reservation
-- `GET /api/reservations/{id}/menu-items` - Get menu items for reservation
-- `POST /api/reservations` - Create new reservation
+- `GET /api/reservations/{id}` - Get reservation details by reservation ID
+- `GET /api/reservations/customer/{customerId}` - Get all reservations for a specific customer
+- `GET /api/reservations/{id}/orders` - Get all orders linked to a specific reservation
+- `GET /api/reservations/{id}/menu-items` - Get all menu items associated with a specific reservation
+- `POST /api/reservations` - Create a new reservation
+- `PUT /api/reservations/{id}` - Update an existing reservation (full update)
+- `PATCH /api/reservations/{id}` - Partially update an existing reservation
+- `DELETE /api/reservations/{id}` - Delete a reservation by ID
+
 
 ### 👨‍🍳 Employees
-- `GET /api/employees/managers` - List all managers
-- `GET /api/employees/{id}/average-order-amount` - Get average order amount for employee
-- `POST /api/employees` - Create new employee
+- `GET /api/employees` - List all employees
+- `GET /api/employees/{id}` - Get employee details by employee ID
+- `GET /api/employees/{id}/orders` - Get all orders handled by a specific employee
+- `GET /api/employees/{id}/restaurant` - Get the restaurant details where the employee works
+- `GET /api/employees?managersOnly=true` - List only employees who are managers
+- `GET /api/employees/{id}/order/average-amount` - Get the average amount of orders handled by the employee
+- `POST /api/employees` - Create a new employee
+- `PUT /api/employees/{id}` - Update an existing employee (full update)
+- `PATCH /api/employees/{id}` - Partially update an existing employee
+- `DELETE /api/employees/{id}` - Delete an employee by ID
+
 
 ### 🍽️ Menu Items
 - `GET /api/menu-items` - List all menu items
-- `POST /api/menu-items` - Create new menu item
+- `GET /api/menu-items/{id}` - Get details of a specific menu item by ID
+- `GET /api/menu-items/{id}/restaurant` - Get the restaurant that offers a specific menu item
+- `POST /api/menu-items` - Create a new menu item
+- `PUT /api/menu-items/{id}` - Update an existing menu item (full update)
+- `PATCH /api/menu-items/{id}` - Partially update an existing menu item
+- `DELETE /api/menu-items/{id}` - Delete a menu item by ID
+
 
 ### 🔐 Authentication
 - `POST /api/auth/login` - Get JWT token
+
+### **Note:**
+The same API endpoint principles outlined above (create, read, full and partial update, and delete) apply to all entities. You can assume standard CRUD endpoints for each entity, using `/api/{entity-name}` as the base. Additionally, a **Postman collection** is available in the project files, containing all endpoints, including both success and failure cases.
 
 ## 🚀 Getting Started
 
